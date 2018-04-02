@@ -1,4 +1,8 @@
+# IntelliJ IDEA
 .idea
+*.iml
+
+# Other
 .gradle
 */out
 */build
