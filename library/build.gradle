@@ -1,8 +1,3 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-
-sourceCompatibility = 1.8
-
 dependencies {
     compile group: 'javax.xml.parsers', name: 'jaxp-api', version: '1.4.5'
     compile 'org.apache.xmlgraphics:xmlgraphics-commons:2.1'

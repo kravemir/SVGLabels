@@ -1,9 +1,38 @@
 
 subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = 1.8
+
     group   'org.kravemir.svg.labels'
     version '0.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
+    }
+
+    tasks.withType(Jar) {
+        from(rootProject.projectDir) {
+            include 'LICENSE'
+            into 'META-INF'
+        }
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                pom.withXml {
+                    asNode().with {
+                        appendNode('licenses').with {
+                            appendNode('license').with {
+                                appendNode('name', 'Apache License, Version 2.0')
+                                appendNode('url', 'https://www.apache.org/licenses/LICENSE-2.0.txt')
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
