@@ -5,11 +5,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-task fatJar(type: Jar) {
+task fatJar(type: Jar, dependsOn: classes) {
     manifest {
         attributes 'Main-Class': 'org.kravemir.svg.tiler.tool.ToolRunner'
     }
-    baseName = 'tool-fat-jar'
+    classifier 'fat-jar'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -22,12 +22,6 @@ publishing {
             version project.version
 
             from components.java
-        }
-        fat(MavenPublication) {
-            groupId project.group
-            artifactId "svg-labels-tool-fatjar"
-            version project.version
-
             artifact fatJar
         }
     }

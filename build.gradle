@@ -6,10 +6,20 @@ subprojects {
     sourceCompatibility = 1.8
 
     group   'org.kravemir.svg.labels'
-    version '0.1-SNAPSHOT'
+    version '0.1.0-SNAPSHOT'
 
     repositories {
         mavenCentral()
+    }
+
+    task sourceJar(type: Jar, dependsOn: classes) {
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
     }
 
     tasks.withType(Jar) {
@@ -22,6 +32,9 @@ subprojects {
     publishing {
         publications {
             maven(MavenPublication) {
+                artifact sourceJar
+                artifact javadocJar
+
                 pom.withXml {
                     asNode().with {
                         appendNode('licenses').with {
