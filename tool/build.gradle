@@ -19,9 +19,21 @@ task fatJar(type: Jar) {
     with jar
 }
 
-task jarWithSources(type: Jar) {
-    from sourceSets.main.output
-    if (gradle.startParameter.taskNames.any{it == "publishToMavenLocal"}) {
-        from sourceSets.main.allJava
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId project.group
+            artifactId "svg-labels-tool"
+            version project.version
+
+            from components.java
+        }
+        fat(MavenPublication) {
+            groupId project.group
+            artifactId "svg-labels-tool-fatjar"
+            version project.version
+
+            artifact fatJar
+        }
     }
 }

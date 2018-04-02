@@ -1,7 +1,8 @@
-group   'org.kravemir.svg.tiler'
-version '0.1-SNAPSHOT'
 
 subprojects {
+    group   'org.kravemir.svg.labels'
+    version '0.1-SNAPSHOT'
+
     repositories {
         mavenCentral()
     }
