@@ -1,3 +1,41 @@
+import groovy.swing.SwingBuilder
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(':tool:publishMavenPublicationToSonatypeSnapshotsRepository')) {
+        String password = null
+
+        if (System.console() == null) {
+            new SwingBuilder().edt {
+                dialog(modal: true,
+                        title: 'Enter password',
+                        alwaysOnTop: true,
+                        resizable: false,
+                        locationRelativeTo: null,
+                        pack: true,
+                        show: true
+                ) {
+                    vbox {
+                        label(text: "Please enter key passphrase:")
+                        input = passwordField()
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            password = new String(input.password)
+                            dispose();
+                        })
+                    }
+                }
+            }
+        } else {
+            def passwordRaw = System.console().readPassword("\nPlease enter key passphrase: ")
+            password = new String(passwordRaw)
+        }
+
+        rootProject.subprojects { project ->
+            project.publishing.repositories.each { repo ->
+                repo.credentials.password = password
+            }
+        }
+    }
+}
 
 subprojects {
     apply plugin: 'java'
@@ -7,6 +45,10 @@ subprojects {
 
     group   'org.kravemir.svg.labels'
     version '0.1.0-SNAPSHOT'
+
+    ext {
+        sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : ''
+    }
 
     repositories {
         mavenCentral()
@@ -44,6 +86,16 @@ subprojects {
                             }
                         }
                     }
+                }
+            }
+        }
+        repositories {
+            maven {
+                name "sonatypeSnapshots"
+                url 'https://oss.sonatype.org/content/repositories/snapshots/'
+                credentials {
+                    username project.sonatypeUsername
+                    password "-- not specified --"
                 }
             }
         }
