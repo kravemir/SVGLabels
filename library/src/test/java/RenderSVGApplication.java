@@ -3,6 +3,7 @@ import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.commons.io.IOUtils;
 import org.kravemir.svg.labels.api.LabelGroup;
+import org.kravemir.svg.labels.api.DocumentRenderOptions;
 import org.kravemir.svg.labels.api.TileRenderer;
 import org.kravemir.svg.labels.api.TiledPaper;
 import org.kravemir.svg.labels.impl.TilePaperImpl;
@@ -120,36 +121,48 @@ public class RenderSVGApplication {
         ArrayList<LabelGroup> labels = new ArrayList<>();
         labels.add(new LabelGroup(svg1, 14));
         labels.add(new LabelGroup(svg2, 8));
-        int mode =  TileRenderer.RENDER_PAGE_BORDERS |
-                    TileRenderer.RENDER_TILE_BORSERS |
-                    TileRenderer.RENDER_LABEL_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, mode), test) );
+        DocumentRenderOptions options =  DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .withRenderTileBorders(true)
+                .withRenderLabelBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
 
         test = "fill one page";
         labels.clear();
         labels.add(new LabelGroup(svg2, 7));
         labels.add(new LabelGroup(svg1, LabelGroup.FILL_PAGE));
-        mode = TileRenderer.RENDER_PAGE_BORDERS | TileRenderer.RENDER_LABEL_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, mode), test) );
+        options = DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .withRenderLabelBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
 
         test = "fill pages";
         labels.clear();
         labels.add(new LabelGroup(svg2, LabelGroup.FILL_PAGE));
         labels.add(new LabelGroup(svg1, LabelGroup.FILL_PAGE));
-        mode = TileRenderer.RENDER_TILE_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, mode), test) );
+        options = DocumentRenderOptions.builder()
+                .withRenderTileBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
 
         test = "one template, multiple pages";
         labels.clear();
         labels.add(new LabelGroup(svg1, 20));
-        mode = TileRenderer.RENDER_PAGE_BORDERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, mode), test) );
+        options = DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
 
         test = "no template (only positions)";
         labels.clear();
         labels.add(new LabelGroup(null, LabelGroup.FILL_PAGE));
-        mode = TileRenderer.RENDER_PAGE_BORDERS | TileRenderer.RENDER_TILE_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, mode), test) );
+        options = DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .withRenderTileBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
     }
 
     private SVGDocument loadTemplate(String file) {

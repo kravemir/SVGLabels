@@ -7,6 +7,7 @@ import org.apache.batik.anim.dom.SVGOMSVGElement;
 import org.apache.batik.dom.svg.SVGContext;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.kravemir.svg.labels.api.LabelGroup;
+import org.kravemir.svg.labels.api.DocumentRenderOptions;
 import org.kravemir.svg.labels.api.TileRenderer;
 import org.kravemir.svg.labels.api.TiledPaper;
 import org.w3c.dom.DOMImplementation;
@@ -123,11 +124,11 @@ public class TileRendererImpl implements TileRenderer {
         private SVGDocument document;
         private TiledPaper paper;
         private double x, y;
-        private int mode;
+        private DocumentRenderOptions options;
 
-        TilePositioner(TiledPaper p, int m){
+        TilePositioner(TiledPaper p, DocumentRenderOptions m){
             paper = p;
-            mode = m;
+            options = m;
             x = -1;
         }
 
@@ -141,7 +142,7 @@ public class TileRendererImpl implements TileRenderer {
             root.setAttributeNS(null, "height", length(paper.getHeight()));
             //root.setAttributeNS(null, "viewBox", "0 0 " + lw.getValueAsString() + " " + lh.getValueAsString());
 
-            if((mode&RENDER_PAGE_BORDERS) != 0)
+            if(options.isRenderPageBorders())
                 root.appendChild(createRect(document,0,0, paper.getWidth(), paper.getHeight()));
 
             x = -1;
@@ -168,7 +169,7 @@ public class TileRendererImpl implements TileRenderer {
                 }
             }
 
-            if((mode&RENDER_TILE_BORSERS) != 0)
+            if(options.isRenderTileBorders())
                 document.getDocumentElement().appendChild(createRect(document,x , y, paper.getTileWidth(), paper.getTileHeight()));
 
             return true;
@@ -192,10 +193,10 @@ public class TileRendererImpl implements TileRenderer {
      */
 
     @Override
-    public List<SVGDocument> render(TiledPaper paper, List<LabelGroup> labels, int mode) {
+    public List<SVGDocument> render(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
 
         ArrayList<SVGDocument> documents = new ArrayList<>();
-        TilePositioner positioner = new TilePositioner(paper,mode);
+        TilePositioner positioner = new TilePositioner(paper, options);
         positioner.createDocument();
 
         for(LabelGroup l : labels){
@@ -227,7 +228,7 @@ public class TileRendererImpl implements TileRenderer {
                 Document doc = positioner.getDocument();
                 Element root = doc.getDocumentElement();
 
-                if ((mode & RENDER_LABEL_BORSERS) != 0)
+                if (options.isRenderLabelBorders())
                     root.appendChild(createRect(doc, positioner.getX() + labelOffsetX, positioner.getY() + labelOffsetY, labelW, labelH));
 
                 if(templateDoc != null) {
@@ -252,7 +253,7 @@ public class TileRendererImpl implements TileRenderer {
     public String render(TiledPaper paper, String SVG) {
         try {
             LabelGroup l = new LabelGroup(parseSVG(SVG), LabelGroup.FILL_PAGE);
-            return documentToString(render(paper, Collections.singletonList(l), 0).get(0));
+            return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -261,7 +262,10 @@ public class TileRendererImpl implements TileRenderer {
     @Override
     public String renderPositions(TiledPaper paper) {
         LabelGroup l = new LabelGroup(null, LabelGroup.FILL_PAGE);
-        int mode = TileRenderer.RENDER_TILE_BORSERS;
-        return documentToString(render( paper, Collections.singletonList(l), mode).get(0));
+        return documentToString(render(
+                paper,
+                Collections.singletonList(l),
+                DocumentRenderOptions.builder().withRenderTileBorders(true).build()
+        ).get(0));
     }
 }
