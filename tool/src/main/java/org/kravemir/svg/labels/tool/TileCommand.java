@@ -1,9 +1,9 @@
-package org.kravemir.svg.tiler.tool;
+package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.tiler.api.TileRenderer;
-import org.kravemir.svg.tiler.impl.TilePaperImpl;
-import org.kravemir.svg.tiler.impl.TileRendererImpl;
+import org.kravemir.svg.labels.api.TileRenderer;
+import org.kravemir.svg.labels.impl.TilePaperImpl;
+import org.kravemir.svg.labels.impl.TileRendererImpl;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

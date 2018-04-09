@@ -1,6 +1,6 @@
-package org.kravemir.svg.tiler.impl;
+package org.kravemir.svg.labels.impl;
 
-import org.kravemir.svg.tiler.api.TiledPaper;
+import org.kravemir.svg.labels.api.TiledPaper;
 
 /**
  * Created by miroslav on 4.12.16.

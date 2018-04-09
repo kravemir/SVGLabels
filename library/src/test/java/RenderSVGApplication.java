@@ -2,11 +2,11 @@ import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.tiler.api.LabelGroup;
-import org.kravemir.svg.tiler.api.TileRenderer;
-import org.kravemir.svg.tiler.api.TiledPaper;
-import org.kravemir.svg.tiler.impl.TilePaperImpl;
-import org.kravemir.svg.tiler.impl.TileRendererImpl;
+import org.kravemir.svg.labels.api.LabelGroup;
+import org.kravemir.svg.labels.api.TileRenderer;
+import org.kravemir.svg.labels.api.TiledPaper;
+import org.kravemir.svg.labels.impl.TilePaperImpl;
+import org.kravemir.svg.labels.impl.TileRendererImpl;
 import org.w3c.dom.svg.SVGDocument;
 
 import javax.swing.*;

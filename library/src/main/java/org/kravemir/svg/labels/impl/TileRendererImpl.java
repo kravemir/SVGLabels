@@ -1,4 +1,4 @@
-package org.kravemir.svg.tiler.impl;
+package org.kravemir.svg.labels.impl;
 
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.anim.dom.SVGDOMImplementation;
@@ -6,9 +6,9 @@ import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.anim.dom.SVGOMSVGElement;
 import org.apache.batik.dom.svg.SVGContext;
 import org.apache.batik.util.XMLResourceDescriptor;
-import org.kravemir.svg.tiler.api.LabelGroup;
-import org.kravemir.svg.tiler.api.TileRenderer;
-import org.kravemir.svg.tiler.api.TiledPaper;
+import org.kravemir.svg.labels.api.LabelGroup;
+import org.kravemir.svg.labels.api.TileRenderer;
+import org.kravemir.svg.labels.api.TiledPaper;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

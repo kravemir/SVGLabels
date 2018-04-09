@@ -1,4 +1,4 @@
-package org.kravemir.svg.tiler.api;
+package org.kravemir.svg.labels.api;
 
 import org.w3c.dom.svg.SVGDocument;
 
