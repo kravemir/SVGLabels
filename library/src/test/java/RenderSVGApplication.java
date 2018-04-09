@@ -6,7 +6,6 @@ import org.kravemir.svg.labels.api.LabelGroup;
 import org.kravemir.svg.labels.api.DocumentRenderOptions;
 import org.kravemir.svg.labels.api.TileRenderer;
 import org.kravemir.svg.labels.api.TiledPaper;
-import org.kravemir.svg.labels.impl.TilePaperImpl;
 import org.kravemir.svg.labels.impl.TileRendererImpl;
 import org.w3c.dom.svg.SVGDocument;
 
@@ -111,8 +110,18 @@ public class RenderSVGApplication {
     }
 
     private void addTests(JComboBox<Wrapper<List<SVGDocument>>> tests){
-        TiledPaper paper1 = new TilePaperImpl(297,210,5,5,68,46.25,5,5);
-        TiledPaper paper2 = new TilePaperImpl(297,210,5,5,85,46.25,5,5);
+        TiledPaper paper1 = TiledPaper.builder()
+                .withPaperSize(297,210)
+                .withLabelOffset(5,5)
+                .withLabelSize(85,46)
+                .withLabelDelta(5,5)
+                .build();
+        TiledPaper paper2 = TiledPaper.builder()
+                .withPaperSize(297,210)
+                .withLabelOffset(5,5)
+                .withLabelSize(85,46.25)
+                .withLabelDelta(5,5)
+                .build();
         SVGDocument svg1 = loadTemplate("/label01.svg");
         SVGDocument svg2 = loadTemplate("/label02.svg");
         TileRenderer tileRenderer = new TileRendererImpl();

@@ -2,7 +2,7 @@ package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.IOUtils;
 import org.kravemir.svg.labels.api.TileRenderer;
-import org.kravemir.svg.labels.impl.TilePaperImpl;
+import org.kravemir.svg.labels.api.TiledPaper;
 import org.kravemir.svg.labels.impl.TileRendererImpl;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -45,14 +45,11 @@ public class TileCommand implements Runnable {
 
             TileRenderer renderer = new TileRendererImpl();
             String result = renderer.render(
-                    new TilePaperImpl(
-                            paperWidth,
-                            paperHeight,
-                            labelOffsetX,
-                            labelOffsetY,
-                            labelWidth,
-                            labelHeight
-                    ),
+                    TiledPaper.builder()
+                            .withPaperSize(paperWidth, paperHeight)
+                            .withLabelOffset(labelOffsetX, labelOffsetY)
+                            .withLabelSize(labelWidth, labelHeight)
+                            .build(),
                     IOUtils.toString(new FileInputStream(source))
             );
             IOUtils.write(
