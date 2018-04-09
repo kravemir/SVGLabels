@@ -1,0 +1,10 @@
+
+# TravisCI virtualisation environment
+# see: https://docs.travis-ci.com/user/reference/overview/#Virtualisation-Environment-vs-Operating-System
+
+sudo: false
+dist: trusty
+
+
+language: java
+
