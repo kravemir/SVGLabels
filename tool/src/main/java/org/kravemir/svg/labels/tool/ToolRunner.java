@@ -1,4 +1,4 @@
-package org.kravemir.svg.tiler.tool;
+package org.kravemir.svg.labels.tool;
 
 import picocli.CommandLine;
 

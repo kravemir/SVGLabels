@@ -1,20 +1,12 @@
-import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.swing.JSVGCanvas;
-import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.tiler.api.LabelGroup;
-import org.kravemir.svg.tiler.api.TileRenderer;
-import org.kravemir.svg.tiler.api.TiledPaper;
-import org.kravemir.svg.tiler.impl.TilePaperImpl;
-import org.kravemir.svg.tiler.impl.TileRendererImpl;
+import org.kravemir.svg.labels.*;
 import org.w3c.dom.svg.SVGDocument;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,58 +102,77 @@ public class RenderSVGApplication {
     }
 
     private void addTests(JComboBox<Wrapper<List<SVGDocument>>> tests){
-        TiledPaper paper1 = new TilePaperImpl(297,210,5,5,68,46.25,5,5);
-        TiledPaper paper2 = new TilePaperImpl(297,210,5,5,85,46.25,5,5);
-        SVGDocument svg1 = loadTemplate("/label01.svg");
-        SVGDocument svg2 = loadTemplate("/label02.svg");
+        TiledPaper paper1 = TiledPaper.builder()
+                .withPaperSize(297,210)
+                .withLabelOffset(5,5)
+                .withLabelSize(85,46)
+                .withLabelDelta(5,5)
+                .build();
+        TiledPaper paper2 = TiledPaper.builder()
+                .withPaperSize(297,210)
+                .withLabelOffset(5,5)
+                .withLabelSize(85,46.25)
+                .withLabelDelta(5,5)
+                .build();
+        String svg1 = loadTemplate("/label01.svg");
+        String svg2 = loadTemplate("/label02.svg");
         TileRenderer tileRenderer = new TileRendererImpl();
 
         String test = "multiple templates, multiple pages";
         ArrayList<LabelGroup> labels = new ArrayList<>();
-        labels.add(new LabelGroup(svg1, 14));
-        labels.add(new LabelGroup(svg2, 8));
-        int mode =  TileRenderer.RENDER_PAGE_BORDERS |
-                    TileRenderer.RENDER_TILE_BORSERS |
-                    TileRenderer.RENDER_LABEL_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, mode), test) );
+        labels.add(LabelGroup.builder().withTemplate(svg1).withCount(14).build());
+        labels.add(LabelGroup.builder().withTemplate(svg2).withCount(8).build());
+        DocumentRenderOptions options =  DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .withRenderTileBorders(true)
+                .withRenderLabelBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
 
         test = "fill one page";
         labels.clear();
-        labels.add(new LabelGroup(svg2, 7));
-        labels.add(new LabelGroup(svg1, LabelGroup.FILL_PAGE));
-        mode = TileRenderer.RENDER_PAGE_BORDERS | TileRenderer.RENDER_LABEL_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, mode), test) );
+        labels.add(LabelGroup.builder().withTemplate(svg2).withCount(7).build());
+        labels.add(LabelGroup.builder().withTemplate(svg1).fillPage().build());
+        options = DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .withRenderLabelBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
 
         test = "fill pages";
         labels.clear();
-        labels.add(new LabelGroup(svg2, LabelGroup.FILL_PAGE));
-        labels.add(new LabelGroup(svg1, LabelGroup.FILL_PAGE));
-        mode = TileRenderer.RENDER_TILE_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, mode), test) );
+        labels.add(LabelGroup.builder().withTemplate(svg2).fillPage().build());
+        labels.add(LabelGroup.builder().withTemplate(svg1).fillPage().build());
+        options = DocumentRenderOptions.builder()
+                .withRenderTileBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
 
         test = "one template, multiple pages";
         labels.clear();
-        labels.add(new LabelGroup(svg1, 20));
-        mode = TileRenderer.RENDER_PAGE_BORDERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, mode), test) );
+        labels.add(LabelGroup.builder().withTemplate(svg1).withCount(20).build());
+        options = DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
 
         test = "no template (only positions)";
         labels.clear();
-        labels.add(new LabelGroup(null, LabelGroup.FILL_PAGE));
-        mode = TileRenderer.RENDER_PAGE_BORDERS | TileRenderer.RENDER_TILE_BORSERS;
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, mode), test) );
+        labels.add(LabelGroup.builder().fillPage().build());
+        options = DocumentRenderOptions.builder()
+                .withRenderPageBorders(true)
+                .withRenderTileBorders(true)
+                .build();
+        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
     }
 
-    private SVGDocument loadTemplate(String file) {
+    private String loadTemplate(String file) {
         try {
-            String str = IOUtils.toString(this.getClass().getResourceAsStream(file));
-            String parser = XMLResourceDescriptor.getXMLParserClassName();
-            SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-            return factory.createSVGDocument("", new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+            return IOUtils.toString(this.getClass().getResourceAsStream(file));
         } catch (IOException e) {
-            e.printStackTrace();
+            // TODO: do something nicer
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
 }

@@ -7,7 +7,7 @@ dependencies {
 
 task fatJar(type: Jar, dependsOn: classes) {
     manifest {
-        attributes 'Main-Class': 'org.kravemir.svg.tiler.tool.ToolRunner'
+        attributes 'Main-Class': 'org.kravemir.svg.labels.tool.ToolRunner'
     }
     classifier 'fat-jar'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

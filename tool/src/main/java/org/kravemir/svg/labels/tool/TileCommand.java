@@ -1,14 +1,17 @@
-package org.kravemir.svg.tiler.tool;
+package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.tiler.api.TileRenderer;
-import org.kravemir.svg.tiler.impl.TilePaperImpl;
-import org.kravemir.svg.tiler.impl.TileRendererImpl;
+import org.kravemir.svg.labels.TileRenderer;
+import org.kravemir.svg.labels.TileRendererImpl;
+import org.kravemir.svg.labels.TiledPaper;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Command(name = "tile", description = "Tile labels")
 public class TileCommand implements Runnable {
@@ -45,14 +48,11 @@ public class TileCommand implements Runnable {
 
             TileRenderer renderer = new TileRendererImpl();
             String result = renderer.render(
-                    new TilePaperImpl(
-                            paperWidth,
-                            paperHeight,
-                            labelOffsetX,
-                            labelOffsetY,
-                            labelWidth,
-                            labelHeight
-                    ),
+                    TiledPaper.builder()
+                            .withPaperSize(paperWidth, paperHeight)
+                            .withLabelOffset(labelOffsetX, labelOffsetY)
+                            .withLabelSize(labelWidth, labelHeight)
+                            .build(),
                     IOUtils.toString(new FileInputStream(source))
             );
             IOUtils.write(
