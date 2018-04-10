@@ -13,10 +13,12 @@ public class DocumentRenderOptions {
         return renderPageBorders;
     }
 
+    // TODO: this should probably be in RenderLabelOptions
     public boolean isRenderTileBorders() {
         return renderTileBorders;
     }
 
+    // TODO: this should probably be in RenderLabelOptions
     public boolean isRenderLabelBorders() {
         return renderLabelBorders;
     }
