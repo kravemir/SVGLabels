@@ -1,4 +1,4 @@
-package org.kravemir.svg.labels.api;
+package org.kravemir.svg.labels;
 
 public class DocumentRenderOptions {
 

@@ -1,4 +1,4 @@
-package org.kravemir.svg.labels.api;
+package org.kravemir.svg.labels;
 
 /**
  * paper specification, in mm (units)

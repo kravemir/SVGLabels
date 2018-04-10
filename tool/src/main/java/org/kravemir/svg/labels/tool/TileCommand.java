@@ -1,14 +1,17 @@
 package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.labels.api.TileRenderer;
-import org.kravemir.svg.labels.api.TiledPaper;
-import org.kravemir.svg.labels.impl.TileRendererImpl;
+import org.kravemir.svg.labels.TileRenderer;
+import org.kravemir.svg.labels.TileRendererImpl;
+import org.kravemir.svg.labels.TiledPaper;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Command(name = "tile", description = "Tile labels")
 public class TileCommand implements Runnable {
