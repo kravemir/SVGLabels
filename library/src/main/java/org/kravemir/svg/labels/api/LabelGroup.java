@@ -4,29 +4,54 @@ import org.w3c.dom.svg.SVGDocument;
 
 public class LabelGroup {
 
-    public static final int FILL_PAGE = 0;
+    private static final int FILL_PAGE = 0;
 
     private SVGDocument template;
     private int count;
 
-    public LabelGroup(SVGDocument template, int count) {
-        this.template = template;
-        this.count = count;
+    private LabelGroup(Builder builder) {
+        this.template = builder.template;
+        this.count = builder.count;
     }
 
     public SVGDocument getTemplate() {
         return template;
     }
 
-    public void setTemplate(SVGDocument template) {
-        this.template = template;
-    }
-
     public int getCount() {
         return count;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public boolean shouldFillPage() {
+        return count == FILL_PAGE;
+    }
+
+    public static class Builder {
+        private SVGDocument template;
+        private int count;
+
+        public Builder withTemplate(SVGDocument template) {
+            this.template = template;
+            return this;
+        }
+
+        public Builder withCount(int count) {
+            // TODO: check count > 0
+            this.count = count;
+            return this;
+        }
+
+        public Builder fillPage() {
+            this.count = FILL_PAGE;
+            return this;
+        }
+
+        public LabelGroup build() {
+            return new LabelGroup(this);
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 }

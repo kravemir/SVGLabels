@@ -128,8 +128,8 @@ public class RenderSVGApplication {
 
         String test = "multiple templates, multiple pages";
         ArrayList<LabelGroup> labels = new ArrayList<>();
-        labels.add(new LabelGroup(svg1, 14));
-        labels.add(new LabelGroup(svg2, 8));
+        labels.add(LabelGroup.builder().withTemplate(svg1).withCount(14).build());
+        labels.add(LabelGroup.builder().withTemplate(svg2).withCount(8).build());
         DocumentRenderOptions options =  DocumentRenderOptions.builder()
                 .withRenderPageBorders(true)
                 .withRenderTileBorders(true)
@@ -139,8 +139,8 @@ public class RenderSVGApplication {
 
         test = "fill one page";
         labels.clear();
-        labels.add(new LabelGroup(svg2, 7));
-        labels.add(new LabelGroup(svg1, LabelGroup.FILL_PAGE));
+        labels.add(LabelGroup.builder().withTemplate(svg2).withCount(7).build());
+        labels.add(LabelGroup.builder().withTemplate(svg1).fillPage().build());
         options = DocumentRenderOptions.builder()
                 .withRenderPageBorders(true)
                 .withRenderLabelBorders(true)
@@ -149,8 +149,8 @@ public class RenderSVGApplication {
 
         test = "fill pages";
         labels.clear();
-        labels.add(new LabelGroup(svg2, LabelGroup.FILL_PAGE));
-        labels.add(new LabelGroup(svg1, LabelGroup.FILL_PAGE));
+        labels.add(LabelGroup.builder().withTemplate(svg2).fillPage().build());
+        labels.add(LabelGroup.builder().withTemplate(svg1).fillPage().build());
         options = DocumentRenderOptions.builder()
                 .withRenderTileBorders(true)
                 .build();
@@ -158,7 +158,7 @@ public class RenderSVGApplication {
 
         test = "one template, multiple pages";
         labels.clear();
-        labels.add(new LabelGroup(svg1, 20));
+        labels.add(LabelGroup.builder().withTemplate(svg1).withCount(20).build());
         options = DocumentRenderOptions.builder()
                 .withRenderPageBorders(true)
                 .build();
@@ -166,7 +166,7 @@ public class RenderSVGApplication {
 
         test = "no template (only positions)";
         labels.clear();
-        labels.add(new LabelGroup(null, LabelGroup.FILL_PAGE));
+        labels.add(LabelGroup.builder().fillPage().build());
         options = DocumentRenderOptions.builder()
                 .withRenderPageBorders(true)
                 .withRenderTileBorders(true)

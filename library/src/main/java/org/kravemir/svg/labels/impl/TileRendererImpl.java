@@ -212,7 +212,7 @@ public class TileRendererImpl implements TileRenderer {
             double labelOffsetX = (paper.getTileWidth() - labelW) / 2;
             double labelOffsetY = (paper.getTileHeight()- labelH) / 2;
 
-            for(int n = 0; n < l.getCount() || l.getCount() == LabelGroup.FILL_PAGE; n++){
+            for(int n = 0; n < l.getCount() || l.shouldFillPage(); n++){
 
                 //create new page if current is full
                 if(!positioner.nextPosition()){
@@ -220,7 +220,7 @@ public class TileRendererImpl implements TileRenderer {
                     positioner.createDocument();
 
                     //move to next template if page is full
-                    if(l.getCount() == LabelGroup.FILL_PAGE) break;
+                    if(l.shouldFillPage()) break;
 
                     positioner.nextPosition();
                 }
@@ -252,7 +252,7 @@ public class TileRendererImpl implements TileRenderer {
     @Override
     public String render(TiledPaper paper, String SVG) {
         try {
-            LabelGroup l = new LabelGroup(parseSVG(SVG), LabelGroup.FILL_PAGE);
+            LabelGroup l = LabelGroup.builder().withTemplate(parseSVG(SVG)).fillPage().build();
             return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -261,7 +261,7 @@ public class TileRendererImpl implements TileRenderer {
 
     @Override
     public String renderPositions(TiledPaper paper) {
-        LabelGroup l = new LabelGroup(null, LabelGroup.FILL_PAGE);
+        LabelGroup l = LabelGroup.builder().fillPage().build();
         return documentToString(render(
                 paper,
                 Collections.singletonList(l),
