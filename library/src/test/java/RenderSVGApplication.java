@@ -1,6 +1,4 @@
-import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.swing.JSVGCanvas;
-import org.apache.batik.util.XMLResourceDescriptor;
 import org.apache.commons.io.IOUtils;
 import org.kravemir.svg.labels.*;
 import org.w3c.dom.svg.SVGDocument;
@@ -8,9 +6,7 @@ import org.w3c.dom.svg.SVGDocument;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,8 +114,8 @@ public class RenderSVGApplication {
                 .withLabelSize(85,46.25)
                 .withLabelDelta(5,5)
                 .build();
-        SVGDocument svg1 = loadTemplate("/label01.svg");
-        SVGDocument svg2 = loadTemplate("/label02.svg");
+        String svg1 = loadTemplate("/label01.svg");
+        String svg2 = loadTemplate("/label02.svg");
         TileRenderer tileRenderer = new TileRendererImpl();
 
         String test = "multiple templates, multiple pages";
@@ -170,16 +166,13 @@ public class RenderSVGApplication {
         tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
     }
 
-    private SVGDocument loadTemplate(String file) {
+    private String loadTemplate(String file) {
         try {
-            String str = IOUtils.toString(this.getClass().getResourceAsStream(file));
-            String parser = XMLResourceDescriptor.getXMLParserClassName();
-            SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-            return factory.createSVGDocument("", new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
+            return IOUtils.toString(this.getClass().getResourceAsStream(file));
         } catch (IOException e) {
-            e.printStackTrace();
+            // TODO: do something nicer
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
 }

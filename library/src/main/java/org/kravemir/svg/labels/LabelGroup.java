@@ -1,12 +1,10 @@
 package org.kravemir.svg.labels;
 
-import org.w3c.dom.svg.SVGDocument;
-
 public class LabelGroup {
 
     private static final int FILL_PAGE = 0;
 
-    private SVGDocument template;
+    private String template;
     private int count;
 
     private LabelGroup(Builder builder) {
@@ -14,7 +12,7 @@ public class LabelGroup {
         this.count = builder.count;
     }
 
-    public SVGDocument getTemplate() {
+    public String getTemplate() {
         return template;
     }
 
@@ -27,10 +25,10 @@ public class LabelGroup {
     }
 
     public static class Builder {
-        private SVGDocument template;
+        private String template;
         private int count;
 
-        public Builder withTemplate(SVGDocument template) {
+        public Builder withTemplate(String template) {
             this.template = template;
             return this;
         }

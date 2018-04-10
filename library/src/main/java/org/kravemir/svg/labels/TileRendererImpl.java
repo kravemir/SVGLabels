@@ -73,10 +73,15 @@ public class TileRendererImpl implements TileRenderer {
         }
     }
 
-    static SVGDocument parseSVG(String s) throws IOException {
+    static SVGDocument parseSVG(String s) {
         String parser = XMLResourceDescriptor.getXMLParserClassName();
         SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-        return factory.createSVGDocument("", new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
+        try {
+            return factory.createSVGDocument("", new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
+        } catch (IOException e) {
+            // TODO: do something nicer
+            throw new RuntimeException(s);
+        }
     }
 
     static SVGDocument createSVG() {
@@ -197,7 +202,7 @@ public class TileRendererImpl implements TileRenderer {
 
         for(LabelGroup l : labels){
 
-            Document templateDoc = l.getTemplate();
+            Document templateDoc = parseSVG(l.getTemplate());
             Element templateRoot = null;
             double labelW = 0, labelH = 0;
             if(templateDoc != null){
@@ -247,12 +252,8 @@ public class TileRendererImpl implements TileRenderer {
 
     @Override
     public String render(TiledPaper paper, String SVG) {
-        try {
-            LabelGroup l = LabelGroup.builder().withTemplate(parseSVG(SVG)).fillPage().build();
-            return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        LabelGroup l = LabelGroup.builder().withTemplate(SVG).fillPage().build();
+        return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
     }
 
     @Override
