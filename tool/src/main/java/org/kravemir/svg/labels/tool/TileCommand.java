@@ -14,7 +14,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Command(name = "tile", description = "Tile labels")
+@Command(
+        name = "tile", description = "Tile labels",
+        versionProvider = VersionProvider.class
+)
 public class TileCommand implements Runnable {
 
     @Option(
@@ -46,6 +49,19 @@ public class TileCommand implements Runnable {
             description = "Path of a SVG file which should be generated"
     )
     private String target;
+
+
+    @Option(
+            names = { "-h", "--help" }, usageHelp = true,
+            description = "display a help message"
+    )
+    private boolean helpRequested = false;
+
+    @Option(
+            names = {"--version"}, versionHelp = true,
+            description = "display version info"
+    )
+    boolean versionInfoRequested;
 
     public void run() {
         try {
