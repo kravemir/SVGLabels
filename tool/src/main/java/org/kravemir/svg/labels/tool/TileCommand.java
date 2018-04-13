@@ -7,6 +7,7 @@ import org.kravemir.svg.labels.TiledPaper;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,20 +17,35 @@ import java.io.IOException;
 @Command(name = "tile", description = "Tile labels")
 public class TileCommand implements Runnable {
 
-    @Option(arity = "2", names = "--paper-size")
-    double[] paperSize;
+    @Option(
+            arity = "2", names = "--paper-size", paramLabel = "mm",
+            description = "Width and height of the paper in mm, ie. 210 297 for A4 paper portrait"
+    )
+    private double[] paperSize;
 
-    @Option(arity = "2", names = "--label-offset")
-    double[] labelOffset;
+    @Option(
+            arity = "2", names = "--label-offset", paramLabel = "mm",
+            description = "X and Y offset of the first label in mm, ie. 5 5"
+    )
+    private double[] labelOffset;
 
-    @Option(arity = "2", names = "--label-size")
-    double[] labelSize;
+    @Option(
+            arity = "2", names = "--label-size", paramLabel = "mm",
+            description = "Width and height of label in mm, ie. "
+    )
+    private double[] labelSize;
 
-    @CommandLine.Parameters(index = "0", paramLabel = "SOURCE")
-    String source;
+    @Parameters(
+            index = "0", paramLabel = "SOURCE",
+            description = "Path of a SVG file containing a label"
+    )
+    private String source;
 
-    @CommandLine.Parameters(index = "1", paramLabel = "TARGET")
-    String target;
+    @Parameters(
+            index = "1", paramLabel = "TARGET",
+            description = "Path of a SVG file which should be generated"
+    )
+    private String target;
 
     public void run() {
         try {
