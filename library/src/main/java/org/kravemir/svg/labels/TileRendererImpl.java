@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Implementation of {@link TileRenderer}
+ */
 public class TileRendererImpl implements TileRenderer {
 
     // helper class for length()
@@ -254,15 +257,5 @@ public class TileRendererImpl implements TileRenderer {
     public String render(TiledPaper paper, String SVG) {
         LabelGroup l = LabelGroup.builder().withTemplate(SVG).fillPage().build();
         return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
-    }
-
-    @Override
-    public String renderPositions(TiledPaper paper) {
-        LabelGroup l = LabelGroup.builder().fillPage().build();
-        return documentToString(render(
-                paper,
-                Collections.singletonList(l),
-                DocumentRenderOptions.builder().withRenderTileBorders(true).build()
-        ).get(0));
     }
 }

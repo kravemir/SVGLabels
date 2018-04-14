@@ -1,11 +1,17 @@
 package org.kravemir.svg.labels;
 
+/**
+ * The <code>DocumentRenderOptions</code> is a value class, and contains rendering options.
+ *
+ * Use a {@link Builder} to construct instance.
+ */
 public class DocumentRenderOptions {
 
     private boolean renderPageBorders;
     private boolean renderTileBorders;
     private boolean renderLabelBorders;
 
+    // TODO: consistency of construction by Builder
     private DocumentRenderOptions() {
     }
 
@@ -13,10 +19,12 @@ public class DocumentRenderOptions {
         return renderPageBorders;
     }
 
+    // TODO: this should probably be in RenderLabelOptions
     public boolean isRenderTileBorders() {
         return renderTileBorders;
     }
 
+    // TODO: this should probably be in RenderLabelOptions
     public boolean isRenderLabelBorders() {
         return renderLabelBorders;
     }
@@ -50,6 +58,12 @@ public class DocumentRenderOptions {
         }
     }
 
+
+    /**
+     * Creates a new instance of a {@link TiledPaper.Builder}
+     *
+     * @return new {@link TiledPaper.Builder} instance
+     */
     public static Builder builder() {
         return new Builder();
     }
