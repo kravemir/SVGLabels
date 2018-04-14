@@ -3,10 +3,11 @@ package org.kravemir.svg.labels;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
 /**
- * paper specification, in mm (units)
+ * The <code>TilerPaper</code> is a value class, and represents a paper containing tiled labels.
  *
- * TODO: support different types of units
+ * Use a {@link Builder} to construct instance.
  */
+// TODO: support different types of units
 @ToBePublicApi
 public class TiledPaper {
     private double width;
@@ -18,6 +19,7 @@ public class TiledPaper {
     private double tileDeltaX;
     private double tileDeltaY;
 
+    // TODO: consistency of construction by Builder
     private TiledPaper() {
     }
 
@@ -163,6 +165,11 @@ public class TiledPaper {
         }
     }
 
+    /**
+     * Creates a new instance of a {@link Builder}
+     *
+     * @return new {@link Builder} instance
+     */
     @ToBePublicApi
     public static Builder builder() {
         return new Builder();

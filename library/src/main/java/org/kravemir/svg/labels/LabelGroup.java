@@ -2,6 +2,12 @@ package org.kravemir.svg.labels;
 
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
+/**
+ * The <code>LabelGroup</code> is a value class, and a group of labels.
+ *
+ * Use a {@link Builder} to construct instance.
+ */
+// TODO: support different types of units
 @ToBePublicApi
 public class LabelGroup {
 
@@ -10,6 +16,7 @@ public class LabelGroup {
     private String template;
     private int count;
 
+    // TODO: consistency of construction by Builder
     private LabelGroup(Builder builder) {
         this.template = builder.template;
         this.count = builder.count;
@@ -60,6 +67,12 @@ public class LabelGroup {
         }
     }
 
+
+    /**
+     * Creates a new instance of a {@link Builder}
+     *
+     * @return new {@link Builder} instance
+     */
     @ToBePublicApi
     public static Builder builder() {
         return new Builder();
