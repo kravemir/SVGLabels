@@ -5,6 +5,12 @@
 sudo: false
 dist: trusty
 
-
 language: java
+
+script:
+ - ./gradlew assemble
+ - ./gradlew check
+ - ./gradlew build
+ - ./gradlew fatJar
+ - ./bin/generateHelpDocs.sh
 
