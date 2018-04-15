@@ -103,16 +103,16 @@ public class RenderSVGApplication {
 
     private void addTests(JComboBox<Wrapper<List<SVGDocument>>> tests){
         TiledPaper paper1 = TiledPaper.builder()
-                .withPaperSize(297,210)
-                .withLabelOffset(5,5)
-                .withLabelSize(85,46)
-                .withLabelDelta(5,5)
+                .setPaperSize(297,210)
+                .setLabelOffset(5,5)
+                .setLabelSize(85,46)
+                .setLabelDelta(5,5)
                 .build();
         TiledPaper paper2 = TiledPaper.builder()
-                .withPaperSize(297,210)
-                .withLabelOffset(5,5)
-                .withLabelSize(85,46.25)
-                .withLabelDelta(5,5)
+                .setPaperSize(297,210)
+                .setLabelOffset(5,5)
+                .setLabelSize(85,46.25)
+                .setLabelDelta(5,5)
                 .build();
         String svg1 = loadTemplate("/label01.svg");
         String svg2 = loadTemplate("/label02.svg");
