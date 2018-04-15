@@ -30,7 +30,6 @@ public interface TileRenderer {
      * @param options rendering options
      * @return generated pages as a SVG
      */
-    // TODO: work with string, only, no DOM, in this interface!
     @ToBePublicApi
-    List<SVGDocument> render(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options);
+    List<String> render(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options);
 }

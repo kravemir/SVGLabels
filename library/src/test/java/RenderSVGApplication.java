@@ -116,7 +116,7 @@ public class RenderSVGApplication {
                 .build();
         String svg1 = loadTemplate("/label01.svg");
         String svg2 = loadTemplate("/label02.svg");
-        TileRenderer tileRenderer = new TileRendererImpl();
+        TileRendererImpl tileRenderer = new TileRendererImpl();
 
         String test = "multiple templates, multiple pages";
         ArrayList<LabelGroup> labels = new ArrayList<>();
@@ -127,7 +127,7 @@ public class RenderSVGApplication {
                 .withRenderTileBorders(true)
                 .withRenderLabelBorders(true)
                 .build();
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
+        tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper2,labels, options), test) );
 
         test = "fill one page";
         labels.clear();
@@ -137,7 +137,7 @@ public class RenderSVGApplication {
                 .withRenderPageBorders(true)
                 .withRenderLabelBorders(true)
                 .build();
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
+        tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper2,labels, options), test) );
 
         test = "fill pages";
         labels.clear();
@@ -146,7 +146,7 @@ public class RenderSVGApplication {
         options = DocumentRenderOptions.builder()
                 .withRenderTileBorders(true)
                 .build();
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
+        tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper1,labels, options), test) );
 
         test = "one template, multiple pages";
         labels.clear();
@@ -154,7 +154,7 @@ public class RenderSVGApplication {
         options = DocumentRenderOptions.builder()
                 .withRenderPageBorders(true)
                 .build();
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper2,labels, options), test) );
+        tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper2,labels, options), test) );
 
         test = "no template (only positions)";
         labels.clear();
@@ -163,7 +163,7 @@ public class RenderSVGApplication {
                 .withRenderPageBorders(true)
                 .withRenderTileBorders(true)
                 .build();
-        tests.addItem( new Wrapper<>( tileRenderer.render(paper1,labels, options), test) );
+        tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper1,labels, options), test) );
     }
 
     private String loadTemplate(String file) {
