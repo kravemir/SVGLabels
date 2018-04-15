@@ -123,9 +123,9 @@ public class RenderSVGApplication {
         labels.add(LabelGroup.builder().setTemplate(svg1).setCount(14).build());
         labels.add(LabelGroup.builder().setTemplate(svg2).setCount(8).build());
         DocumentRenderOptions options =  DocumentRenderOptions.builder()
-                .withRenderPageBorders(true)
-                .withRenderTileBorders(true)
-                .withRenderLabelBorders(true)
+                .setRenderPageBorders(true)
+                .setRenderTileBorders(true)
+                .setRenderLabelBorders(true)
                 .build();
         tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper2,labels, options), test) );
 
@@ -134,8 +134,8 @@ public class RenderSVGApplication {
         labels.add(LabelGroup.builder().setTemplate(svg2).setCount(7).build());
         labels.add(LabelGroup.builder().setTemplate(svg1).fillPage().build());
         options = DocumentRenderOptions.builder()
-                .withRenderPageBorders(true)
-                .withRenderLabelBorders(true)
+                .setRenderPageBorders(true)
+                .setRenderLabelBorders(true)
                 .build();
         tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper2,labels, options), test) );
 
@@ -144,7 +144,7 @@ public class RenderSVGApplication {
         labels.add(LabelGroup.builder().setTemplate(svg2).fillPage().build());
         labels.add(LabelGroup.builder().setTemplate(svg1).fillPage().build());
         options = DocumentRenderOptions.builder()
-                .withRenderTileBorders(true)
+                .setRenderTileBorders(true)
                 .build();
         tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper1,labels, options), test) );
 
@@ -152,7 +152,7 @@ public class RenderSVGApplication {
         labels.clear();
         labels.add(LabelGroup.builder().setTemplate(svg1).setCount(20).build());
         options = DocumentRenderOptions.builder()
-                .withRenderPageBorders(true)
+                .setRenderPageBorders(true)
                 .build();
         tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper2,labels, options), test) );
 
@@ -160,8 +160,8 @@ public class RenderSVGApplication {
         labels.clear();
         labels.add(LabelGroup.builder().fillPage().build());
         options = DocumentRenderOptions.builder()
-                .withRenderPageBorders(true)
-                .withRenderTileBorders(true)
+                .setRenderPageBorders(true)
+                .setRenderTileBorders(true)
                 .build();
         tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper1,labels, options), test) );
     }

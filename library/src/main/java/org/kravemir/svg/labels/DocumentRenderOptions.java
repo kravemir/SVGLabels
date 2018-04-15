@@ -1,61 +1,40 @@
 package org.kravemir.svg.labels;
 
+import com.google.auto.value.AutoValue;
+import org.kravemir.svg.labels.annotations.ToBePublicApi;
+
 /**
  * The <code>DocumentRenderOptions</code> is a value class, and contains rendering options.
  *
  * Use a {@link Builder} to construct instance.
  */
-public class DocumentRenderOptions {
+@AutoValue
+@ToBePublicApi
+public abstract class DocumentRenderOptions {
 
-    private boolean renderPageBorders;
-    private boolean renderTileBorders;
-    private boolean renderLabelBorders;
-
-    // TODO: consistency of construction by Builder
-    private DocumentRenderOptions() {
+    protected DocumentRenderOptions() {
     }
 
-    public boolean isRenderPageBorders() {
-        return renderPageBorders;
-    }
+    @ToBePublicApi
+    public abstract boolean isRenderPageBorders();
 
     // TODO: this should probably be in RenderLabelOptions
-    public boolean isRenderTileBorders() {
-        return renderTileBorders;
-    }
+    public abstract boolean isRenderTileBorders();
 
     // TODO: this should probably be in RenderLabelOptions
-    public boolean isRenderLabelBorders() {
-        return renderLabelBorders;
-    }
+    public abstract boolean isRenderLabelBorders();
 
-    public static class Builder {
-        private boolean renderPageBorders;
-        private boolean renderTileBorders;
-        private boolean renderLabelBorders;
+    @AutoValue.Builder
+    @ToBePublicApi
+    public abstract static class Builder {
+        @ToBePublicApi
+        public abstract Builder setRenderPageBorders(boolean renderPageBorders);
 
-        public Builder withRenderPageBorders(boolean renderPageBorders) {
-            this.renderPageBorders = renderPageBorders;
-            return this;
-        }
+        public abstract Builder setRenderTileBorders(boolean renderTileBorders);
 
-        public Builder withRenderTileBorders(boolean renderTileBorders) {
-            this.renderTileBorders = renderTileBorders;
-            return this;
-        }
+        public abstract Builder setRenderLabelBorders(boolean renderLabelBorders);
 
-        public Builder withRenderLabelBorders(boolean renderLabelBorders) {
-            this.renderLabelBorders = renderLabelBorders;
-            return this;
-        }
-
-        public DocumentRenderOptions build() {
-            DocumentRenderOptions options = new DocumentRenderOptions();
-            options.renderPageBorders = renderPageBorders;
-            options.renderLabelBorders = renderLabelBorders;
-            options.renderTileBorders = renderTileBorders;
-            return options;
-        }
+        public abstract DocumentRenderOptions build();
     }
 
 
@@ -65,6 +44,6 @@ public class DocumentRenderOptions {
      * @return new {@link TiledPaper.Builder} instance
      */
     public static Builder builder() {
-        return new Builder();
+        return new AutoValue_DocumentRenderOptions.Builder();
     }
 }
