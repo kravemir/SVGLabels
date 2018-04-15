@@ -255,7 +255,7 @@ public class TileRendererImpl implements TileRenderer {
 
     @Override
     public String render(TiledPaper paper, String SVG) {
-        LabelGroup l = LabelGroup.builder().withTemplate(SVG).fillPage().build();
+        LabelGroup l = LabelGroup.builder().setTemplate(SVG).fillPage().build();
         return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
     }
 }

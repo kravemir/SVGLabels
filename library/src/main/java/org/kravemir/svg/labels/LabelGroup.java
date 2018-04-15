@@ -1,5 +1,6 @@
 package org.kravemir.svg.labels;
 
+import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
 /**
@@ -8,63 +9,44 @@ import org.kravemir.svg.labels.annotations.ToBePublicApi;
  * Use a {@link Builder} to construct instance.
  */
 // TODO: support different types of units
+@AutoValue
 @ToBePublicApi
-public class LabelGroup {
+public abstract class LabelGroup {
 
     private static final int FILL_PAGE = 0;
 
-    private String template;
-    private int count;
-
-    // TODO: consistency of construction by Builder
-    private LabelGroup(Builder builder) {
-        this.template = builder.template;
-        this.count = builder.count;
+    protected LabelGroup() {
     }
 
     @ToBePublicApi
-    public String getTemplate() {
-        return template;
-    }
+    public abstract String getTemplate();
 
     @ToBePublicApi
-    public int getCount() {
-        return count;
-    }
+    public abstract int getCount();
 
     @ToBePublicApi
     public boolean shouldFillPage() {
-        return count == FILL_PAGE;
+        return getCount() == FILL_PAGE;
     }
 
+    @AutoValue.Builder
     @ToBePublicApi
-    public static class Builder {
-        private String template;
-        private int count;
+    public abstract static class Builder {
 
         @ToBePublicApi
-        public Builder withTemplate(String template) {
-            this.template = template;
-            return this;
-        }
+        public abstract Builder setTemplate(String template);
 
         @ToBePublicApi
-        public Builder withCount(int count) {
-            // TODO: check count > 0
-            this.count = count;
-            return this;
-        }
+        public abstract Builder setCount(int count);
 
         @ToBePublicApi
         public Builder fillPage() {
-            this.count = FILL_PAGE;
+            setCount(FILL_PAGE);
             return this;
         }
 
         @ToBePublicApi
-        public LabelGroup build() {
-            return new LabelGroup(this);
-        }
+        public abstract LabelGroup build();
     }
 
 
@@ -75,6 +57,6 @@ public class LabelGroup {
      */
     @ToBePublicApi
     public static Builder builder() {
-        return new Builder();
+        return new AutoValue_LabelGroup.Builder();
     }
 }
