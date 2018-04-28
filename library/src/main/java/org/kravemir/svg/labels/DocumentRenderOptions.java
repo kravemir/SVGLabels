@@ -15,13 +15,10 @@ public abstract class DocumentRenderOptions {
     protected DocumentRenderOptions() {
     }
 
-    @ToBePublicApi
     public abstract boolean isRenderPageBorders();
 
-    // TODO: this should probably be in RenderLabelOptions
     public abstract boolean isRenderTileBorders();
 
-    // TODO: this should probably be in RenderLabelOptions
     public abstract boolean isRenderLabelBorders();
 
     @AutoValue.Builder
