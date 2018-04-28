@@ -4,7 +4,6 @@ import org.apache.commons.io.IOUtils;
 import org.kravemir.svg.labels.TileRenderer;
 import org.kravemir.svg.labels.TileRendererImpl;
 import org.kravemir.svg.labels.TiledPaper;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
@@ -81,9 +80,9 @@ public class TileCommand implements Runnable {
             TileRenderer renderer = new TileRendererImpl();
             String result = renderer.render(
                     TiledPaper.builder()
-                            .withPaperSize(paperWidth, paperHeight)
-                            .withLabelOffset(labelOffsetX, labelOffsetY)
-                            .withLabelSize(labelWidth, labelHeight)
+                            .setPaperSize(paperWidth, paperHeight)
+                            .setLabelOffset(labelOffsetX, labelOffsetY)
+                            .setLabelSize(labelWidth, labelHeight)
                             .build(),
                     IOUtils.toString(new FileInputStream(source))
             );

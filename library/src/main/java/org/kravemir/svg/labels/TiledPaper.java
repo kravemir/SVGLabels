@@ -1,5 +1,6 @@
 package org.kravemir.svg.labels;
 
+import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
 /**
@@ -8,161 +9,95 @@ import org.kravemir.svg.labels.annotations.ToBePublicApi;
  * Use a {@link Builder} to construct instance.
  */
 // TODO: support different types of units
+@AutoValue
 @ToBePublicApi
-public class TiledPaper {
-    private double width;
-    private double height;
-    private double tileOffsetX;
-    private double tileOffsetY;
-    private double tileWidth;
-    private double tileHeight;
-    private double tileDeltaX;
-    private double tileDeltaY;
+public abstract class TiledPaper {
 
-    // TODO: consistency of construction by Builder
-    private TiledPaper() {
+    protected TiledPaper() {
     }
 
     @ToBePublicApi
-    public double getWidth() {
-        return width;
-    }
+    public abstract double getWidth();
 
     @ToBePublicApi
-    public double getHeight() {
-        return height;
-    }
+    public abstract double getHeight();
 
     @ToBePublicApi
-    public double getTileOffsetX() {
-        return tileOffsetX;
-    }
+    public abstract double getTileOffsetX();
 
     @ToBePublicApi
-    public double getTileOffsetY() {
-        return tileOffsetY;
-    }
+    public abstract double getTileOffsetY();
 
     @ToBePublicApi
-    public double getTileWidth() {
-        return tileWidth;
-    }
+    public abstract double getTileWidth();
 
     @ToBePublicApi
-    public double getTileHeight() {
-        return tileHeight;
-    }
+    public abstract double getTileHeight();
 
     @ToBePublicApi
-    public double getTileDeltaX() {
-        return tileDeltaX;
-    }
+    public abstract double getTileDeltaX();
 
     @ToBePublicApi
-    public double getTileDeltaY() {
-        return tileDeltaY;
-    }
+    public abstract double getTileDeltaY();
 
+    @AutoValue.Builder
     @ToBePublicApi
-    public static class Builder {
-        private double width;
-        private double height;
-        private double tileOffsetX;
-        private double tileOffsetY;
-        private double tileWidth;
-        private double tileHeight;
-        private double tileDeltaX;
-        private double tileDeltaY;
+    public abstract static class Builder {
 
         @ToBePublicApi
-        public Builder withPaperSize(double width, double height) {
-            this.width = width;
-            this.height = height;
+        public Builder setPaperSize(double width, double height) {
+            setWidth(width);
+            setHeight(height);
             return this;
         }
 
         @ToBePublicApi
-        public Builder withLabelSize(double labelWidth, double labelHeight) {
-            this.tileWidth = labelWidth;
-            this.tileHeight = labelHeight;
+        public Builder setLabelSize(double labelWidth, double labelHeight) {
+            setTileWidth(labelWidth);
+            setTileHeight(labelHeight);
             return this;
         }
 
         @ToBePublicApi
-        public Builder withLabelOffset(double labelOffsetX, double labelOffsetY) {
-            this.tileOffsetX = labelOffsetX;
-            this.tileOffsetY = labelOffsetY;
+        public Builder setLabelOffset(double labelOffsetX, double labelOffsetY) {
+            setTileOffsetX(labelOffsetX);
+            setTileOffsetY(labelOffsetY);
             return this;
         }
 
         @ToBePublicApi
-        public Builder withLabelDelta(double labelDeltaX, double labelDeltaY) {
-            this.tileDeltaX = labelDeltaX;
-            this.tileDeltaY = labelDeltaY;
+        public Builder setLabelDelta(double labelDeltaX, double labelDeltaY) {
+            setTileDeltaX(labelDeltaX);
+            setTileDeltaY(labelDeltaY);
             return this;
         }
 
         @ToBePublicApi
-        public Builder withWidth(double width) {
-            this.width = width;
-            return this;
-        }
+        public abstract Builder setWidth(double width);
 
         @ToBePublicApi
-        public Builder withHeight(double height) {
-            this.height = height;
-            return this;
-        }
+        public abstract Builder setHeight(double height);
 
         @ToBePublicApi
-        public Builder withTileOffsetX(double tileOffsetX) {
-            this.tileOffsetX = tileOffsetX;
-            return this;
-        }
+        public abstract Builder setTileOffsetX(double tileOffsetX);
 
         @ToBePublicApi
-        public Builder withTileOffsetY(double tileOffsetY) {
-            this.tileOffsetY = tileOffsetY;
-            return this;
-        }
+        public abstract Builder setTileOffsetY(double tileOffsetY);
 
         @ToBePublicApi
-        public Builder withTileWidth(double tileWidth) {
-            this.tileWidth = tileWidth;
-            return this;
-        }
+        public abstract Builder setTileWidth(double tileWidth);
 
         @ToBePublicApi
-        public Builder withTileHeight(double tileHeight) {
-            this.tileHeight = tileHeight;
-            return this;
-        }
+        public abstract Builder setTileHeight(double tileHeight);
 
         @ToBePublicApi
-        public Builder withTileDeltaX(double tileDeltaX) {
-            this.tileDeltaX = tileDeltaX;
-            return this;
-        }
+        public abstract Builder setTileDeltaX(double tileDeltaX);
 
         @ToBePublicApi
-        public Builder withTileDeltaY(double tileDeltaY) {
-            this.tileDeltaY = tileDeltaY;
-            return this;
-        }
+        public abstract Builder setTileDeltaY(double tileDeltaY);
 
         @ToBePublicApi
-        public TiledPaper build() {
-            TiledPaper paper = new TiledPaper();
-            paper.width = this.width;
-            paper.height = this.height;
-            paper.tileOffsetX = this.tileOffsetX;
-            paper.tileOffsetY = this.tileOffsetY;
-            paper.tileWidth = this.tileWidth;
-            paper.tileHeight = this.tileHeight;
-            paper.tileDeltaX = this.tileDeltaX;
-            paper.tileDeltaY = this.tileDeltaY;
-            return paper;
-        }
+        public abstract TiledPaper build();
     }
 
     /**
@@ -172,6 +107,6 @@ public class TiledPaper {
      */
     @ToBePublicApi
     public static Builder builder() {
-        return new Builder();
+        return new AutoValue_TiledPaper.Builder();
     }
 }

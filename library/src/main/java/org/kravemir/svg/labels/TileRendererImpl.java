@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of {@link TileRenderer}
@@ -197,7 +198,14 @@ public class TileRendererImpl implements TileRenderer {
      */
 
     @Override
-    public List<SVGDocument> render(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
+    public List<String> render(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
+        return renderAsSVGDocument(paper, labels, options)
+                .stream()
+                .map(TileRendererImpl::documentToString)
+                .collect(Collectors.toList());
+    }
+
+    public List<SVGDocument> renderAsSVGDocument(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
 
         ArrayList<SVGDocument> documents = new ArrayList<>();
         TilePositioner positioner = new TilePositioner(paper, options);
@@ -255,7 +263,7 @@ public class TileRendererImpl implements TileRenderer {
 
     @Override
     public String render(TiledPaper paper, String SVG) {
-        LabelGroup l = LabelGroup.builder().withTemplate(SVG).fillPage().build();
-        return documentToString(render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0));
+        LabelGroup l = LabelGroup.builder().setTemplate(SVG).fillPage().build();
+        return render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0);
     }
 }
