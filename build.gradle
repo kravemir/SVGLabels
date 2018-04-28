@@ -84,11 +84,32 @@ subprojects {
 
                 pom.withXml {
                     asNode().with {
+                        appendNode('packaging', 'jar')
+
+                        // TODO: "${groupId}:${artifactId}" not working well
+                        appendNode('name', "${groupId}:${artifactId}")
+                        appendNode('description', 'Java SVG Labels generator')
+                        appendNode('url', 'https://github.com/kravemir/svg-labels')
+
                         appendNode('licenses').with {
                             appendNode('license').with {
                                 appendNode('name', 'Apache License, Version 2.0')
                                 appendNode('url', 'https://www.apache.org/licenses/LICENSE-2.0.txt')
                             }
+                        }
+
+                        appendNode('developers').with {
+                            appendNode('developer').with {
+                                appendNode('name', 'Miroslav Kravec')
+                                appendNode('email', 'kravec.miroslav@gmail.com')
+                                appendNode('organization', null)
+                            }
+                        }
+
+                        appendNode('scm').with {
+                            appendNode('connection', 'scm:git:git://github.com/kravemir/svg-labels.git')
+                            appendNode('developerConnection', 'scm:git:ssh://github.com:kravemir/svg-labels.git')
+                            appendNode('url', 'https://github.com/kravemir/svg-labels/tree/master')
                         }
                     }
                 }
