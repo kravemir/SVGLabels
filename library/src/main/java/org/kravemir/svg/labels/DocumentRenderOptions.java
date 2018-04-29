@@ -3,6 +3,8 @@ package org.kravemir.svg.labels;
 import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
+import java.util.Optional;
+
 /**
  * The <code>DocumentRenderOptions</code> is a value class, and contains rendering options.
  *
@@ -31,7 +33,22 @@ public abstract class DocumentRenderOptions {
 
         public abstract Builder setRenderLabelBorders(boolean renderLabelBorders);
 
-        public abstract DocumentRenderOptions build();
+        abstract Optional<Boolean> isRenderPageBorders();
+        abstract Optional<Boolean> isRenderTileBorders();
+        abstract Optional<Boolean> isRenderLabelBorders();
+
+        abstract DocumentRenderOptions autoBuild();
+
+        public final DocumentRenderOptions build() {
+            if(!isRenderPageBorders().isPresent())
+                setRenderPageBorders(false);
+            if(!isRenderTileBorders().isPresent())
+                setRenderTileBorders(false);
+            if(!isRenderLabelBorders().isPresent())
+                setRenderLabelBorders(false);
+
+            return autoBuild();
+        }
     }
 
 
