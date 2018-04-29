@@ -32,6 +32,12 @@ public class TileCommand implements Runnable {
     private double[] labelOffset;
 
     @Option(
+            arity = "2", names = "--label-delta", paramLabel = "mm",
+            description = "X and Y delta between labels in mm, ie. 5 5"
+    )
+    private double[] labelDelta;
+
+    @Option(
             arity = "2", names = "--label-size", paramLabel = "mm",
             description = "Width and height of label in mm, ie. "
     )
@@ -68,14 +74,10 @@ public class TileCommand implements Runnable {
             double paperHeight = paperSize[1];
             double labelOffsetX = labelOffset[0];
             double labelOffsetY = labelOffset[1];
+            double labelDeltaX = labelDelta[0];
+            double labelDeltaY = labelDelta[1];
             double labelWidth = labelSize[0];
             double labelHeight = labelSize[1];
-
-            System.out.println(String.format("Source:       %s", source));
-            System.out.println(String.format("Target:       %s", target));
-            System.out.println(String.format("Paper size:   %.2f x %.2f [mm]", paperWidth, paperHeight));
-            System.out.println(String.format("Label offset: %.2f + %.2f [mm]", labelOffsetX, labelOffsetY));
-            System.out.println(String.format("Label size:   %.2f x %.2f [mm]", labelWidth, labelHeight));
 
             TileRenderer renderer = new TileRendererImpl();
             String result = renderer.render(
@@ -83,6 +85,7 @@ public class TileCommand implements Runnable {
                             .setPaperSize(paperWidth, paperHeight)
                             .setLabelOffset(labelOffsetX, labelOffsetY)
                             .setLabelSize(labelWidth, labelHeight)
+                            .setLabelDelta(labelDeltaX, labelDeltaY)
                             .build(),
                     IOUtils.toString(new FileInputStream(source))
             );
