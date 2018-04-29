@@ -24,11 +24,11 @@ classes {
     dependsOn createProperties
 }
 
-task fatJar(type: Jar, dependsOn: classes) {
+task executableJar(type: Jar, dependsOn: classes) {
     manifest {
         attributes 'Main-Class': 'org.kravemir.svg.labels.tool.ToolRunner'
     }
-    classifier 'fat-jar'
+    classifier 'executable'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -36,7 +36,7 @@ task fatJar(type: Jar, dependsOn: classes) {
 publishing {
     publications {
         maven(MavenPublication) {
-            artifact fatJar
+            artifact executableJar
         }
     }
 }
