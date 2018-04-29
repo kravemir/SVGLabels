@@ -40,6 +40,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 subprojects { subproject ->
     apply plugin: 'java'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     sourceCompatibility = 1.8
 
@@ -76,6 +77,17 @@ subprojects { subproject ->
         }
     }
 
+    artifacts {
+        archives jar
+        archives sourceJar
+        archives javadocJar
+    }
+
+    signing {
+        useGpgCmd()
+        sign configurations.archives
+    }
+
     publishing {
         publications {
             maven(MavenPublication) {
@@ -89,9 +101,6 @@ subprojects { subproject ->
 
                 pom.withXml {
                     asNode().with {
-                        appendNode('packaging', 'jar')
-
-                        // TODO: "${groupId}:${artifactId}" not working well
                         appendNode('name', "${subproject.group}:${subproject.artifact}")
                         appendNode('description', 'Java SVG Labels generator')
                         appendNode('url', 'https://github.com/kravemir/svg-labels')
@@ -118,6 +127,28 @@ subprojects { subproject ->
                         }
                     }
                 }
+
+                pom.withXml {
+                    def pomFile = file("${project.buildDir}/generated-pom.xml")
+                    writeTo(pomFile)
+                    def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                    artifact(pomAscFile) {
+                        classifier = null
+                        extension = 'pom.asc'
+                    }
+                }
+
+                project.tasks.signArchives.signatureFiles.each {
+                    artifact(it) {
+                        def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
+                        if (matcher.find()) {
+                            classifier = matcher.group(1)
+                        } else {
+                            classifier = null
+                        }
+                        extension = 'jar.asc'
+                    }
+                }
             }
         }
         repositories {
@@ -129,6 +160,15 @@ subprojects { subproject ->
                     password "-- not specified --"
                 }
             }
+        }
+    }
+
+    model {
+        tasks.generatePomFileForMavenPublication {
+            destination = file("$buildDir/generated-pom.xml")
+        }
+        tasks.publishMavenPublicationToSonatypeSnapshotsRepository {
+            dependsOn project.tasks.signArchives
         }
     }
 }
