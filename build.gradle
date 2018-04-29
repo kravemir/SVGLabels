@@ -30,6 +30,10 @@ gradle.taskGraph.whenReady { taskGraph ->
         }
 
         rootProject.subprojects { project ->
+            signing {
+                useGpgCmd()
+            }
+
             project.publishing.repositories.each { repo ->
                 repo.credentials.password = password
             }
@@ -84,8 +88,8 @@ subprojects { subproject ->
     }
 
     signing {
-        useGpgCmd()
         sign configurations.archives
+        required { gradle.taskGraph.hasTask("publishMavenPublicationToSonatypeSnapshotsRepository") }
     }
 
     publishing {
