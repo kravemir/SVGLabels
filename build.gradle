@@ -37,7 +37,7 @@ gradle.taskGraph.whenReady { taskGraph ->
     }
 }
 
-subprojects {
+subprojects { subproject ->
     apply plugin: 'java'
     apply plugin: 'maven-publish'
 
@@ -79,6 +79,11 @@ subprojects {
     publishing {
         publications {
             maven(MavenPublication) {
+                groupId subproject.group
+                artifactId subproject.artifact
+                version project.version
+
+                from components.java
                 artifact sourceJar
                 artifact javadocJar
 
@@ -87,7 +92,7 @@ subprojects {
                         appendNode('packaging', 'jar')
 
                         // TODO: "${groupId}:${artifactId}" not working well
-                        appendNode('name', "${groupId}:${artifactId}")
+                        appendNode('name', "${subproject.group}:${subproject.artifact}")
                         appendNode('description', 'Java SVG Labels generator')
                         appendNode('url', 'https://github.com/kravemir/svg-labels')
 

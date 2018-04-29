@@ -5,6 +5,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
+ext {
+    artifact = "svg-labels-tool"
+}
+
 task createProperties(dependsOn: processResources) {
     doLast {
         File versionPropertiesFile = new File("$buildDir/resources/main/version.properties")
@@ -32,11 +36,6 @@ task fatJar(type: Jar, dependsOn: classes) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId project.group
-            artifactId "svg-labels-tool"
-            version project.version
-
-            from components.java
             artifact fatJar
         }
     }
