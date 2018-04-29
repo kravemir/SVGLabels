@@ -33,6 +33,10 @@ task executableJar(type: Jar, dependsOn: classes) {
     with jar
 }
 
+artifacts {
+    archives executableJar
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
