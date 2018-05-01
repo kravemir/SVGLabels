@@ -7,5 +7,5 @@ cd "${PROJECT_DIRECTORY}"
 
 echo -e "# \`svg-labels\` help\n\n\`\`\`" > docs/help.md
 # TODO: use correct version
-java -jar  ./tool/build/libs/tool-0.1.0-SNAPSHOT-executable.jar --help >> docs/help.md
+java -jar  ./tool/build/libs/tool-0.1.0-executable.jar --help >> docs/help.md
 echo -e "\`\`\`" >> docs/help.md
