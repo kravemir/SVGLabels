@@ -30,6 +30,10 @@ gradle.taskGraph.whenReady { taskGraph ->
         }
 
         rootProject.subprojects { project ->
+            signing {
+                useGpgCmd()
+            }
+
             project.publishing.repositories.each { repo ->
                 repo.credentials.password = password
             }
@@ -37,9 +41,10 @@ gradle.taskGraph.whenReady { taskGraph ->
     }
 }
 
-subprojects {
+subprojects { subproject ->
     apply plugin: 'java'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
 
     sourceCompatibility = 1.8
 
@@ -76,20 +81,76 @@ subprojects {
         }
     }
 
+    artifacts {
+        archives jar
+        archives sourceJar
+        archives javadocJar
+    }
+
+    signing {
+        sign configurations.archives
+        required { gradle.taskGraph.hasTask("publishMavenPublicationToSonatypeSnapshotsRepository") }
+    }
+
     publishing {
         publications {
             maven(MavenPublication) {
+                groupId subproject.group
+                artifactId subproject.artifact
+                version project.version
+
+                from components.java
                 artifact sourceJar
                 artifact javadocJar
 
                 pom.withXml {
                     asNode().with {
+                        appendNode('name', "${subproject.group}:${subproject.artifact}")
+                        appendNode('description', 'Java SVG Labels generator')
+                        appendNode('url', 'https://github.com/kravemir/svg-labels')
+
                         appendNode('licenses').with {
                             appendNode('license').with {
                                 appendNode('name', 'Apache License, Version 2.0')
                                 appendNode('url', 'https://www.apache.org/licenses/LICENSE-2.0.txt')
                             }
                         }
+
+                        appendNode('developers').with {
+                            appendNode('developer').with {
+                                appendNode('name', 'Miroslav Kravec')
+                                appendNode('email', 'kravec.miroslav@gmail.com')
+                                appendNode('organization', null)
+                            }
+                        }
+
+                        appendNode('scm').with {
+                            appendNode('connection', 'scm:git:git://github.com/kravemir/svg-labels.git')
+                            appendNode('developerConnection', 'scm:git:ssh://github.com:kravemir/svg-labels.git')
+                            appendNode('url', 'https://github.com/kravemir/svg-labels/tree/master')
+                        }
+                    }
+                }
+
+                pom.withXml {
+                    def pomFile = file("${project.buildDir}/generated-pom.xml")
+                    writeTo(pomFile)
+                    def pomAscFile = signing.sign(pomFile).signatureFiles[0]
+                    artifact(pomAscFile) {
+                        classifier = null
+                        extension = 'pom.asc'
+                    }
+                }
+
+                project.tasks.signArchives.signatureFiles.each {
+                    artifact(it) {
+                        def matcher = it.file =~ /-(sources|javadoc|executable)\.jar\.asc$/
+                        if (matcher.find()) {
+                            classifier = matcher.group(1)
+                        } else {
+                            classifier = null
+                        }
+                        extension = 'jar.asc'
                     }
                 }
             }
@@ -103,6 +164,15 @@ subprojects {
                     password "-- not specified --"
                 }
             }
+        }
+    }
+
+    model {
+        tasks.generatePomFileForMavenPublication {
+            destination = file("$buildDir/generated-pom.xml")
+        }
+        tasks.publishMavenPublicationToSonatypeSnapshotsRepository {
+            dependsOn project.tasks.signArchives
         }
     }
 }

@@ -11,7 +11,7 @@ script:
  - ./gradlew assemble
  - ./gradlew check
  - ./gradlew build
- - ./gradlew fatJar
+ - ./gradlew executableJar
  - ./bin/generateHelpDocs.sh
  - ./bin/travis_ci_after_build_checks.sh
 

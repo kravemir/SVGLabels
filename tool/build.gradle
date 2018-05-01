@@ -5,6 +5,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
+ext {
+    artifact = "svg-labels-tool"
+}
+
 task createProperties(dependsOn: processResources) {
     doLast {
         File versionPropertiesFile = new File("$buildDir/resources/main/version.properties")
@@ -20,24 +24,23 @@ classes {
     dependsOn createProperties
 }
 
-task fatJar(type: Jar, dependsOn: classes) {
+task executableJar(type: Jar, dependsOn: classes) {
     manifest {
         attributes 'Main-Class': 'org.kravemir.svg.labels.tool.ToolRunner'
     }
-    classifier 'fat-jar'
+    classifier 'executable'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+artifacts {
+    archives executableJar
 }
 
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId project.group
-            artifactId "svg-labels-tool"
-            version project.version
-
-            from components.java
-            artifact fatJar
+            artifact executableJar
         }
     }
 }
