@@ -5,6 +5,9 @@ dependencies {
     compile 'org.apache.xmlgraphics:batik-transcoder:1.8'
     compile 'org.apache.xmlgraphics:batik-anim:1.8'
 
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.5'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+
     testCompile 'org.apache.xmlgraphics:xmlgraphics-commons:2.1'
     testCompile 'org.apache.xmlgraphics:batik-swing:1.8'
     testCompile group: 'commons-io', name: 'commons-io', version: '2.5'

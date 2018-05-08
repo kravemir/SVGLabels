@@ -1,0 +1,13 @@
+{
+  "attributes": [
+    { "key": "name" },
+    { "key": "description" },
+    { "key": "date" }
+  ],
+  "contentReplaceRules": [
+    {
+      "value": "$name",
+      "elementXPath": "TODO"
+    }
+  ]
+}
