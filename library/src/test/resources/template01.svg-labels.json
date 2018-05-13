@@ -7,7 +7,7 @@
   "contentReplaceRules": [
     {
       "value": "$name",
-      "elementXPath": "TODO"
+      "elementXPath": "//*[@id='nameText']"
     }
   ]
 }
