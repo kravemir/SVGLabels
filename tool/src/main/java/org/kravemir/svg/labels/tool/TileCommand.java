@@ -1,17 +1,18 @@
 package org.kravemir.svg.labels.tool;
 
-import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.labels.TileRenderer;
-import org.kravemir.svg.labels.TileRendererImpl;
-import org.kravemir.svg.labels.TiledPaper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
+import org.kravemir.svg.labels.*;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.HashMap;
 
 @Command(
         name = "tile", description = "Tile labels",
@@ -43,17 +44,22 @@ public class TileCommand implements Runnable {
     )
     private double[] labelSize;
 
+    @Option(
+            names = "--instance-json"
+    )
+    private File instanceJsonFile;
+
     @Parameters(
             index = "0", paramLabel = "SOURCE",
             description = "Path of a SVG file containing a label"
     )
-    private String source;
+    private File source;
 
     @Parameters(
             index = "1", paramLabel = "TARGET",
             description = "Path of a SVG file which should be generated"
     )
-    private String target;
+    private File target;
 
 
     @Option(
@@ -79,6 +85,29 @@ public class TileCommand implements Runnable {
             double labelWidth = labelSize[0];
             double labelHeight = labelSize[1];
 
+            String svg = FileUtils.readFileToString(source);
+
+            if(instanceJsonFile != null) {
+                Path sourcePath = source.toPath();
+
+                ObjectMapper mapper = new ObjectMapper();
+
+                LabelTemplateDescriptor descriptor = mapper.readValue(
+                        FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
+                        LabelTemplateDescriptor.class
+                );
+
+                TypeReference<HashMap<String,Object>> hashMapTypeReference
+                        = new TypeReference<HashMap<String,Object>>() {};
+                HashMap<String,String> values = mapper.readValue(
+                        FileUtils.readFileToString(instanceJsonFile),
+                        hashMapTypeReference
+                );
+
+                InstanceRenderer renderer = new InstanceRenderer();
+                svg = renderer.render(svg, descriptor, values);
+            }
+
             TileRenderer renderer = new TileRendererImpl();
             String result = renderer.render(
                     TiledPaper.builder()
@@ -87,13 +116,14 @@ public class TileCommand implements Runnable {
                             .setLabelSize(labelWidth, labelHeight)
                             .setLabelDelta(labelDeltaX, labelDeltaY)
                             .build(),
-                    IOUtils.toString(new FileInputStream(source))
+                    svg
             );
-            IOUtils.write(
-                    result,
-                    new FileOutputStream(new File(target))
+            FileUtils.writeStringToFile(
+                    target,
+                    result
             );
-        } catch (IOException ignored) {
+        } catch (IOException | XPathExpressionException e) {
+            throw new RuntimeException(e);
         }
     }
 }
