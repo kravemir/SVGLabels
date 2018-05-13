@@ -1,31 +1,23 @@
 package org.kravemir.svg.labels;
 
-import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.anim.dom.SVGOMSVGElement;
 import org.apache.batik.dom.svg.SVGContext;
-import org.apache.batik.util.XMLResourceDescriptor;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.svg.SVGDocument;
 import org.w3c.dom.svg.SVGLength;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.kravemir.svg.labels.RenderingUtils.parseSVG;
 
 /**
  * Implementation of {@link TileRenderer}
@@ -64,28 +56,6 @@ public class TileRendererImpl implements TileRenderer {
 
         @Override
         public float getFontSize() { return 0; }
-    }
-
-    static String documentToString(Document doc) {
-        try {
-            StringWriter writer = new StringWriter();
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.transform(new DOMSource(doc), new StreamResult(writer));
-            return writer.toString();
-        }catch (Exception e){
-            return  "";
-        }
-    }
-
-    static SVGDocument parseSVG(String s) {
-        String parser = XMLResourceDescriptor.getXMLParserClassName();
-        SAXSVGDocumentFactory factory = new SAXSVGDocumentFactory(parser);
-        try {
-            return factory.createSVGDocument("", new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
-        } catch (IOException e) {
-            // TODO: do something nicer
-            throw new RuntimeException(s);
-        }
     }
 
     static SVGDocument createSVG() {
@@ -201,7 +171,7 @@ public class TileRendererImpl implements TileRenderer {
     public List<String> render(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
         return renderAsSVGDocument(paper, labels, options)
                 .stream()
-                .map(TileRendererImpl::documentToString)
+                .map(RenderingUtils::documentToString)
                 .collect(Collectors.toList());
     }
 
