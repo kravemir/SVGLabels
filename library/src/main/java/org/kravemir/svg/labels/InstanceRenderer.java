@@ -1,5 +1,6 @@
 package org.kravemir.svg.labels;
 
+import org.kravemir.svg.labels.utils.ExpressionEvaluator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
@@ -13,6 +14,8 @@ import java.util.stream.Stream;
 
 public class InstanceRenderer {
 
+    private final ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
+
     public String render(String svgTemplate,
                          LabelTemplateDescriptor templateDescriptor,
                          Map<String,String> instanceContent) throws XPathExpressionException {
@@ -24,7 +27,7 @@ public class InstanceRenderer {
             XPathExpression elementXPath = xpath.compile(rule.getElementXPath());
             XPathExpression tspanXPath = xpath.compile("*[local-name()='tspan']");
 
-            String value = evaluateValue(rule, instanceContent);
+            String value = expressionEvaluator.evaluateExpression(rule.getValue(), instanceContent);
 
             getNodeStream(document.getRootElement(), elementXPath).forEach(node -> {
                 getNodeStream(node, tspanXPath).forEach(tspanNode -> {
@@ -34,19 +37,6 @@ public class InstanceRenderer {
         }
 
         return RenderingUtils.documentToString(document);
-    }
-
-    private String evaluateValue(LabelTemplateDescriptor.ContentReplaceRule rule, Map<String, String> instanceContent) {
-        Pattern p = Pattern.compile("\\$([a-zA-Z]+)");
-        Matcher m = p.matcher(rule.getValue());
-        StringBuffer sb = new StringBuffer();
-        while (m.find()) {
-            String variableName = m.group(1);
-            String value = instanceContent.get(variableName);
-            m.appendReplacement(sb, value);
-        }
-        m.appendTail(sb);
-        return sb.toString();
     }
 
     private Stream<Node> getNodeStream(Node root, XPathExpression expression){
