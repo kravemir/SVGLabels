@@ -28,11 +28,19 @@ public class InstanceRenderer {
             XPathExpression tspanXPath = xpath.compile("*[local-name()='tspan']");
 
             String value = expressionEvaluator.evaluateExpression(rule.getValue(), instanceContent);
+            String[] valueLines = value.split("\n");
 
             getNodeStream(document.getRootElement(), elementXPath).forEach(node -> {
-                getNodeStream(node, tspanXPath).forEach(tspanNode -> {
-                    tspanNode.setTextContent(value);
-                });
+                NodeList spanNodes = getNodes(node, tspanXPath);
+                int line = 0;
+                for(; line < Math.min(spanNodes.getLength(), valueLines.length); line++ ) {
+                    Node tspanNode = spanNodes.item(line);
+                    tspanNode.setTextContent(valueLines[line]);
+                }
+                for(; line < spanNodes.getLength(); line++ ) {
+                    Node tspanNode = spanNodes.item(line);
+                    tspanNode.setTextContent("");
+                }
             });
         }
 
@@ -40,9 +48,13 @@ public class InstanceRenderer {
     }
 
     private Stream<Node> getNodeStream(Node root, XPathExpression expression){
+        NodeList nodes = getNodes(root, expression);
+        return IntStream.range(0, nodes.getLength()).mapToObj(nodes::item);
+    }
+
+    private NodeList getNodes(Node root, XPathExpression expression){
         try {
-            NodeList nodes = (NodeList) expression.evaluate(root, XPathConstants.NODESET);
-            return IntStream.range(0, nodes.getLength()).mapToObj(nodes::item);
+            return (NodeList) expression.evaluate(root, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
         }

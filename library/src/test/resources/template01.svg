@@ -29,14 +29,18 @@
      id="layer1">
     <text
        id="nameText"
-       y="283.37396"
        x="32.5"
-       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       y="280.29227"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        xml:space="preserve"><tspan
-         style="font-size:6.3499999px;text-align:center;text-anchor:middle;stroke-width:0.26458332"
-         y="283.37396"
          x="32.5"
-         id="tspan4526">Name</tspan></text>
+         y="280.29227"
+         style="font-size:5.64444447px;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan4526">Multiline</tspan><tspan
+         x="32.5"
+         y="287.34781"
+         style="font-size:5.64444447px;text-align:center;text-anchor:middle;stroke-width:0.26458332"
+         id="tspan22">name</tspan></text>
     <text
        id="text4540"
        y="296"
