@@ -1,0 +1,12 @@
+{
+  "attributes": [
+    { "key": "text" },
+    { "key": "text_size" }
+  ],
+  "contentReplaceRules": [
+    {
+      "value": "$text",
+      "elementXPath": "//*[starts-with(@id,'text-')]"
+    }
+  ]
+}

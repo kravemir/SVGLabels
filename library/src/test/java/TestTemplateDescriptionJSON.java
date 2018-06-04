@@ -90,6 +90,36 @@ public class TestTemplateDescriptionJSON {
         assertEquals(1, getCount(instanceDocument, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
     }
 
+    @Test
+    public void testMultipleReplacements() throws IOException, XPathExpressionException {
+        Map<String,String> values = new HashMap<>();
+        values.put("text", "Some multi-line\ntext");
+        values.put("text-size", "TODO");
+
+        LabelTemplateDescriptor descriptor = mapper.readValue(
+                IOUtils.toString(getClass().getResource("/template02.svg-labels.json")),
+                LabelTemplateDescriptor.class
+        );
+
+        InstanceRenderer renderer = new InstanceRenderer();
+        String renderedInstance = renderer.render(
+                IOUtils.toString(getClass().getResource("/template02.svg")),
+                descriptor,
+                values
+        );
+
+        SVGDocument instanceDocument = RenderingUtils.parseSVG(renderedInstance);
+
+        System.out.println(renderedInstance);
+
+        assertEquals(1, getCount(instanceDocument, "//*[@id='text-large']/*[1][text()='Some multi-line']"));
+        assertEquals(1, getCount(instanceDocument, "//*[@id='text-large']/*[2][text()='text']"));
+        assertEquals(1, getCount(instanceDocument, "//*[@id='text-medium']/*[1][text()='Some multi-line']"));
+        assertEquals(1, getCount(instanceDocument, "//*[@id='text-medium']/*[2][text()='text']"));
+        assertEquals(1, getCount(instanceDocument, "//*[@id='text-small']/*[1][text()='Some multi-line']"));
+        assertEquals(1, getCount(instanceDocument, "//*[@id='text-small']/*[2][text()='text']"));
+    }
+
     private int getCount(Document doc, String expression) throws XPathExpressionException {
         return ((NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET)).getLength();
     }
