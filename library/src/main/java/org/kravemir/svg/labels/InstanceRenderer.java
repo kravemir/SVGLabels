@@ -1,11 +1,14 @@
 package org.kravemir.svg.labels;
 
+import org.apache.commons.jexl3.*;
 import org.kravemir.svg.labels.utils.ExpressionEvaluator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 
 import javax.xml.xpath.*;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +33,9 @@ public class InstanceRenderer {
             String value = expressionEvaluator.evaluateExpression(rule.getValue(), instanceContent);
             String[] valueLines = value.split("\n");
 
+            if (!shouldEvaluate(instanceContent, rule))
+                continue;
+
             getNodeStream(document.getRootElement(), elementXPath).forEach(node -> {
                 NodeList spanNodes = getNodes(node, tspanXPath);
                 int line = 0;
@@ -45,6 +51,25 @@ public class InstanceRenderer {
         }
 
         return RenderingUtils.documentToString(document);
+    }
+
+    private boolean shouldEvaluate(Map<String, String> instanceContent, LabelTemplateDescriptor.ContentReplaceRule rule) {
+        if(rule.getIfCondition() == null)
+            return true;
+
+        // Create or retrieve an engine
+        JexlEngine jexl = new JexlBuilder().create();
+
+        // Create an expression
+        String jexlExp = rule.getIfCondition();
+        JexlExpression e = jexl.createExpression( jexlExp );
+
+        // Create a context and add data
+        JexlContext jc = new MapContext();
+        jc.set("instance", Collections.unmodifiableMap(instanceContent));
+
+        // Now evaluate the expression, getting the result
+        return (boolean) e.evaluate(jc);
     }
 
     private Stream<Node> getNodeStream(Node root, XPathExpression expression){

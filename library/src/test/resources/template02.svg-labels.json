@@ -7,6 +7,21 @@
     {
       "value": "$text",
       "elementXPath": "//*[starts-with(@id,'text-')]"
+    },
+    {
+      "value": "",
+      "if": "instance['text_size'] != 'small'",
+      "elementXPath": "//*[starts-with(@id,'text-small')]"
+    },
+    {
+      "value": "",
+      "if": "instance['text_size'] != 'medium'",
+      "elementXPath": "//*[starts-with(@id,'text-medium')]"
+    },
+    {
+      "value": "",
+      "if": "instance['text_size'] != 'large'",
+      "elementXPath": "//*[starts-with(@id,'text-large')]"
     }
   ]
 }

@@ -5,6 +5,9 @@ dependencies {
     compile 'org.apache.xmlgraphics:batik-transcoder:1.8'
     compile 'org.apache.xmlgraphics:batik-anim:1.8'
 
+    compile group: 'org.apache.commons', name: 'commons-jexl3', version: '3.1'
+    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.5'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
 
@@ -12,6 +15,7 @@ dependencies {
     testCompile 'org.apache.xmlgraphics:batik-swing:1.8'
     testCompile group: 'commons-io', name: 'commons-io', version: '2.5'
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
 }
 
 ext {
