@@ -3,6 +3,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.kravemir.svg.labels.InstanceRenderer;
+import org.kravemir.svg.labels.InstanceRendererImpl;
 import org.kravemir.svg.labels.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.RenderingUtils;
 import org.w3c.dom.Document;
@@ -42,7 +43,7 @@ public class TestTemplateDescriptionJSON {
                 LabelTemplateDescriptor.class
         );
 
-        InstanceRenderer renderer = new InstanceRenderer();
+        InstanceRenderer renderer = new InstanceRendererImpl();
         String renderedInstance = renderer.render(
                 IOUtils.toString(getClass().getResource("/template01.svg")),
                 descriptor,
@@ -72,7 +73,7 @@ public class TestTemplateDescriptionJSON {
                 LabelTemplateDescriptor.class
         );
 
-        InstanceRenderer renderer = new InstanceRenderer();
+        InstanceRenderer renderer = new InstanceRendererImpl();
         String renderedInstance = renderer.render(
                 IOUtils.toString(getClass().getResource("/template01.svg")),
                 descriptor,
