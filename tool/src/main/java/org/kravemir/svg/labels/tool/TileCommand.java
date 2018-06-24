@@ -104,7 +104,7 @@ public class TileCommand implements Runnable {
                         hashMapTypeReference
                 );
 
-                InstanceRenderer renderer = new InstanceRenderer();
+                InstanceRenderer renderer = new InstanceRendererImpl();
                 svg = renderer.render(svg, descriptor, values);
             }
 
