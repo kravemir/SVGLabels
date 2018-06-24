@@ -1,5 +1,8 @@
 package org.kravemir.svg.labels.utils;
 
+import org.apache.commons.jexl3.*;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,6 +12,8 @@ public class ExpressionEvaluator {
     private Pattern p = Pattern.compile(
             "\\$(?:([a-zA-Z]+)|\\{([a-zA-Z]+)})"
     );
+
+    private JexlEngine jexl = new JexlBuilder().create();
 
     public String evaluateExpression(String expression, Map<String,String> variables) {
 
@@ -24,5 +29,17 @@ public class ExpressionEvaluator {
         }
         m.appendTail(sb);
         return sb.toString();
+    }
+
+    public Object evaluateExpressionWithJEXL(String expression, Map<String,String> variables) {
+        // Create an expression
+        JexlExpression e = jexl.createExpression( expression );
+
+        // Create a context and add data
+        final JexlContext jc = new MapContext();
+        jc.set("instance", Collections.unmodifiableMap(variables));
+
+        // Now evaluate the expression, getting the result
+        return e.evaluate(jc);
     }
 }

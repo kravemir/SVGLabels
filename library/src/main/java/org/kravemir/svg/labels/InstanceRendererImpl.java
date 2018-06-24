@@ -1,13 +1,11 @@
 package org.kravemir.svg.labels;
 
-import org.apache.commons.jexl3.*;
 import org.kravemir.svg.labels.utils.ExpressionEvaluator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
 
 import javax.xml.xpath.*;
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -55,19 +53,7 @@ public class InstanceRendererImpl implements InstanceRenderer {
         if(rule.getIfCondition() == null)
             return true;
 
-        // Create or retrieve an engine
-        JexlEngine jexl = new JexlBuilder().create();
-
-        // Create an expression
-        String jexlExp = rule.getIfCondition();
-        JexlExpression e = jexl.createExpression( jexlExp );
-
-        // Create a context and add data
-        JexlContext jc = new MapContext();
-        jc.set("instance", Collections.unmodifiableMap(instanceContent));
-
-        // Now evaluate the expression, getting the result
-        return (boolean) e.evaluate(jc);
+        return (boolean) expressionEvaluator.evaluateExpressionWithJEXL(rule.getIfCondition(), instanceContent);
     }
 
     private Stream<Node> getNodeStream(Node root, XPathExpression expression){
