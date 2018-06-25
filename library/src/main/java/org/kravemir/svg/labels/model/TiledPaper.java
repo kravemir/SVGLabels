@@ -1,4 +1,4 @@
-package org.kravemir.svg.labels;
+package org.kravemir.svg.labels.model;
 
 import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;

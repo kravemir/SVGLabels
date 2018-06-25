@@ -1,6 +1,8 @@
 package org.kravemir.svg.labels;
 
+import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.utils.ExpressionEvaluator;
+import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;

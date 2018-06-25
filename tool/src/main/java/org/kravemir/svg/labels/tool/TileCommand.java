@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.kravemir.svg.labels.*;
+import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
+import org.kravemir.svg.labels.model.TiledPaper;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;

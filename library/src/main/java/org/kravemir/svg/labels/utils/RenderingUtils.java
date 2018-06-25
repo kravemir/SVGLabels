@@ -1,4 +1,4 @@
-package org.kravemir.svg.labels;
+package org.kravemir.svg.labels.utils;
 
 import org.apache.batik.anim.dom.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;

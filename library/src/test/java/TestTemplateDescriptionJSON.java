@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kravemir.svg.labels.InstanceRenderer;
 import org.kravemir.svg.labels.InstanceRendererImpl;
-import org.kravemir.svg.labels.LabelTemplateDescriptor;
-import org.kravemir.svg.labels.RenderingUtils;
+import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
+import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.svg.SVGDocument;
@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)

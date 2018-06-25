@@ -4,6 +4,10 @@ import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.batik.anim.dom.SVGOMDocument;
 import org.apache.batik.anim.dom.SVGOMSVGElement;
 import org.apache.batik.dom.svg.SVGContext;
+import org.kravemir.svg.labels.model.DocumentRenderOptions;
+import org.kravemir.svg.labels.model.LabelGroup;
+import org.kravemir.svg.labels.model.TiledPaper;
+import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.kravemir.svg.labels.RenderingUtils.parseSVG;
+import static org.kravemir.svg.labels.utils.RenderingUtils.parseSVG;
 
 /**
  * Implementation of {@link TileRenderer}

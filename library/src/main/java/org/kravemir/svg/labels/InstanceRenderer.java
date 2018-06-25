@@ -1,6 +1,7 @@
 package org.kravemir.svg.labels;
 
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
+import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.util.Map;

@@ -1,7 +1,9 @@
 package org.kravemir.svg.labels;
 
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
-import org.w3c.dom.svg.SVGDocument;
+import org.kravemir.svg.labels.model.DocumentRenderOptions;
+import org.kravemir.svg.labels.model.LabelGroup;
+import org.kravemir.svg.labels.model.TiledPaper;
 
 import java.util.List;
 
