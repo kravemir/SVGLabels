@@ -1,10 +1,13 @@
 package org.kravemir.svg.labels;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @AutoValue
@@ -35,6 +38,10 @@ public abstract class LabelTemplateDescriptor {
         public abstract String getValue();
         public abstract String getElementXPath();
 
+        @Nullable
+        @JsonProperty("if")
+        public abstract String getIfCondition();
+
 
         @AutoValue.Builder
         @JsonPOJOBuilder(withPrefix = "")
@@ -42,8 +49,12 @@ public abstract class LabelTemplateDescriptor {
             public abstract Builder value(String value);
             public abstract Builder elementXPath(String elementXPath);
 
+            @JsonProperty("if")
+            public abstract Builder ifCondition(String ifCondition);
+
             public abstract ContentReplaceRule build();
         }
+
     }
 
 
