@@ -1,6 +1,8 @@
 svg-labels
 ==========
 
+[![Build Status](https://travis-ci.org/kravemir/svg-labels.svg?branch=master)](https://travis-ci.org/kravemir/svg-labels)
+
 The svg-labels project provides a java library and a java tool for generation of documents with labels to print.
 
 ## Usage as a tool
