@@ -8,7 +8,6 @@ import org.kravemir.svg.labels.InstanceRendererImpl;
 import org.kravemir.svg.labels.TileRenderer;
 import org.kravemir.svg.labels.TileRendererImpl;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
-import org.kravemir.svg.labels.model.TiledPaper;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -49,15 +48,6 @@ public class TileCommand implements Runnable {
 
     public void run() {
         try {
-            double paperWidth = paperOptions.getPaperSize()[0];
-            double paperHeight = paperOptions.getPaperSize()[1];
-            double labelOffsetX = paperOptions.getLabelOffset()[0];
-            double labelOffsetY = paperOptions.getLabelOffset()[1];
-            double labelDeltaX = paperOptions.getLabelDelta()[0];
-            double labelDeltaY = paperOptions.getLabelDelta()[1];
-            double labelWidth = paperOptions.getLabelSize()[0];
-            double labelHeight = paperOptions.getLabelSize()[1];
-
             String svg = FileUtils.readFileToString(source);
 
             if(instanceJsonFile != null) {
@@ -83,12 +73,7 @@ public class TileCommand implements Runnable {
 
             TileRenderer renderer = new TileRendererImpl();
             String result = renderer.render(
-                    TiledPaper.builder()
-                            .setPaperSize(paperWidth, paperHeight)
-                            .setLabelOffset(labelOffsetX, labelOffsetY)
-                            .setLabelSize(labelWidth, labelHeight)
-                            .setLabelDelta(labelDeltaX, labelDeltaY)
-                            .build(),
+                    paperOptions.buildPaper(),
                     svg
             );
             FileUtils.writeStringToFile(

@@ -1,5 +1,6 @@
 package org.kravemir.svg.labels.tool;
 
+import org.kravemir.svg.labels.model.TiledPaper;
 import picocli.CommandLine.Option;
 
 public class PaperOptions {
@@ -43,5 +44,23 @@ public class PaperOptions {
 
     public double[] getLabelSize() {
         return labelSize;
+    }
+
+    public TiledPaper buildPaper() {
+        double paperWidth = getPaperSize()[0];
+        double paperHeight = getPaperSize()[1];
+        double labelOffsetX = getLabelOffset()[0];
+        double labelOffsetY = getLabelOffset()[1];
+        double labelDeltaX = getLabelDelta()[0];
+        double labelDeltaY = getLabelDelta()[1];
+        double labelWidth = getLabelSize()[0];
+        double labelHeight = getLabelSize()[1];
+
+        return TiledPaper.builder()
+                .setPaperSize(paperWidth, paperHeight)
+                .setLabelOffset(labelOffsetX, labelOffsetY)
+                .setLabelSize(labelWidth, labelHeight)
+                .setLabelDelta(labelDeltaX, labelDeltaY)
+                .build();
     }
 }
