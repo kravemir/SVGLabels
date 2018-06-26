@@ -1,3 +1,5 @@
+package org.kravemir.svg.labels;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -6,7 +8,6 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kravemir.svg.labels.InstanceRendererImpl;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
