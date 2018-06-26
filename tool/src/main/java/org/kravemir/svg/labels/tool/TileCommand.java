@@ -3,10 +3,12 @@ package org.kravemir.svg.labels.tool;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
-import org.kravemir.svg.labels.*;
+import org.kravemir.svg.labels.InstanceRenderer;
+import org.kravemir.svg.labels.InstanceRendererImpl;
+import org.kravemir.svg.labels.TileRenderer;
+import org.kravemir.svg.labels.TileRendererImpl;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.model.TiledPaper;
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -44,18 +46,6 @@ public class TileCommand implements Runnable {
     )
     private File target;
 
-
-    @Option(
-            names = { "-h", "--help" }, usageHelp = true,
-            description = "display a help message"
-    )
-    private boolean helpRequested = false;
-
-    @Option(
-            names = {"--version"}, versionHelp = true,
-            description = "display version info"
-    )
-    boolean versionInfoRequested;
 
     public void run() {
         try {
