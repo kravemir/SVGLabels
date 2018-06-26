@@ -25,6 +25,8 @@ import java.util.HashMap;
 )
 public class TileCommand implements Runnable {
 
+    private static final TypeReference<HashMap<String,Object>> HASH_MAP_TYPE_REFERENCE = new TypeReference<HashMap<String,Object>>() {};
+
     @Mixin
     private PaperOptions paperOptions;
 
@@ -49,39 +51,36 @@ public class TileCommand implements Runnable {
     public void run() {
         try {
             String svg = FileUtils.readFileToString(source);
-
-            if(instanceJsonFile != null) {
-                Path sourcePath = source.toPath();
-
-                ObjectMapper mapper = new ObjectMapper();
-
-                LabelTemplateDescriptor descriptor = mapper.readValue(
-                        FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
-                        LabelTemplateDescriptor.class
-                );
-
-                TypeReference<HashMap<String,Object>> hashMapTypeReference
-                        = new TypeReference<HashMap<String,Object>>() {};
-                HashMap<String,String> values = mapper.readValue(
-                        FileUtils.readFileToString(instanceJsonFile),
-                        hashMapTypeReference
-                );
-
-                InstanceRenderer renderer = new InstanceRendererImpl();
-                svg = renderer.render(svg, descriptor, values);
-            }
+            svg = processSVGTemplate(svg);
 
             TileRenderer renderer = new TileRendererImpl();
-            String result = renderer.render(
-                    paperOptions.buildPaper(),
-                    svg
-            );
-            FileUtils.writeStringToFile(
-                    target,
-                    result
-            );
+            String result = renderer.render(paperOptions.buildPaper(), svg);
+            FileUtils.writeStringToFile(target, result);
         } catch (IOException | XPathExpressionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String processSVGTemplate(String templateOrImage) throws IOException, XPathExpressionException {
+        if(instanceJsonFile == null) {
+            return templateOrImage;
+        }
+
+        Path sourcePath = source.toPath();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        LabelTemplateDescriptor descriptor = mapper.readValue(
+                FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
+                LabelTemplateDescriptor.class
+        );
+
+        HashMap<String,String> values = mapper.readValue(
+                FileUtils.readFileToString(instanceJsonFile),
+                HASH_MAP_TYPE_REFERENCE
+        );
+
+        InstanceRenderer renderer = new InstanceRendererImpl();
+        return renderer.render(templateOrImage, descriptor, values);
     }
 }
