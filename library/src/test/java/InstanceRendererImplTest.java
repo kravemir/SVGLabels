@@ -10,11 +10,8 @@ import org.kravemir.svg.labels.InstanceRendererImpl;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.svg.SVGDocument;
 
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
@@ -22,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.kravemir.svg.labels.matcher.XPathMatcher.matchesXPath;
 
@@ -58,15 +54,15 @@ public class InstanceRendererImplTest {
                 values
         );
 
-        SVGDocument instanceDocument = RenderingUtils.parseSVG(renderedInstance);
+        Document instanceDocument = RenderingUtils.parseSVG(renderedInstance);
 
         System.out.println(renderedInstance);
 
-        assertEquals(1, getCount(instanceDocument, "//*[@id='nameText']/*[1][text()='JUnit test']"));
-        assertEquals(1, getCount(instanceDocument, "//*[@id='nameText']/*[2][not(text())]"));
-        assertEquals(2, getCount(instanceDocument, "//*[@id='nameText']/*"));
-        assertEquals(1, getCount(instanceDocument, "//*[@id='text4540']/*[text()='Test replacement of texts']"));
-        assertEquals(1, getCount(instanceDocument, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[1][text()='JUnit test']"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[2][not(text())]"));
+        assertThat(instanceDocument, matchesXPath( 2, "//*[@id='nameText']/*"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4540']/*[text()='Test replacement of texts']"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
     }
 
     @Test
@@ -87,20 +83,20 @@ public class InstanceRendererImplTest {
                 values
         );
 
-        SVGDocument instanceDocument = RenderingUtils.parseSVG(renderedInstance);
+        Document instanceDocument = RenderingUtils.parseSVG(renderedInstance);
 
         System.out.println(renderedInstance);
 
-        assertEquals(1, getCount(instanceDocument, "//*[@id='nameText']/*[1][text()='Line no. 01']"));
-        assertEquals(1, getCount(instanceDocument, "//*[@id='nameText']/*[2][text()='.. line no 02 ..']"));
-        assertEquals(2, getCount(instanceDocument, "//*[@id='nameText']/*"));
-        assertEquals(1, getCount(instanceDocument, "//*[@id='text4540']/*[text()='Test replacement of texts']"));
-        assertEquals(1, getCount(instanceDocument, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[1][text()='Line no. 01']"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[2][text()='.. line no 02 ..']"));
+        assertThat(instanceDocument, matchesXPath( 2, "//*[@id='nameText']/*"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4540']/*[text()='Test replacement of texts']"));
+        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
     }
 
     @Test
     @Parameters
-    public void testMultipleReplacements(String size, Matcher<? super SVGDocument> matcher) throws IOException, XPathExpressionException {
+    public void testMultipleReplacements(String size, Matcher<? super Document> matcher) throws IOException, XPathExpressionException {
         Map<String,String> values = new HashMap<>();
         values.put("text", "Some multi-line\ntext");
         values.put("text_size", size);
@@ -116,7 +112,7 @@ public class InstanceRendererImplTest {
                 values
         );
 
-        SVGDocument instanceDocument = RenderingUtils.parseSVG(renderedInstance);
+        Document instanceDocument = RenderingUtils.parseSVG(renderedInstance);
 
         System.out.println(renderedInstance);
 
@@ -159,9 +155,4 @@ public class InstanceRendererImplTest {
                 )},
         };
     }
-
-    private int getCount(Document doc, String expression) throws XPathExpressionException {
-        return ((NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET)).getLength();
-    }
-
 }
