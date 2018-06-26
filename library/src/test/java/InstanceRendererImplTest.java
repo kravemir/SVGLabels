@@ -26,15 +26,17 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
-public class TestTemplateDescriptionJSON {
+public class InstanceRendererImplTest {
 
     private XPath xpath;
     private ObjectMapper mapper;
+    private InstanceRendererImpl renderer;
 
     @Before
     public void setUp() throws Exception {
         xpath = XPathFactory.newInstance().newXPath();
         mapper = new ObjectMapper();
+        renderer = new InstanceRendererImpl();
     }
 
     @Test
@@ -49,7 +51,6 @@ public class TestTemplateDescriptionJSON {
                 LabelTemplateDescriptor.class
         );
 
-        InstanceRenderer renderer = new InstanceRendererImpl();
         String renderedInstance = renderer.render(
                 IOUtils.toString(getClass().getResource("/template01.svg")),
                 descriptor,
@@ -79,7 +80,6 @@ public class TestTemplateDescriptionJSON {
                 LabelTemplateDescriptor.class
         );
 
-        InstanceRenderer renderer = new InstanceRendererImpl();
         String renderedInstance = renderer.render(
                 IOUtils.toString(getClass().getResource("/template01.svg")),
                 descriptor,
@@ -109,7 +109,6 @@ public class TestTemplateDescriptionJSON {
                 LabelTemplateDescriptor.class
         );
 
-        InstanceRenderer renderer = new InstanceRendererImpl();
         String renderedInstance = renderer.render(
                 IOUtils.toString(getClass().getResource("/template02.svg")),
                 descriptor,
