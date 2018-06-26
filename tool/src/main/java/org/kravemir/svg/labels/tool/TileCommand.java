@@ -6,7 +6,9 @@ import org.apache.commons.io.FileUtils;
 import org.kravemir.svg.labels.*;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.model.TiledPaper;
+import picocli.CommandLine;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -22,29 +24,8 @@ import java.util.HashMap;
 )
 public class TileCommand implements Runnable {
 
-    @Option(
-            arity = "2", names = "--paper-size", paramLabel = "mm",
-            description = "Width and height of the paper in mm, ie. 210 297 for A4 paper portrait"
-    )
-    private double[] paperSize;
-
-    @Option(
-            arity = "2", names = "--label-offset", paramLabel = "mm",
-            description = "X and Y offset of the first label in mm, ie. 5 5"
-    )
-    private double[] labelOffset;
-
-    @Option(
-            arity = "2", names = "--label-delta", paramLabel = "mm",
-            description = "X and Y delta between labels in mm, ie. 5 5"
-    )
-    private double[] labelDelta;
-
-    @Option(
-            arity = "2", names = "--label-size", paramLabel = "mm",
-            description = "Width and height of label in mm, ie. "
-    )
-    private double[] labelSize;
+    @Mixin
+    private PaperOptions paperOptions;
 
     @Option(
             names = "--instance-json"
@@ -78,14 +59,14 @@ public class TileCommand implements Runnable {
 
     public void run() {
         try {
-            double paperWidth = paperSize[0];
-            double paperHeight = paperSize[1];
-            double labelOffsetX = labelOffset[0];
-            double labelOffsetY = labelOffset[1];
-            double labelDeltaX = labelDelta[0];
-            double labelDeltaY = labelDelta[1];
-            double labelWidth = labelSize[0];
-            double labelHeight = labelSize[1];
+            double paperWidth = paperOptions.getPaperSize()[0];
+            double paperHeight = paperOptions.getPaperSize()[1];
+            double labelOffsetX = paperOptions.getLabelOffset()[0];
+            double labelOffsetY = paperOptions.getLabelOffset()[1];
+            double labelDeltaX = paperOptions.getLabelDelta()[0];
+            double labelDeltaY = paperOptions.getLabelDelta()[1];
+            double labelWidth = paperOptions.getLabelSize()[0];
+            double labelHeight = paperOptions.getLabelSize()[1];
 
             String svg = FileUtils.readFileToString(source);
 
