@@ -12,9 +12,7 @@ import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
 
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +24,11 @@ import static org.kravemir.svg.labels.matcher.XPathMatcher.matchesXPath;
 @RunWith(JUnitParamsRunner.class)
 public class InstanceRendererImplTest {
 
-    private XPath xpath;
     private ObjectMapper mapper;
     private InstanceRendererImpl renderer;
 
     @Before
     public void setUp() throws Exception {
-        xpath = XPathFactory.newInstance().newXPath();
         mapper = new ObjectMapper();
         renderer = new InstanceRendererImpl();
     }
