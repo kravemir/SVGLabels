@@ -2,6 +2,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class InstanceRendererImplTest {
@@ -120,7 +123,7 @@ public class InstanceRendererImplTest {
         System.out.println(renderedInstance);
 
         for(XPathCheck check : xPathChecks) {
-            assertEquals(check.rule, check.count, getCount(instanceDocument, check.rule));
+            assertThat(instanceDocument, check);
         }
     }
 
@@ -165,13 +168,38 @@ public class InstanceRendererImplTest {
         return ((NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET)).getLength();
     }
 
-    private static class XPathCheck {
+    private static class XPathCheck extends TypeSafeMatcher<Document> {
+        private static final XPath XPATH = XPathFactory.newInstance().newXPath();
+
         public final int count;
         public final String rule;
 
         public XPathCheck(int count, String rule) {
             this.count = count;
             this.rule = rule;
+        }
+
+        @Override
+        protected boolean matchesSafely(Document document) {
+            return count == getCount(document, rule);
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("matches " + count + " times `" + rule + "`");
+        }
+
+        @Override
+        protected void describeMismatchSafely(Document document, Description mismatchDescription) {
+            mismatchDescription.appendText("rule matched document " + getCount(document, rule) + " time(s)");
+        }
+
+        private int getCount(Document doc, String expression) {
+            try {
+                return ((NodeList) XPATH.evaluate(expression, doc, XPathConstants.NODESET)).getLength();
+            } catch (XPathExpressionException e) {
+                throw new RuntimeException("This shouldn't happen", e);
+            }
         }
     }
 }
