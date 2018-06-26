@@ -2,12 +2,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kravemir.svg.labels.InstanceRenderer;
 import org.kravemir.svg.labels.InstanceRendererImpl;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.utils.RenderingUtils;
@@ -20,13 +18,13 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.kravemir.svg.labels.matcher.XPathMatcher.matchesXPath;
 
 @RunWith(JUnitParamsRunner.class)
 public class InstanceRendererImplTest {
@@ -102,7 +100,7 @@ public class InstanceRendererImplTest {
 
     @Test
     @Parameters
-    public void testMultipleReplacements(String size, List<XPathCheck> xPathChecks ) throws IOException, XPathExpressionException {
+    public void testMultipleReplacements(String size, Matcher<? super SVGDocument> matcher) throws IOException, XPathExpressionException {
         Map<String,String> values = new HashMap<>();
         values.put("text", "Some multi-line\ntext");
         values.put("text_size", size);
@@ -122,44 +120,42 @@ public class InstanceRendererImplTest {
 
         System.out.println(renderedInstance);
 
-        for(XPathCheck check : xPathChecks) {
-            assertThat(instanceDocument, check);
-        }
+        assertThat(instanceDocument, matcher);
     }
 
     private static Object[] parametersForTestMultipleReplacements() {
         return new Object[]{
-                new Object[] { "unknown", Arrays.asList(
-                        new XPathCheck(1, "//*[@id='text-large']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-large']/*[2][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[2][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[2][not(text())]")
+                new Object[] { "unknown", allOf(
+                        matchesXPath(1, "//*[@id='text-large']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-large']/*[2][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[2][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-small']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-small']/*[2][not(text())]")
                 )},
-                new Object[] { "large", Arrays.asList(
-                        new XPathCheck(1, "//*[@id='text-large']/*[1][text()='Some multi-line']"),
-                        new XPathCheck(1, "//*[@id='text-large']/*[2][text()='text']"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[2][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[2][not(text())]")
+                new Object[] { "large", allOf(
+                        matchesXPath(1, "//*[@id='text-large']/*[1][text()='Some multi-line']"),
+                        matchesXPath(1, "//*[@id='text-large']/*[2][text()='text']"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[2][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-small']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-small']/*[2][not(text())]")
                 )},
-                new Object[] { "medium", Arrays.asList(
-                        new XPathCheck(1, "//*[@id='text-large']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-large']/*[2][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[1][text()='Some multi-line']"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[2][text()='text']"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[2][not(text())]")
+                new Object[] { "medium", allOf(
+                        matchesXPath(1, "//*[@id='text-large']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-large']/*[2][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[1][text()='Some multi-line']"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[2][text()='text']"),
+                        matchesXPath(1, "//*[@id='text-small']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-small']/*[2][not(text())]")
                 )},
-                new Object[] { "small", Arrays.asList(
-                        new XPathCheck(1, "//*[@id='text-large']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-large']/*[2][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[1][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-medium']/*[2][not(text())]"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[1][text()='Some multi-line']"),
-                        new XPathCheck(1, "//*[@id='text-small']/*[2][text()='text']")
+                new Object[] { "small", allOf(
+                        matchesXPath(1, "//*[@id='text-large']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-large']/*[2][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[1][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-medium']/*[2][not(text())]"),
+                        matchesXPath(1, "//*[@id='text-small']/*[1][text()='Some multi-line']"),
+                        matchesXPath(1, "//*[@id='text-small']/*[2][text()='text']")
                 )},
         };
     }
@@ -168,38 +164,4 @@ public class InstanceRendererImplTest {
         return ((NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET)).getLength();
     }
 
-    private static class XPathCheck extends TypeSafeMatcher<Document> {
-        private static final XPath XPATH = XPathFactory.newInstance().newXPath();
-
-        public final int count;
-        public final String rule;
-
-        public XPathCheck(int count, String rule) {
-            this.count = count;
-            this.rule = rule;
-        }
-
-        @Override
-        protected boolean matchesSafely(Document document) {
-            return count == getCount(document, rule);
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("matches " + count + " times `" + rule + "`");
-        }
-
-        @Override
-        protected void describeMismatchSafely(Document document, Description mismatchDescription) {
-            mismatchDescription.appendText("rule matched document " + getCount(document, rule) + " time(s)");
-        }
-
-        private int getCount(Document doc, String expression) {
-            try {
-                return ((NodeList) XPATH.evaluate(expression, doc, XPathConstants.NODESET)).getLength();
-            } catch (XPathExpressionException e) {
-                throw new RuntimeException("This shouldn't happen", e);
-            }
-        }
-    }
 }
