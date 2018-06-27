@@ -99,6 +99,29 @@ public class TileRendererImpl implements TileRenderer {
         return lw.getValueInSpecifiedUnits();
     }
 
+    static class LabelTemplate {
+        Element templateRoot = null;
+        double labelW = 0, labelH = 0;
+        double labelOffsetX = 0, labelOffsetY = 0;
+
+        public static LabelTemplate create(String svg, TiledPaper paper) {
+            LabelTemplate template = new LabelTemplate();
+            template.load(svg, paper);
+            return template;
+        }
+
+        public void load(String svg, TiledPaper paper) {
+            Document templateDoc = parseSVG(svg);
+            if (templateDoc != null) {
+                templateRoot = templateDoc.getDocumentElement();
+                labelW = length(templateRoot.getAttributeNS(null, "width"));
+                labelH = length(templateRoot.getAttributeNS(null, "height"));
+                labelOffsetX = (paper.getTileWidth() - labelW) / 2;
+                labelOffsetY = (paper.getTileHeight() - labelH) / 2;
+            }
+        }
+    }
+
     static class LabelDocumentBuilder {
         private SVGDocument document;
         private TiledPaper paper;
@@ -132,21 +155,22 @@ public class TileRendererImpl implements TileRenderer {
             y = paper.getTileOffsetY();
         }
 
-        void placeLabel(Element templateRoot, double labelW, double labelH, double labelOffsetX, double labelOffsetY) {
+
+        public void placeLabel(LabelTemplate template) {
             Element root = document.getDocumentElement();
 
-            if(options.isRenderTileBorders())
+            if( options.isRenderTileBorders())
                 document.getDocumentElement().appendChild(createRect(document,x , y, paper.getTileWidth(), paper.getTileHeight()));
 
             if (options.isRenderLabelBorders())
-                root.appendChild(createRect(document, x + labelOffsetX, y + labelOffsetY, labelW, labelH));
+                root.appendChild(createRect(document, x + template.labelOffsetX, y + template.labelOffsetY, template.labelW, template.labelH));
 
-            Element label = (Element) templateRoot.cloneNode(true);
+            Element label = (Element) template.templateRoot.cloneNode(true);
             document.adoptNode(label);
-            label.setAttributeNS(null, "x", length(x + labelOffsetX));
-            label.setAttributeNS(null, "y", length(y + labelOffsetY));
-            label.setAttributeNS(null, "width", length(labelW));
-            label.setAttributeNS(null, "height", length(labelH));
+            label.setAttributeNS(null, "x", length(x + template.labelOffsetX));
+            label.setAttributeNS(null, "y", length(y + template.labelOffsetY));
+            label.setAttributeNS(null, "width", length(template.labelW));
+            label.setAttributeNS(null, "height", length(template.labelH));
             root.appendChild(label);
 
             nextPosition();
@@ -190,30 +214,19 @@ public class TileRendererImpl implements TileRenderer {
     public List<SVGDocument> renderAsSVGDocument(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
 
         ArrayList<SVGDocument> documents = new ArrayList<>();
-        LabelDocumentBuilder positioner = new LabelDocumentBuilder(paper, options);
-        positioner.startDocument();
+        LabelDocumentBuilder builder = new LabelDocumentBuilder(paper, options);
+        builder.startDocument();
 
         for(LabelGroup l : labels){
-
-            Document templateDoc = parseSVG(l.getTemplate());
-            Element templateRoot = null;
-            double labelW = 0, labelH = 0;
-            double labelOffsetX = 0, labelOffsetY = 0;
-            if(templateDoc != null){
-                templateRoot = templateDoc.getDocumentElement();
-                labelW = length(templateRoot.getAttributeNS(null,"width"));
-                labelH = length(templateRoot.getAttributeNS(null,"height"));
-                labelOffsetX = (paper.getTileWidth() - labelW) / 2;
-                labelOffsetY = (paper.getTileHeight()- labelH) / 2;
-            }
+            LabelTemplate template = LabelTemplate.create(l.getTemplate(), paper);
 
             for(int n = 0; n < l.getCount() || l.shouldFillPage(); n++){
-                positioner.placeLabel(templateRoot, labelW, labelH, labelOffsetX, labelOffsetY);
+                builder.placeLabel(template);
 
                 //create new page if current is full
-                if(positioner.isFull()){
-                    documents.add(positioner.getDocument());
-                    positioner.startDocument();
+                if(builder.isFull()){
+                    documents.add(builder.getDocument());
+                    builder.startDocument();
 
                     //move to next template if page is full
                     if(l.shouldFillPage()) break;
