@@ -99,19 +99,20 @@ public class TileRendererImpl implements TileRenderer {
         return lw.getValueInSpecifiedUnits();
     }
 
-    static class TilePositioner{
+    static class LabelDocumentBuilder {
         private SVGDocument document;
         private TiledPaper paper;
         private double x, y;
         private DocumentRenderOptions options;
+        boolean full;
 
-        TilePositioner(TiledPaper p, DocumentRenderOptions m){
+        LabelDocumentBuilder(TiledPaper p, DocumentRenderOptions m){
             paper = p;
             options = m;
             x = -1;
         }
 
-        void createDocument(){
+        void startDocument(){
             DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
             document = (SVGDocument) impl.createDocument(SVGDOMImplementation.SVG_NAMESPACE_URI, "svg", null);
             Element root = document.getDocumentElement();
@@ -125,45 +126,52 @@ public class TileRendererImpl implements TileRenderer {
                 root.appendChild(createRect(document,0,0, paper.getWidth(), paper.getHeight()));
 
             x = -1;
+
+            full = false;
+            x = paper.getTileOffsetX();
+            y = paper.getTileOffsetY();
         }
 
-        boolean empty(){
-            return x < 0;
-        }
-
-        boolean nextPosition(){
-            if(document == null) return false;
-
-            if(x < 0){
-                x = paper.getTileOffsetX();
-                y = paper.getTileOffsetY();
-            }else {
-                x += paper.getTileWidth() + paper.getTileDeltaX();
-                if (x > paper.getWidth() - paper.getTileWidth()) {
-                    x = paper.getTileOffsetX();
-
-                    y += paper.getTileHeight() + paper.getTileDeltaY();
-                    if (y > paper.getHeight() - paper.getTileHeight())
-                        return false;
-                }
-            }
+        void placeLabel(Element templateRoot, double labelW, double labelH, double labelOffsetX, double labelOffsetY) {
+            Element root = document.getDocumentElement();
 
             if(options.isRenderTileBorders())
                 document.getDocumentElement().appendChild(createRect(document,x , y, paper.getTileWidth(), paper.getTileHeight()));
 
-            return true;
+            if (options.isRenderLabelBorders())
+                root.appendChild(createRect(document, x + labelOffsetX, y + labelOffsetY, labelW, labelH));
+
+            Element label = (Element) templateRoot.cloneNode(true);
+            document.adoptNode(label);
+            label.setAttributeNS(null, "x", length(x + labelOffsetX));
+            label.setAttributeNS(null, "y", length(y + labelOffsetY));
+            label.setAttributeNS(null, "width", length(labelW));
+            label.setAttributeNS(null, "height", length(labelH));
+            root.appendChild(label);
+
+            nextPosition();
+        }
+
+        private void nextPosition(){
+            if(isFull()) return;
+
+            x += paper.getTileWidth() + paper.getTileDeltaX();
+            if (x > paper.getWidth() - paper.getTileWidth()) {
+                x = paper.getTileOffsetX();
+                y += paper.getTileHeight() + paper.getTileDeltaY();
+
+                if (y > paper.getHeight() - paper.getTileHeight()) {
+                    full = true;
+                }
+            }
+        }
+
+        boolean isFull() {
+            return document == null || full;
         }
 
         SVGDocument getDocument() {
             return document;
-        }
-
-        double getX() {
-            return x;
-        }
-
-        double getY() {
-            return y;
         }
     }
 
@@ -182,55 +190,36 @@ public class TileRendererImpl implements TileRenderer {
     public List<SVGDocument> renderAsSVGDocument(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
 
         ArrayList<SVGDocument> documents = new ArrayList<>();
-        TilePositioner positioner = new TilePositioner(paper, options);
-        positioner.createDocument();
+        LabelDocumentBuilder positioner = new LabelDocumentBuilder(paper, options);
+        positioner.startDocument();
 
         for(LabelGroup l : labels){
 
             Document templateDoc = parseSVG(l.getTemplate());
             Element templateRoot = null;
             double labelW = 0, labelH = 0;
+            double labelOffsetX = 0, labelOffsetY = 0;
             if(templateDoc != null){
                 templateRoot = templateDoc.getDocumentElement();
                 labelW = length(templateRoot.getAttributeNS(null,"width"));
                 labelH = length(templateRoot.getAttributeNS(null,"height"));
+                labelOffsetX = (paper.getTileWidth() - labelW) / 2;
+                labelOffsetY = (paper.getTileHeight()- labelH) / 2;
             }
-            double labelOffsetX = (paper.getTileWidth() - labelW) / 2;
-            double labelOffsetY = (paper.getTileHeight()- labelH) / 2;
 
             for(int n = 0; n < l.getCount() || l.shouldFillPage(); n++){
+                positioner.placeLabel(templateRoot, labelW, labelH, labelOffsetX, labelOffsetY);
 
                 //create new page if current is full
-                if(!positioner.nextPosition()){
+                if(positioner.isFull()){
                     documents.add(positioner.getDocument());
-                    positioner.createDocument();
+                    positioner.startDocument();
 
                     //move to next template if page is full
                     if(l.shouldFillPage()) break;
-
-                    positioner.nextPosition();
-                }
-
-                Document doc = positioner.getDocument();
-                Element root = doc.getDocumentElement();
-
-                if (options.isRenderLabelBorders())
-                    root.appendChild(createRect(doc, positioner.getX() + labelOffsetX, positioner.getY() + labelOffsetY, labelW, labelH));
-
-                if(templateDoc != null) {
-                    Element label = (Element) templateRoot.cloneNode(true);
-                    doc.adoptNode(label);
-                    label.setAttributeNS(null, "x", length(positioner.getX() + labelOffsetX));
-                    label.setAttributeNS(null, "y", length(positioner.getY() + labelOffsetY));
-                    label.setAttributeNS(null, "width", length(labelW));
-                    label.setAttributeNS(null, "height", length(labelH));
-                    root.appendChild(label);
                 }
             }
         }
-
-        if(!positioner.empty())
-            documents.add(positioner.getDocument());
 
         return documents;
     }
