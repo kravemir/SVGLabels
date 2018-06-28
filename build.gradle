@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.palantir:jacoco-coverage:0.4.0"
+    }
+}
+
 import groovy.swing.SwingBuilder
 
 gradle.taskGraph.whenReady { taskGraph ->
@@ -45,6 +56,9 @@ subprojects { subproject ->
     apply plugin: 'java'
     apply plugin: 'maven-publish'
     apply plugin: 'signing'
+
+    apply plugin: 'com.palantir.jacoco-coverage'
+    apply plugin: 'com.palantir.jacoco-full-report'
 
     sourceCompatibility = 1.8
 
