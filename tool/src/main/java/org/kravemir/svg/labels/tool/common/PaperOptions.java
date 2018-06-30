@@ -1,4 +1,4 @@
-package org.kravemir.svg.labels.tool;
+package org.kravemir.svg.labels.tool.common;
 
 import org.kravemir.svg.labels.model.TiledPaper;
 import picocli.CommandLine.Option;

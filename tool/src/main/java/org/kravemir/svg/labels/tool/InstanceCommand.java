@@ -5,13 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.kravemir.svg.labels.InstanceRenderer;
 import org.kravemir.svg.labels.InstanceRendererImpl;
-import org.kravemir.svg.labels.TileRenderer;
-import org.kravemir.svg.labels.TileRendererImpl;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.tool.common.AbstractCommand;
-import org.kravemir.svg.labels.tool.common.PaperOptions;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
@@ -22,14 +18,11 @@ import java.nio.file.Path;
 import java.util.HashMap;
 
 @Command(
-        name = "tile", description = "Tile labels"
+        name = "instance", description = "Fill label template with instance data"
 )
-public class TileCommand extends AbstractCommand {
+public class InstanceCommand extends AbstractCommand {
 
     private static final TypeReference<HashMap<String,Object>> HASH_MAP_TYPE_REFERENCE = new TypeReference<HashMap<String,Object>>() {};
-
-    @Mixin
-    private PaperOptions paperOptions;
 
     @Option(
             names = "--instance-json"
@@ -53,10 +46,7 @@ public class TileCommand extends AbstractCommand {
         try {
             String svg = FileUtils.readFileToString(source);
             svg = processSVGTemplate(svg);
-
-            TileRenderer renderer = new TileRendererImpl();
-            String result = renderer.render(paperOptions.buildPaper(), svg);
-            FileUtils.writeStringToFile(target, result);
+            FileUtils.writeStringToFile(target, svg);
         } catch (IOException | XPathExpressionException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +54,7 @@ public class TileCommand extends AbstractCommand {
 
     private String processSVGTemplate(String templateOrImage) throws IOException, XPathExpressionException {
         if(instanceJsonFile == null) {
-            return templateOrImage;
+            throw new RuntimeException("JSON file null");
         }
 
         Path sourcePath = source.toPath();
