@@ -1,5 +1,6 @@
 package org.kravemir.svg.labels.rendering;
 
+import org.kravemir.svg.labels.annotations.ToBePublicApi;
 import org.kravemir.svg.labels.model.TiledPaper;
 
 public class TilePositionGenerator {
@@ -50,5 +51,15 @@ public class TilePositionGenerator {
 
     public double getPaperHeight() {
         return paper.getHeight();
+    }
+
+    @ToBePublicApi
+    public double getTileWidth() {
+        return paper.getTileWidth();
+    }
+
+    @ToBePublicApi
+    public double getTileHeight() {
+        return paper.getTileHeight();
     }
 }

@@ -37,23 +37,45 @@ public class LabelDocumentBuilder {
 
 
     public void placeLabel(LabelTemplate template) {
-        Element root = document.getDocumentElement();
+        placeLabelClone(template);
 
         if( options.isRenderTileBorders())
-            document.getDocumentElement().appendChild(RenderingUtils.createRect(document, getX() , getY(), getPaperWidth(), getPaperWidth()));
+            renderTileBorders();
 
         if (options.isRenderLabelBorders())
-            root.appendChild(RenderingUtils.createRect(document, getX() + template.labelOffsetX, getY() + template.labelOffsetY, template.labelW, template.labelH));
+            renderLabelBorders(template);
 
+        positionGenerator.nextPosition();
+    }
+
+    private void placeLabelClone(LabelTemplate template) {
         Element label = (Element) template.templateRoot.cloneNode(true);
         document.adoptNode(label);
         label.setAttributeNS(null, "x", RenderingUtils.length(getX() + template.labelOffsetX));
         label.setAttributeNS(null, "y", RenderingUtils.length(getY() + template.labelOffsetY));
         label.setAttributeNS(null, "width", RenderingUtils.length(template.labelW));
         label.setAttributeNS(null, "height", RenderingUtils.length(template.labelH));
-        root.appendChild(label);
+        document.getRootElement().appendChild(label);
+    }
 
-        positionGenerator.nextPosition();
+    private void renderTileBorders() {
+        document.getRootElement().appendChild(RenderingUtils.createRect(
+                document,
+                getX(),
+                getY(),
+                positionGenerator.getTileWidth(),
+                positionGenerator.getTileHeight())
+        );
+    }
+
+    private void renderLabelBorders(LabelTemplate template) {
+        document.getRootElement().appendChild(RenderingUtils.createRect(
+                document,
+                getX() + template.labelOffsetX,
+                getY() + template.labelOffsetY,
+                template.labelW,
+                template.labelH)
+        );
     }
 
     public SVGDocument getDocument() {
