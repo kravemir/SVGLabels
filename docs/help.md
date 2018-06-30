@@ -1,9 +1,20 @@
 # `svg-labels` help
 
 ```
-Usage: tile [-h] [--version] [--instance-json=<instanceJsonFile>]
-            [--label-delta=mm mm]... [--label-offset=mm mm]... [--label-size=mm
-            mm]... [--paper-size=mm mm]... SOURCE TARGET
+Usage: <main class> [-hv] [COMMAND]
+  -h, --help      display a help message
+  -v, --version   display version info
+Commands:
+  tile      Tile labels
+  instance  Fill label template with instance data
+```
+
+Command `tile`:
+```
+Usage: <main class> tile [-h] [--instance-json=<instanceJsonFile>]
+                         [--label-delta=mm mm]... [--label-offset=mm mm]...
+                         [--label-size=mm mm]... [--paper-size=mm mm]... SOURCE
+                         TARGET
 Tile labels
       SOURCE                 Path of a SVG file containing a label
       TARGET                 Path of a SVG file which should be generated
@@ -14,6 +25,17 @@ Tile labels
       --label-size=mm mm     Width and height of label in mm, ie.
       --paper-size=mm mm     Width and height of the paper in mm, ie. 210 297 for A4
                                paper portrait
-      --version              display version info
   -h, --help                 display a help message
+```
+
+Command `instance`:
+```
+Usage: <main class> instance [-h] [--instance-json=<instanceJsonFile>] SOURCE
+                             TARGET
+Fill label template with instance data
+      SOURCE   Path of a SVG file containing a label
+      TARGET   Path of a SVG file which should be generated
+      --instance-json=<instanceJsonFile>
+
+  -h, --help   display a help message
 ```

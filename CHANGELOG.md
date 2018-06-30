@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- library: simple SVG rendering from template
-- tool: option to render labels from template and content JSON
+- library: instance SVG rendering from template
+- tool: added option to render tiled labels from template and content JSON
+- tool: added `instance` sub-command to render instance label with tiling
+
+## Changed
+- library: lots of refactoring to simplify huge classes
+- tool: moved tiled labels rendering into `tile` sub-command
 
 ## 0.0.1 - 2018-05-01
 ### Added

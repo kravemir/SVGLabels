@@ -16,6 +16,15 @@ public class InstanceRendererImpl implements InstanceRenderer {
 
     private final ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
     private final XPath xpath = XPathFactory.newInstance().newXPath();
+    private final XPathExpression tspanXPath;
+
+    public InstanceRendererImpl() {
+        try {
+            tspanXPath = xpath.compile("*[local-name()='tspan']");
+        } catch (XPathException e) {
+            throw new RuntimeException("This shouldn't have happened!", e);
+        }
+    }
 
     @Override
     public String render(String svgTemplate,
@@ -23,7 +32,6 @@ public class InstanceRendererImpl implements InstanceRenderer {
                          Map<String, String> instanceContent) throws XPathExpressionException {
 
         final SVGDocument document = RenderingUtils.parseSVG(svgTemplate);
-        final XPathExpression tspanXPath = xpath.compile("*[local-name()='tspan']");
 
         for (LabelTemplateDescriptor.ContentReplaceRule rule : templateDescriptor.getContentReplaceRules()) {
             XPathExpression elementXPath = xpath.compile(rule.getElementXPath());
@@ -35,20 +43,24 @@ public class InstanceRendererImpl implements InstanceRenderer {
                 continue;
 
             getNodeStream(document.getRootElement(), elementXPath).forEach(node -> {
-                NodeList spanNodes = getNodes(node, tspanXPath);
-                int line = 0;
-                for(; line < Math.min(spanNodes.getLength(), valueLines.length); line++ ) {
-                    Node tspanNode = spanNodes.item(line);
-                    tspanNode.setTextContent(valueLines[line]);
-                }
-                for(; line < spanNodes.getLength(); line++ ) {
-                    Node tspanNode = spanNodes.item(line);
-                    tspanNode.setTextContent("");
-                }
+                replaceNodeTextContents(node, valueLines);
             });
         }
 
         return RenderingUtils.documentToString(document);
+    }
+
+    private void replaceNodeTextContents(Node node, String[] valueLines) {
+        NodeList spanNodes = getNodes(node, tspanXPath);
+        int line = 0;
+        for(; line < Math.min(spanNodes.getLength(), valueLines.length); line++ ) {
+            Node tspanNode = spanNodes.item(line);
+            tspanNode.setTextContent(valueLines[line]);
+        }
+        for(; line < spanNodes.getLength(); line++ ) {
+            Node tspanNode = spanNodes.item(line);
+            tspanNode.setTextContent("");
+        }
     }
 
     private boolean shouldEvaluate(Map<String, String> instanceContent, LabelTemplateDescriptor.ContentReplaceRule rule) {

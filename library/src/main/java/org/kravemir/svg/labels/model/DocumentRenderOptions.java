@@ -33,22 +33,7 @@ public abstract class DocumentRenderOptions {
 
         public abstract Builder setRenderLabelBorders(boolean renderLabelBorders);
 
-        abstract Optional<Boolean> isRenderPageBorders();
-        abstract Optional<Boolean> isRenderTileBorders();
-        abstract Optional<Boolean> isRenderLabelBorders();
-
-        abstract DocumentRenderOptions autoBuild();
-
-        public final DocumentRenderOptions build() {
-            if(!isRenderPageBorders().isPresent())
-                setRenderPageBorders(false);
-            if(!isRenderTileBorders().isPresent())
-                setRenderTileBorders(false);
-            if(!isRenderLabelBorders().isPresent())
-                setRenderLabelBorders(false);
-
-            return autoBuild();
-        }
+        public abstract DocumentRenderOptions build();
     }
 
 
@@ -58,6 +43,10 @@ public abstract class DocumentRenderOptions {
      * @return new {@link TiledPaper.Builder} instance
      */
     public static Builder builder() {
-        return new AutoValue_DocumentRenderOptions.Builder();
+        Builder builder = new AutoValue_DocumentRenderOptions.Builder();
+        builder.setRenderPageBorders(false);
+        builder.setRenderTileBorders(false);
+        builder.setRenderLabelBorders(false);
+        return builder;
     }
 }

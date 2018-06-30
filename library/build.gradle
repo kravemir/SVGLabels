@@ -1,5 +1,6 @@
 dependencies {
-    compile group: 'javax.xml.parsers', name: 'jaxp-api', version: '1.4.5'
+    compile 'xml-apis:xml-apis-ext:1.3.04'
+
     compile 'org.apache.xmlgraphics:xmlgraphics-commons:2.3'
     compile 'org.apache.xmlgraphics:batik-svg-dom:1.10'
     compile 'org.apache.xmlgraphics:batik-transcoder:1.10'
