@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
-- library: instance SVG rendering from template
+- library: instance SVG rendering from template:
+    - separate template descriptor and instance data
+    - matching text elements with XPath
+    - support for multi-line texts
+    - conditional rule application based on `if` (JEXL) condition
 - tool: added option to render tiled labels from template and content JSON
 - tool: added `instance` sub-command to render instance label with tiling
 
