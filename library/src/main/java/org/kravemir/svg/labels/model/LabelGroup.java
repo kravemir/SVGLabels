@@ -3,6 +3,8 @@ package org.kravemir.svg.labels.model;
 import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
+import java.util.List;
+
 /**
  * The <code>LabelGroup</code> is a value class, and a group of labels.
  *
@@ -13,7 +15,49 @@ import org.kravemir.svg.labels.annotations.ToBePublicApi;
 @ToBePublicApi
 public abstract class LabelGroup {
 
-    private static final int FILL_PAGE = 0;
+    @AutoValue
+    @ToBePublicApi
+    public static abstract class Instance {
+
+        private static final int FILL_PAGE = 0;
+
+        @ToBePublicApi
+        public abstract int getCount();
+
+        @ToBePublicApi
+        public boolean shouldFillPage() {
+            return getCount() == FILL_PAGE;
+        }
+
+        @AutoValue.Builder
+        @ToBePublicApi
+        public abstract static class Builder {
+
+            @ToBePublicApi
+            public abstract Builder setCount(int count);
+
+            @ToBePublicApi
+            public Builder fillPage() {
+                setCount(FILL_PAGE);
+                return this;
+            }
+
+            @ToBePublicApi
+            public abstract Instance build();
+        }
+
+
+        /**
+         * Creates a new instance of a {@link LabelGroup.Builder}
+         *
+         * @return new {@link LabelGroup.Builder} instance
+         */
+        @ToBePublicApi
+        public static Builder builder() {
+            return new AutoValue_LabelGroup_Instance.Builder();
+        }
+
+    }
 
     protected LabelGroup() {
     }
@@ -22,12 +66,10 @@ public abstract class LabelGroup {
     public abstract String getTemplate();
 
     @ToBePublicApi
-    public abstract int getCount();
+    public abstract LabelTemplateDescriptor getTemplateDescriptor();
 
     @ToBePublicApi
-    public boolean shouldFillPage() {
-        return getCount() == FILL_PAGE;
-    }
+    public abstract List<Instance> getInstances();
 
     @AutoValue.Builder
     @ToBePublicApi
@@ -37,13 +79,10 @@ public abstract class LabelGroup {
         public abstract Builder setTemplate(String template);
 
         @ToBePublicApi
-        public abstract Builder setCount(int count);
+        public abstract Builder setTemplateDescriptor(LabelTemplateDescriptor descriptor);
 
         @ToBePublicApi
-        public Builder fillPage() {
-            setCount(FILL_PAGE);
-            return this;
-        }
+        public abstract Builder setInstances(List<Instance> instances);
 
         @ToBePublicApi
         public abstract LabelGroup build();

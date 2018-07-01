@@ -39,16 +39,18 @@ public class TileRendererImpl implements TileRenderer {
         for(LabelGroup l : labels){
             LabelTemplate template = LabelTemplate.create(l.getTemplate(), paper);
 
-            for(int n = 0; n < l.getCount() || l.shouldFillPage(); n++){
-                builder.placeLabel(template);
+            for(LabelGroup.Instance instance : l.getInstances()) {
+                for (int n = 0; n < instance.getCount() || instance.shouldFillPage(); n++) {
+                    builder.placeLabel(template);
 
-                //create new page if current is full
-                if(builder.isFull()){
-                    documents.add(builder.getDocument());
-                    builder.startDocument();
+                    //create new page if current is full
+                    if (builder.isFull()) {
+                        documents.add(builder.getDocument());
+                        builder.startDocument();
 
-                    //move to next template if page is full
-                    if(l.shouldFillPage()) break;
+                        //move to next template if page is full
+                        if (instance.shouldFillPage()) break;
+                    }
                 }
             }
         }
@@ -58,7 +60,10 @@ public class TileRendererImpl implements TileRenderer {
 
     @Override
     public String render(TiledPaper paper, String SVG) {
-        LabelGroup l = LabelGroup.builder().setTemplate(SVG).fillPage().build();
+        LabelGroup l = LabelGroup.builder()
+                .setTemplate(SVG)
+                .setInstances(Collections.singletonList(LabelGroup.Instance.builder().fillPage().build()))
+                .build();
         return render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0);
     }
 }
