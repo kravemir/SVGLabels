@@ -7,12 +7,15 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 @AutoValue
 @JsonAutoDetect
 @JsonDeserialize(builder = AutoValue_LabelTemplateDescriptor.Builder.class)
 public abstract class LabelTemplateDescriptor {
+
+    public static final LabelTemplateDescriptor EMPTY;
 
     @AutoValue
     @JsonAutoDetect
@@ -68,5 +71,12 @@ public abstract class LabelTemplateDescriptor {
         public abstract Builder contentReplaceRules(List<ContentReplaceRule> contentReplaceRules);
 
         public abstract LabelTemplateDescriptor build();
+    }
+
+    static {
+        Builder emptyDescriptorBuilder = new AutoValue_LabelTemplateDescriptor.Builder();
+        emptyDescriptorBuilder.attributes(Collections.emptyList());
+        emptyDescriptorBuilder.contentReplaceRules(Collections.emptyList());
+        EMPTY = emptyDescriptorBuilder.build();
     }
 }

@@ -3,6 +3,7 @@ package org.kravemir.svg.labels.model;
 import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -85,6 +86,11 @@ public abstract class LabelGroup {
         public abstract Builder setInstances(List<Instance> instances);
 
         @ToBePublicApi
+        public final Builder setInstances(Instance ...instances) {
+            return setInstances(Arrays.asList(instances));
+        }
+
+        @ToBePublicApi
         public abstract LabelGroup build();
     }
 
@@ -96,6 +102,6 @@ public abstract class LabelGroup {
      */
     @ToBePublicApi
     public static Builder builder() {
-        return new AutoValue_LabelGroup.Builder();
+        return new AutoValue_LabelGroup.Builder().setTemplateDescriptor(LabelTemplateDescriptor.EMPTY);
     }
 }
