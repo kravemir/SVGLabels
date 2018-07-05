@@ -4,18 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kravemir.svg.labels.model.TiledPaper;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
+import java.util.List;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.kravemir.svg.labels.matcher.XPathMatcher.matchesXPath;
+import static org.kravemir.svg.labels.matcher.NodesMatchingXPath.nodesMatchingXPath;
 
 @RunWith(JUnitParamsRunner.class)
 public class TileRendererImplTest {
@@ -45,9 +49,14 @@ public class TileRendererImplTest {
 
         System.out.println(renderedInstance);
 
-        assertThat(instanceDocument, matchesXPath( expectedCount * 1, "//*[@id='nameText']/*[1][text()='Multiline']"));
-        assertThat(instanceDocument, matchesXPath( expectedCount * 1, "//*[@id='nameText']/*[2][text()='name']"));
-        assertThat(instanceDocument, matchesXPath( expectedCount * 2, "//*[@id='nameText']/*"));
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<List<Node>>allOf(
+                hasSize(expectedCount),
+                everyItem( allOf(
+                        nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
+                        nodesMatchingXPath( ".//*[@id='nameText']/*[2][text()='name']", hasSize(1)),
+                        nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2))
+                ))
+        )));
     }
 
     private Object[] parametersForTestSimpleFullPageInstancing() {
