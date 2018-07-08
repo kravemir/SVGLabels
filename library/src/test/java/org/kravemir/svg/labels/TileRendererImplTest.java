@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,11 +58,7 @@ public class TileRendererImplTest {
 
         assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<List<Node>>allOf(
                 hasSize(expectedCount),
-                everyItem( allOf(
-                        nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
-                        nodesMatchingXPath( ".//*[@id='nameText']/*[2][text()='name']", hasSize(1)),
-                        nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2))
-                ))
+                everyItem( TEMPLATE_01_MATCHER )
         )));
     }
 
@@ -105,16 +102,8 @@ public class TileRendererImplTest {
                 hasSize(expectedCount),
                 contains(
                         Stream.concat(
-                                repeat(1, allOf(
-                                        nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
-                                        nodesMatchingXPath( ".//*[@id='nameText']/*[2][text()='name']", hasSize(1)),
-                                        nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2))
-                                )),
-                                repeat(expectedCount - 1, allOf(
-                                        nodesMatchingXPath( ".//*[@id='text-large']/*[1][text()='Large font']", hasSize(1)),
-                                        nodesMatchingXPath( ".//*[@id='text-large']/*[2][text()='TEXT']", hasSize(1)),
-                                        nodesMatchingXPath( ".//*[@id='text-large']/*", hasSize(2))
-                                ))
+                                repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_02_MATCHER))),
+                                repeat(expectedCount - 1, allOf(TEMPLATE_02_MATCHER, not(TEMPLATE_01_MATCHER)))
                         ).collect(Collectors.toList())
                 )
         )));
@@ -135,4 +124,16 @@ public class TileRendererImplTest {
                 .setLabelDelta(0, 0)
                 .build();
     }
+
+    private static final Matcher<Node> TEMPLATE_01_MATCHER = allOf(
+            nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
+            nodesMatchingXPath( ".//*[@id='nameText']/*[2][text()='name']", hasSize(1)),
+            nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2))
+    );
+
+    private static final Matcher<Node> TEMPLATE_02_MATCHER = allOf(
+            nodesMatchingXPath( ".//*[@id='text-large']/*[1][text()='Large font']", hasSize(1)),
+            nodesMatchingXPath( ".//*[@id='text-large']/*[2][text()='TEXT']", hasSize(1)),
+            nodesMatchingXPath( ".//*[@id='text-large']/*", hasSize(2))
+    );
 }
