@@ -4,7 +4,9 @@ import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The <code>LabelGroup</code> is a value class, and a group of labels.
@@ -26,6 +28,9 @@ public abstract class LabelGroup {
         public abstract int getCount();
 
         @ToBePublicApi
+        public abstract Map<String, String> getInstanceContent();
+
+        @ToBePublicApi
         public boolean shouldFillPage() {
             return getCount() == FILL_PAGE;
         }
@@ -44,6 +49,9 @@ public abstract class LabelGroup {
             }
 
             @ToBePublicApi
+            public abstract Builder setInstanceContent(Map<String, String> instanceContent);
+
+            @ToBePublicApi
             public abstract Instance build();
         }
 
@@ -55,7 +63,9 @@ public abstract class LabelGroup {
          */
         @ToBePublicApi
         public static Builder builder() {
-            return new AutoValue_LabelGroup_Instance.Builder();
+            Builder builder = new AutoValue_LabelGroup_Instance.Builder();
+            builder.setInstanceContent(Collections.emptyMap());
+            return builder;
         }
 
     }

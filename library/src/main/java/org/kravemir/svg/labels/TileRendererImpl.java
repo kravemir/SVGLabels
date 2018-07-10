@@ -32,14 +32,24 @@ public class TileRendererImpl implements TileRenderer {
 
     public List<SVGDocument> renderAsSVGDocument(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
 
+        InstanceRenderer instanceRenderer = new InstanceRendererImpl();
         ArrayList<SVGDocument> documents = new ArrayList<>();
         LabelDocumentBuilder builder = new LabelDocumentBuilder(paper, options);
         builder.startDocument();
 
         for(LabelGroup l : labels){
-            LabelTemplate template = LabelTemplate.create(l.getTemplate(), paper);
-
             for(LabelGroup.Instance instance : l.getInstances()) {
+                String templateSVG = l.getTemplate();
+                if(l.getTemplateDescriptor() != null) {
+                    try {
+                        templateSVG = instanceRenderer.render(templateSVG, l.getTemplateDescriptor(), instance.getInstanceContent());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                LabelTemplate template = LabelTemplate.create(templateSVG, paper);
+
                 for (int n = 0; n < instance.getCount() || instance.shouldFillPage(); n++) {
                     builder.placeLabel(template);
 
