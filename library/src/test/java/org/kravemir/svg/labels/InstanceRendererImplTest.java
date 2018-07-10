@@ -17,9 +17,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertThat;
-import static org.kravemir.svg.labels.matcher.XPathMatcher.matchesXPath;
+import static org.kravemir.svg.labels.matcher.NodesMatchingXPath.nodesMatchingXPath;
 
 @RunWith(JUnitParamsRunner.class)
 public class InstanceRendererImplTest {
@@ -76,11 +77,11 @@ public class InstanceRendererImplTest {
 
         System.out.println(renderedInstance);
 
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[1][text()='Line no. 01']"));
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[2][text()='.. line no 02 ..']"));
-        assertThat(instanceDocument, matchesXPath( 2, "//*[@id='nameText']/*"));
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4540']/*[text()='Test replacement of texts']"));
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
+        assertThat(instanceDocument, nodesMatchingXPath( "//*[@id='nameText']/*[1][text()='Line no. 01']", hasSize(1)));
+        assertThat(instanceDocument, nodesMatchingXPath( "//*[@id='nameText']/*[2][text()='.. line no 02 ..']", hasSize(1)));
+        assertThat(instanceDocument, nodesMatchingXPath( "//*[@id='nameText']/*", hasSize(2)));
+        assertThat(instanceDocument, nodesMatchingXPath( "//*[@id='text4540']/*[text()='Test replacement of texts']", hasSize(1)));
+        assertThat(instanceDocument, nodesMatchingXPath( "//*[@id='text4544']/*[text()='13. 05. 2017']", hasSize(1)));
     }
 
     @Test
@@ -111,36 +112,36 @@ public class InstanceRendererImplTest {
     private static Object[] parametersForTestMultipleReplacements() {
         return new Object[]{
                 new Object[] { "unknown", allOf(
-                        matchesXPath(1, "//*[@id='text-large']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-large']/*[2][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[2][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-small']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-small']/*[2][not(text())]")
+                        nodesMatchingXPath( "//*[@id='text-large']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-large']/*[2][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[2][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[2][not(text())]", hasSize(1))
                 )},
                 new Object[] { "large", allOf(
-                        matchesXPath(1, "//*[@id='text-large']/*[1][text()='Some multi-line']"),
-                        matchesXPath(1, "//*[@id='text-large']/*[2][text()='text']"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[2][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-small']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-small']/*[2][not(text())]")
+                        nodesMatchingXPath( "//*[@id='text-large']/*[1][text()='Some multi-line']", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-large']/*[2][text()='text']", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[2][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[2][not(text())]", hasSize(1))
                 )},
                 new Object[] { "medium", allOf(
-                        matchesXPath(1, "//*[@id='text-large']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-large']/*[2][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[1][text()='Some multi-line']"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[2][text()='text']"),
-                        matchesXPath(1, "//*[@id='text-small']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-small']/*[2][not(text())]")
+                        nodesMatchingXPath( "//*[@id='text-large']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-large']/*[2][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[1][text()='Some multi-line']", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[2][text()='text']", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[2][not(text())]", hasSize(1))
                 )},
                 new Object[] { "small", allOf(
-                        matchesXPath(1, "//*[@id='text-large']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-large']/*[2][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[1][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-medium']/*[2][not(text())]"),
-                        matchesXPath(1, "//*[@id='text-small']/*[1][text()='Some multi-line']"),
-                        matchesXPath(1, "//*[@id='text-small']/*[2][text()='text']")
+                        nodesMatchingXPath( "//*[@id='text-large']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-large']/*[2][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[1][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-medium']/*[2][not(text())]", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[1][text()='Some multi-line']", hasSize(1)),
+                        nodesMatchingXPath( "//*[@id='text-small']/*[2][text()='text']", hasSize(1))
                 )},
         };
     }
