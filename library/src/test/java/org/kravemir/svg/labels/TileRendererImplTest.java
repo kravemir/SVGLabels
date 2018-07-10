@@ -3,9 +3,7 @@ package org.kravemir.svg.labels;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +19,7 @@ import org.w3c.dom.Node;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -31,6 +27,7 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.kravemir.svg.labels.TemplateResoures.*;
 import static org.kravemir.svg.labels.matcher.NodesMatchingXPath.nodesMatchingXPath;
 
 @RunWith(JUnitParamsRunner.class)
@@ -179,27 +176,4 @@ public class TileRendererImplTest {
                 .build();
     }
 
-    private static final Map<String,String> DATA_01 = MapUtils.putAll(new HashMap<>(), new String[][] {
-            {"name", "JUnit test"},
-            {"description", "Test replacement of texts"},
-            {"date", "13. 05. 2017"}
-    });
-
-    private static final Matcher<Node> TEMPLATE_01_MATCHER = allOf(
-            nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
-            nodesMatchingXPath( ".//*[@id='nameText']/*[2][text()='name']", hasSize(1)),
-            nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2))
-    );
-
-    private static final Matcher<Node> TEMPLATE_01_DATA_01_MATCHER = allOf(
-            nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='JUnit test']", hasSize(1)),
-            nodesMatchingXPath( ".//*[@id='nameText']/*[2][not(text())]", hasSize(1)),
-            nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2))
-    );
-
-    private static final Matcher<Node> TEMPLATE_02_MATCHER = allOf(
-            nodesMatchingXPath( ".//*[@id='text-large']/*[1][text()='Large font']", hasSize(1)),
-            nodesMatchingXPath( ".//*[@id='text-large']/*[2][text()='TEXT']", hasSize(1)),
-            nodesMatchingXPath( ".//*[@id='text-large']/*", hasSize(2))
-    );
 }

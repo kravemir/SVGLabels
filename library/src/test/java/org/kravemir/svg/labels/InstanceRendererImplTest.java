@@ -35,10 +35,6 @@ public class InstanceRendererImplTest {
 
     @Test
     public void testInstanceContentReplacement() throws IOException, XPathExpressionException {
-        Map<String,String> values = new HashMap<>();
-        values.put("name", "JUnit test");
-        values.put("description", "Test replacement of texts");
-        values.put("date", "13. 05. 2017");
 
         LabelTemplateDescriptor descriptor = mapper.readValue(
                 IOUtils.toString(getClass().getResource("/template01.svg-labels.json")),
@@ -48,18 +44,14 @@ public class InstanceRendererImplTest {
         String renderedInstance = renderer.render(
                 IOUtils.toString(getClass().getResource("/template01.svg")),
                 descriptor,
-                values
+                TemplateResoures.DATA_01
         );
 
         Document instanceDocument = RenderingUtils.parseSVG(renderedInstance);
 
         System.out.println(renderedInstance);
 
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[1][text()='JUnit test']"));
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='nameText']/*[2][not(text())]"));
-        assertThat(instanceDocument, matchesXPath( 2, "//*[@id='nameText']/*"));
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4540']/*[text()='Test replacement of texts']"));
-        assertThat(instanceDocument, matchesXPath( 1, "//*[@id='text4544']/*[text()='13. 05. 2017']"));
+        assertThat(instanceDocument, TemplateResoures.TEMPLATE_01_DATA_01_MATCHER);
     }
 
     @Test
