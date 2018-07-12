@@ -1,11 +1,16 @@
 package org.kravemir.svg.labels;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matcher;
+import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.w3c.dom.Node;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasSize;
@@ -24,6 +29,12 @@ public final class TemplateResoures {
             {"description", "Test replacement of texts"},
             {"date", "13. 05. 2017"}
     });
+
+    static final Supplier<String> TEMPLATE_01 = getTemplateFromResource("/template01.svg");
+    static final Supplier<String> TEMPLATE_02 = getTemplateFromResource("/template02.svg");
+
+    static final Supplier<LabelTemplateDescriptor> TEMPLATE_01_DESCRIPTOR = getDescriptorFromResource("/template01.svg-labels.json");
+    static final Supplier<LabelTemplateDescriptor> TEMPLATE_02_DESCRIPTOR = getDescriptorFromResource("/template02.svg-labels.json");
 
     static final Matcher<Node> TEMPLATE_01_MATCHER = allOf(
             nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
@@ -49,4 +60,28 @@ public final class TemplateResoures {
             nodesMatchingXPath( ".//*[@id='text-large']/*[2][text()='TEXT']", hasSize(1)),
             nodesMatchingXPath( ".//*[@id='text-large']/*", hasSize(2))
     );
+
+    private static Supplier<String> getTemplateFromResource(String resource) {
+        return () -> {
+            try {
+                return  IOUtils.toString(TemplateResoures.class.getResource(resource));
+            } catch (IOException e) {
+                throw new RuntimeException("This should not happen!!!", e);
+            }
+        };
+    }
+
+    private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static Supplier<LabelTemplateDescriptor> getDescriptorFromResource(String resource) {
+        return () -> {
+            try {
+                return OBJECT_MAPPER.readValue(
+                        IOUtils.toString(TemplateResoures.class.getResource(resource)),
+                        LabelTemplateDescriptor.class
+                );
+            } catch (IOException e) {
+                throw new RuntimeException("This should not happen!!!", e);
+            }
+        };
+    }
 }

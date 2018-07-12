@@ -3,7 +3,6 @@ package org.kravemir.svg.labels;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kravemir.svg.labels.model.DocumentRenderOptions;
 import org.kravemir.svg.labels.model.LabelGroup;
-import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.model.TiledPaper;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
@@ -45,14 +43,14 @@ public class TileRendererImplTest {
 
     @Test
     @Parameters
-    public void testSimpleFullPageInstancing(int rows, int columns) throws IOException, XPathExpressionException {
+    public void testSimpleFullPageInstancing(int rows, int columns) {
         int expectedCount = rows * columns;
 
         TiledPaper paper = createPaper(rows, columns);
 
         String renderedInstance = renderer.render(
                 paper,
-                IOUtils.toString(getClass().getResource("/template01.svg"))
+                TEMPLATE_01.get()
         );
 
         Document instanceDocument = RenderingUtils.parseSVG(renderedInstance);
@@ -85,11 +83,11 @@ public class TileRendererImplTest {
                 paper,
                 Arrays.asList(
                         LabelGroup.builder()
-                                .setTemplate(IOUtils.toString(getClass().getResource("/template01.svg")))
+                                .setTemplate(TEMPLATE_01.get())
                                 .setInstances(LabelGroup.Instance.builder().setCount(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(IOUtils.toString(getClass().getResource("/template02.svg")))
+                                .setTemplate(TEMPLATE_02.get())
                                 .setInstances(LabelGroup.Instance.builder().fillPage().build())
                                 .build()
 
@@ -119,30 +117,25 @@ public class TileRendererImplTest {
 
         TiledPaper paper = createPaper(rows, columns);
 
-        LabelTemplateDescriptor descriptor = mapper.readValue(
-                IOUtils.toString(getClass().getResource("/template01.svg-labels.json")),
-                LabelTemplateDescriptor.class
-        );
-
         List<String> renderedInstance = renderer.render(
                 paper,
                 Arrays.asList(
                         LabelGroup.builder()
-                                .setTemplate(IOUtils.toString(getClass().getResource("/template01.svg")))
+                                .setTemplate(TEMPLATE_01.get())
                                 .setInstances(LabelGroup.Instance.builder().setCount(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(IOUtils.toString(getClass().getResource("/template01.svg")))
-                                .setTemplateDescriptor(descriptor)
+                                .setTemplate(TEMPLATE_01.get())
+                                .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
                                 .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_01).setCount(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(IOUtils.toString(getClass().getResource("/template01.svg")))
-                                .setTemplateDescriptor(descriptor)
+                                .setTemplate(TEMPLATE_01.get())
+                                .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
                                 .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_02).setCount(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(IOUtils.toString(getClass().getResource("/template02.svg")))
+                                .setTemplate(TEMPLATE_02.get())
                                 .setInstances(LabelGroup.Instance.builder().fillPage().build())
                                 .build()
 

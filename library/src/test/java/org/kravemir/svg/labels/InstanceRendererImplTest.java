@@ -3,12 +3,10 @@ package org.kravemir.svg.labels;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
 
@@ -36,16 +34,10 @@ public class InstanceRendererImplTest {
     }
 
     @Test
-    public void testInstanceContentReplacement() throws IOException, XPathExpressionException {
-
-        LabelTemplateDescriptor descriptor = mapper.readValue(
-                IOUtils.toString(getClass().getResource("/template01.svg-labels.json")),
-                LabelTemplateDescriptor.class
-        );
-
+    public void testInstanceContentReplacement() throws XPathExpressionException {
         String renderedInstance = renderer.render(
-                IOUtils.toString(getClass().getResource("/template01.svg")),
-                descriptor,
+                TEMPLATE_01.get(),
+                TEMPLATE_01_DESCRIPTOR.get(),
                 DATA_01
         );
 
@@ -58,14 +50,9 @@ public class InstanceRendererImplTest {
 
     @Test
     public void testMultilineReplacement() throws IOException, XPathExpressionException {
-        LabelTemplateDescriptor descriptor = mapper.readValue(
-                IOUtils.toString(getClass().getResource("/template01.svg-labels.json")),
-                LabelTemplateDescriptor.class
-        );
-
         String renderedInstance = renderer.render(
-                IOUtils.toString(getClass().getResource("/template01.svg")),
-                descriptor,
+                TEMPLATE_01.get(),
+                TEMPLATE_01_DESCRIPTOR.get(),
                 DATA_02
         );
 
@@ -78,19 +65,14 @@ public class InstanceRendererImplTest {
 
     @Test
     @Parameters
-    public void testMultipleReplacements(String size, Matcher<? super Document> matcher) throws IOException, XPathExpressionException {
+    public void testMultipleReplacements(String size, Matcher<? super Document> matcher) throws XPathExpressionException {
         Map<String,String> values = new HashMap<>();
         values.put("text", "Some multi-line\ntext");
         values.put("text_size", size);
 
-        LabelTemplateDescriptor descriptor = mapper.readValue(
-                IOUtils.toString(getClass().getResource("/template02.svg-labels.json")),
-                LabelTemplateDescriptor.class
-        );
-
         String renderedInstance = renderer.render(
-                IOUtils.toString(getClass().getResource("/template02.svg")),
-                descriptor,
+                TEMPLATE_02.get(),
+                TEMPLATE_02_DESCRIPTOR.get(),
                 values
         );
 
