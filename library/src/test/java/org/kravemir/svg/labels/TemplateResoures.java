@@ -19,6 +19,12 @@ public final class TemplateResoures {
             {"date", "13. 05. 2017"}
     });
 
+    static final Map<String,String> DATA_02 = MapUtils.putAll(new HashMap<>(), new String[][]{
+            {"name", "Line no. 01\n.. line no 02 .."},
+            {"description", "Test replacement of texts"},
+            {"date", "13. 05. 2017"}
+    });
+
     static final Matcher<Node> TEMPLATE_01_MATCHER = allOf(
             nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
             nodesMatchingXPath( ".//*[@id='nameText']/*[2][text()='name']", hasSize(1)),
@@ -28,8 +34,15 @@ public final class TemplateResoures {
             nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='JUnit test']", hasSize(1)),
             nodesMatchingXPath( ".//*[@id='nameText']/*[2][not(text())]", hasSize(1)),
             nodesMatchingXPath( ".//*[@id='nameText']/*", hasSize(2)),
-            nodesMatchingXPath( "//*[@id='text4540']/*[text()='Test replacement of texts']", hasSize(1)),
-            nodesMatchingXPath( "//*[@id='text4544']/*[text()='13. 05. 2017']", hasSize(1))
+            nodesMatchingXPath( ".//*[@id='text4540']/*[text()='Test replacement of texts']", hasSize(1)),
+            nodesMatchingXPath( ".//*[@id='text4544']/*[text()='13. 05. 2017']", hasSize(1))
+    );
+    static final Matcher<Node> TEMPLATE_01_DATA_02_MATCHER = allOf(
+            nodesMatchingXPath(".//*[@id='nameText']/*[1][text()='Line no. 01']", hasSize(1)),
+            nodesMatchingXPath(".//*[@id='nameText']/*[2][text()='.. line no 02 ..']", hasSize(1)),
+            nodesMatchingXPath(".//*[@id='nameText']/*", hasSize(2)),
+            nodesMatchingXPath(".//*[@id='text4540']/*[text()='Test replacement of texts']", hasSize(1)),
+            nodesMatchingXPath(".//*[@id='text4544']/*[text()='13. 05. 2017']", hasSize(1))
     );
     static final Matcher<Node> TEMPLATE_02_MATCHER = allOf(
             nodesMatchingXPath( ".//*[@id='text-large']/*[1][text()='Large font']", hasSize(1)),

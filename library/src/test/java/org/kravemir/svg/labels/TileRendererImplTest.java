@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,6 +137,11 @@ public class TileRendererImplTest {
                                 .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_01).setCount(1).build())
                                 .build(),
                         LabelGroup.builder()
+                                .setTemplate(IOUtils.toString(getClass().getResource("/template01.svg")))
+                                .setTemplateDescriptor(descriptor)
+                                .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_02).setCount(1).build())
+                                .build(),
+                        LabelGroup.builder()
                                 .setTemplate(IOUtils.toString(getClass().getResource("/template02.svg")))
                                 .setInstances(LabelGroup.Instance.builder().fillPage().build())
                                 .build()
@@ -150,17 +156,24 @@ public class TileRendererImplTest {
 
         assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<List<Node>>allOf(
                 hasSize(expectedCount),
-                contains(
-                        Stream.of(
-                                repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_02_MATCHER))),
-                                repeat(1, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
-                                repeat(expectedCount - 2, allOf(TEMPLATE_02_MATCHER, not(TEMPLATE_01_MATCHER)))
-                        ).flatMap(Function.identity()).collect(Collectors.toList())
+                containsConcat(
+                        repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_02_MATCHER))),
+                        repeat(1, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
+                        repeat(1, allOf(TEMPLATE_01_DATA_02_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
+                        repeat(expectedCount - 3, allOf(TEMPLATE_02_MATCHER, not(TEMPLATE_01_MATCHER)))
                 )
         )));
     }
 
-    private <T> Stream<T> repeat(int times, T element) {
+    private <T> Matcher<Iterable<? extends T>> containsConcat(Stream<Matcher<? super T>>... matchers) {
+        List<Matcher<? super T>> matcherList = Stream
+                .of(matchers)
+                .flatMap(Function.identity())
+                .collect(Collectors.toList());
+        return contains(matcherList);
+    }
+
+    private <T> Stream<Matcher<? super T>> repeat(int times, Matcher<? super T> element) {
         return IntStream.range(0, times).mapToObj(i -> element);
     }
 
