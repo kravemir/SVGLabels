@@ -17,7 +17,7 @@ public interface TileRenderer {
      * Renders one page filled by single label
      *
      * @param paper specification of a paper
-     * @param labelSVG label SVG image
+     * @param labelSVG {@link java.lang.String} containing <code>SVG</code> of label to be rendered
      * @return generate page
      */
     String renderSinglePageWithLabel(TiledPaper paper, String labelSVG);
