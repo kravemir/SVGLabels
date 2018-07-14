@@ -105,6 +105,7 @@ public class RenderSVGApplication {
     }
 
     private void addTests(JComboBox<Wrapper<List<SVGDocument>>> tests){
+        /* TODO !!!
         TiledPaper paper1 = TiledPaper.builder()
                 .setPaperSize(297,210)
                 .setLabelOffset(5,5)
@@ -167,6 +168,7 @@ public class RenderSVGApplication {
                 .setRenderTileBorders(true)
                 .build();
         tests.addItem( new Wrapper<>( tileRenderer.renderAsSVGDocument(paper1,labels, options), test) );
+        */
     }
 
     private String loadTemplate(String file) {

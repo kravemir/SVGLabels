@@ -32,23 +32,35 @@ public class TileRendererImpl implements TileRenderer {
 
     public List<SVGDocument> renderAsSVGDocument(TiledPaper paper, List<LabelGroup> labels, DocumentRenderOptions options) {
 
+        InstanceRenderer instanceRenderer = new InstanceRendererImpl();
         ArrayList<SVGDocument> documents = new ArrayList<>();
         LabelDocumentBuilder builder = new LabelDocumentBuilder(paper, options);
         builder.startDocument();
 
         for(LabelGroup l : labels){
-            LabelTemplate template = LabelTemplate.create(l.getTemplate(), paper);
+            for(LabelGroup.Instance instance : l.getInstances()) {
+                String templateSVG = l.getTemplate();
+                if(l.getTemplateDescriptor() != null) {
+                    try {
+                        templateSVG = instanceRenderer.render(templateSVG, l.getTemplateDescriptor(), instance.getInstanceContent());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
 
-            for(int n = 0; n < l.getCount() || l.shouldFillPage(); n++){
-                builder.placeLabel(template);
+                LabelTemplate template = LabelTemplate.create(templateSVG, paper);
 
-                //create new page if current is full
-                if(builder.isFull()){
-                    documents.add(builder.getDocument());
-                    builder.startDocument();
+                for (int n = 0; n < instance.getCount() || instance.shouldFillPage(); n++) {
+                    builder.placeLabel(template);
 
-                    //move to next template if page is full
-                    if(l.shouldFillPage()) break;
+                    //create new page if current is full
+                    if (builder.isFull()) {
+                        documents.add(builder.getDocument());
+                        builder.startDocument();
+
+                        //move to next template if page is full
+                        if (instance.shouldFillPage()) break;
+                    }
                 }
             }
         }
@@ -58,7 +70,10 @@ public class TileRendererImpl implements TileRenderer {
 
     @Override
     public String render(TiledPaper paper, String SVG) {
-        LabelGroup l = LabelGroup.builder().setTemplate(SVG).fillPage().build();
+        LabelGroup l = LabelGroup.builder()
+                .setTemplate(SVG)
+                .setInstances(Collections.singletonList(LabelGroup.Instance.builder().fillPage().build()))
+                .build();
         return render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0);
     }
 }
