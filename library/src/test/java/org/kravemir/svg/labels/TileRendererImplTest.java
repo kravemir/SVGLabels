@@ -46,7 +46,7 @@ public class TileRendererImplTest {
 
         TiledPaper paper = createPaper(rows, columns);
 
-        String renderedInstance = renderer.render(
+        String renderedInstance = renderer.renderSinglePageWithLabel(
                 paper,
                 TEMPLATE_01.get()
         );

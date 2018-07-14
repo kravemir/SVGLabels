@@ -69,7 +69,7 @@ public class TileRendererImpl implements TileRenderer {
     }
 
     @Override
-    public String render(TiledPaper paper, String SVG) {
+    public String renderSinglePageWithLabel(TiledPaper paper, String SVG) {
         LabelGroup l = LabelGroup.builder()
                 .template(SVG)
                 .instances(Collections.singletonList(LabelGroup.Instance.builder().fillPage().build()))
