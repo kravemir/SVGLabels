@@ -57,10 +57,10 @@ public class PaperOptions {
         double labelHeight = getLabelSize()[1];
 
         return TiledPaper.builder()
-                .setPaperSize(paperWidth, paperHeight)
-                .setLabelOffset(labelOffsetX, labelOffsetY)
-                .setLabelSize(labelWidth, labelHeight)
-                .setLabelDelta(labelDeltaX, labelDeltaY)
+                .paperSize(paperWidth, paperHeight)
+                .labelOffset(labelOffsetX, labelOffsetY)
+                .labelSize(labelWidth, labelHeight)
+                .labelDelta(labelDeltaX, labelDeltaY)
                 .build();
     }
 }

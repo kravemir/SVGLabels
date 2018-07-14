@@ -17,84 +17,84 @@ public abstract class TiledPaper {
     }
 
     @ToBePublicApi
-    public abstract double getWidth();
+    public abstract double width();
 
     @ToBePublicApi
-    public abstract double getHeight();
+    public abstract double height();
 
     @ToBePublicApi
-    public abstract double getTileOffsetX();
+    public abstract double tileOffsetX();
 
     @ToBePublicApi
-    public abstract double getTileOffsetY();
+    public abstract double tileOffsetY();
 
     @ToBePublicApi
-    public abstract double getTileWidth();
+    public abstract double tileWidth();
 
     @ToBePublicApi
-    public abstract double getTileHeight();
+    public abstract double tileHeight();
 
     @ToBePublicApi
-    public abstract double getTileDeltaX();
+    public abstract double tileDeltaX();
 
     @ToBePublicApi
-    public abstract double getTileDeltaY();
+    public abstract double tileDeltaY();
 
     @AutoValue.Builder
     @ToBePublicApi
     public abstract static class Builder {
 
         @ToBePublicApi
-        public Builder setPaperSize(double width, double height) {
-            setWidth(width);
-            setHeight(height);
+        public Builder paperSize(double width, double height) {
+            width(width);
+            height(height);
             return this;
         }
 
         @ToBePublicApi
-        public Builder setLabelSize(double labelWidth, double labelHeight) {
-            setTileWidth(labelWidth);
-            setTileHeight(labelHeight);
+        public Builder labelSize(double labelWidth, double labelHeight) {
+            tileWidth(labelWidth);
+            tileHeight(labelHeight);
             return this;
         }
 
         @ToBePublicApi
-        public Builder setLabelOffset(double labelOffsetX, double labelOffsetY) {
-            setTileOffsetX(labelOffsetX);
-            setTileOffsetY(labelOffsetY);
+        public Builder labelOffset(double labelOffsetX, double labelOffsetY) {
+            tileOffsetX(labelOffsetX);
+            tileOffsetY(labelOffsetY);
             return this;
         }
 
         @ToBePublicApi
-        public Builder setLabelDelta(double labelDeltaX, double labelDeltaY) {
-            setTileDeltaX(labelDeltaX);
-            setTileDeltaY(labelDeltaY);
+        public Builder labelDelta(double labelDeltaX, double labelDeltaY) {
+            tileDeltaX(labelDeltaX);
+            tileDeltaY(labelDeltaY);
             return this;
         }
 
         @ToBePublicApi
-        public abstract Builder setWidth(double width);
+        public abstract Builder width(double width);
 
         @ToBePublicApi
-        public abstract Builder setHeight(double height);
+        public abstract Builder height(double height);
 
         @ToBePublicApi
-        public abstract Builder setTileOffsetX(double tileOffsetX);
+        public abstract Builder tileOffsetX(double tileOffsetX);
 
         @ToBePublicApi
-        public abstract Builder setTileOffsetY(double tileOffsetY);
+        public abstract Builder tileOffsetY(double tileOffsetY);
 
         @ToBePublicApi
-        public abstract Builder setTileWidth(double tileWidth);
+        public abstract Builder tileWidth(double tileWidth);
 
         @ToBePublicApi
-        public abstract Builder setTileHeight(double tileHeight);
+        public abstract Builder tileHeight(double tileHeight);
 
         @ToBePublicApi
-        public abstract Builder setTileDeltaX(double tileDeltaX);
+        public abstract Builder tileDeltaX(double tileDeltaX);
 
         @ToBePublicApi
-        public abstract Builder setTileDeltaY(double tileDeltaY);
+        public abstract Builder tileDeltaY(double tileDeltaY);
 
         @ToBePublicApi
         public abstract TiledPaper build();
