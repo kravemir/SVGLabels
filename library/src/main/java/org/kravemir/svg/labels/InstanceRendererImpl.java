@@ -29,12 +29,18 @@ public class InstanceRendererImpl implements InstanceRenderer {
     @Override
     public String render(String svgTemplate,
                          LabelTemplateDescriptor templateDescriptor,
-                         Map<String, String> instanceContent) throws XPathExpressionException {
+                         Map<String, String> instanceContent) {
 
         final SVGDocument document = RenderingUtils.parseSVG(svgTemplate);
 
         for (LabelTemplateDescriptor.ContentReplaceRule rule : templateDescriptor.contentReplaceRules()) {
-            XPathExpression elementXPath = xpath.compile(rule.elementXPath());
+            XPathExpression elementXPath;
+            try {
+                elementXPath = xpath.compile(rule.elementXPath());
+            } catch (XPathExpressionException e) {
+                // TODO: clean-up code
+                throw new RuntimeException("This should not happen!", e);
+            }
 
             String value = expressionEvaluator.evaluateExpression(rule.value(), instanceContent);
             String[] valueLines = value.split("\n");
