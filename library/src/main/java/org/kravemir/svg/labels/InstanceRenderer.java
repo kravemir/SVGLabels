@@ -9,6 +9,12 @@ import java.util.Map;
 @ToBePublicApi
 public interface InstanceRenderer {
 
+    interface PreparedInstance {
+        public String render(Map<String, String> instanceContent);
+    }
+
+    PreparedInstance prepare(String svgTemplate, LabelTemplateDescriptor descriptor);
+
     @ToBePublicApi
     String render(String svgTemplate,
                   LabelTemplateDescriptor templateDescriptor,
