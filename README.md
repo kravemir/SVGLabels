@@ -6,6 +6,10 @@ svg-labels
 
 Designed to be simply usable java library and java tool for generation of documents with labels to print.
 
+The library consist of renderers performing SVG manipulations for creation of label materials.
+
+The tool offers commandline a simple way to invoke these manipulations without need to write any java code.
+
 ## Usage as a tool
 
 TODO: some intro to usage
