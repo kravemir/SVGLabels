@@ -15,8 +15,6 @@ import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import javax.xml.xpath.XPathExpressionException;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -36,7 +34,7 @@ public class TileRendererImplTest {
     private TileRendererImpl renderer;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mapper = new ObjectMapper();
         renderer = new TileRendererImpl();
     }
@@ -73,7 +71,7 @@ public class TileRendererImplTest {
     }
 
     @Test
-    public void testMultipleLabels() throws IOException, XPathExpressionException {
+    public void testMultipleLabels() {
         int rows = 2, columns = 4;
         int expectedCount = rows * columns;
 
@@ -111,7 +109,7 @@ public class TileRendererImplTest {
     }
 
     @Test
-    public void testMultipleLabelsWithReplacement() throws IOException, XPathExpressionException {
+    public void testMultipleLabelsWithReplacement() {
         int rows = 2, columns = 4;
         int expectedCount = rows * columns;
 
@@ -133,6 +131,52 @@ public class TileRendererImplTest {
                                 .setTemplate(TEMPLATE_01.get())
                                 .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
                                 .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_02).setCount(1).build())
+                                .build(),
+                        LabelGroup.builder()
+                                .setTemplate(TEMPLATE_02.get())
+                                .setInstances(LabelGroup.Instance.builder().fillPage().build())
+                                .build()
+
+                ),
+                DocumentRenderOptions.builder().build()
+        );
+
+        Document instanceDocument = RenderingUtils.parseSVG(renderedInstance.get(0));
+
+        System.out.println(renderedInstance);
+
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<List<Node>>allOf(
+                hasSize(expectedCount),
+                containsConcat(
+                        repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_02_MATCHER))),
+                        repeat(1, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
+                        repeat(1, allOf(TEMPLATE_01_DATA_02_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
+                        repeat(expectedCount - 3, allOf(TEMPLATE_02_MATCHER, not(TEMPLATE_01_MATCHER)))
+                )
+        )));
+    }
+
+    @Test
+    public void testMultipleLabelsWithReplacement2() {
+        int rows = 2, columns = 4;
+        int expectedCount = rows * columns;
+
+        TiledPaper paper = createPaper(rows, columns);
+
+        List<String> renderedInstance = renderer.render(
+                paper,
+                Arrays.asList(
+                        LabelGroup.builder()
+                                .setTemplate(TEMPLATE_01.get())
+                                .setInstances(LabelGroup.Instance.builder().setCount(1).build())
+                                .build(),
+                        LabelGroup.builder()
+                                .setTemplate(TEMPLATE_01.get())
+                                .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
+                                .setInstances(
+                                        LabelGroup.Instance.builder().setInstanceContent(DATA_01).setCount(1).build(),
+                                        LabelGroup.Instance.builder().setInstanceContent(DATA_02).setCount(1).build()
+                                )
                                 .build(),
                         LabelGroup.builder()
                                 .setTemplate(TEMPLATE_02.get())
