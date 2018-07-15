@@ -3,8 +3,6 @@ package org.kravemir.svg.labels.model;
 import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
-import java.util.Optional;
-
 /**
  * The <code>DocumentRenderOptions</code> is a value class, and contains rendering options.
  *
@@ -27,11 +25,11 @@ public abstract class DocumentRenderOptions {
     @ToBePublicApi
     public abstract static class Builder {
         @ToBePublicApi
-        public abstract Builder setRenderPageBorders(boolean renderPageBorders);
+        public abstract Builder renderPageBorders(boolean renderPageBorders);
 
-        public abstract Builder setRenderTileBorders(boolean renderTileBorders);
+        public abstract Builder renderTileBorders(boolean renderTileBorders);
 
-        public abstract Builder setRenderLabelBorders(boolean renderLabelBorders);
+        public abstract Builder renderLabelBorders(boolean renderLabelBorders);
 
         public abstract DocumentRenderOptions build();
     }
@@ -44,9 +42,9 @@ public abstract class DocumentRenderOptions {
      */
     public static Builder builder() {
         Builder builder = new AutoValue_DocumentRenderOptions.Builder();
-        builder.setRenderPageBorders(false);
-        builder.setRenderTileBorders(false);
-        builder.setRenderLabelBorders(false);
+        builder.renderPageBorders(false);
+        builder.renderTileBorders(false);
+        builder.renderLabelBorders(false);
         return builder;
     }
 }

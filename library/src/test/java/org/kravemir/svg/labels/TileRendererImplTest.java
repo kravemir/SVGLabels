@@ -46,7 +46,7 @@ public class TileRendererImplTest {
 
         TiledPaper paper = createPaper(rows, columns);
 
-        String renderedInstance = renderer.render(
+        String renderedInstance = renderer.renderSinglePageWithLabel(
                 paper,
                 TEMPLATE_01.get()
         );
@@ -81,12 +81,12 @@ public class TileRendererImplTest {
                 paper,
                 Arrays.asList(
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_01.get())
-                                .setInstances(LabelGroup.Instance.builder().setCount(1).build())
+                                .template(TEMPLATE_01.get())
+                                .instances(LabelGroup.Instance.builder().count(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_02.get())
-                                .setInstances(LabelGroup.Instance.builder().fillPage().build())
+                                .template(TEMPLATE_02.get())
+                                .instances(LabelGroup.Instance.builder().fillPage().build())
                                 .build()
 
                 ),
@@ -119,22 +119,22 @@ public class TileRendererImplTest {
                 paper,
                 Arrays.asList(
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_01.get())
-                                .setInstances(LabelGroup.Instance.builder().setCount(1).build())
+                                .template(TEMPLATE_01.get())
+                                .instances(LabelGroup.Instance.builder().count(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_01.get())
-                                .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
-                                .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_01).setCount(1).build())
+                                .template(TEMPLATE_01.get())
+                                .templateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
+                                .instances(LabelGroup.Instance.builder().instanceContent(DATA_01).count(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_01.get())
-                                .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
-                                .setInstances(LabelGroup.Instance.builder().setInstanceContent(DATA_02).setCount(1).build())
+                                .template(TEMPLATE_01.get())
+                                .templateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
+                                .instances(LabelGroup.Instance.builder().instanceContent(DATA_02).count(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_02.get())
-                                .setInstances(LabelGroup.Instance.builder().fillPage().build())
+                                .template(TEMPLATE_02.get())
+                                .instances(LabelGroup.Instance.builder().fillPage().build())
                                 .build()
 
                 ),
@@ -167,20 +167,20 @@ public class TileRendererImplTest {
                 paper,
                 Arrays.asList(
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_01.get())
-                                .setInstances(LabelGroup.Instance.builder().setCount(1).build())
+                                .template(TEMPLATE_01.get())
+                                .instances(LabelGroup.Instance.builder().count(1).build())
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_01.get())
-                                .setTemplateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
-                                .setInstances(
-                                        LabelGroup.Instance.builder().setInstanceContent(DATA_01).setCount(1).build(),
-                                        LabelGroup.Instance.builder().setInstanceContent(DATA_02).setCount(1).build()
+                                .template(TEMPLATE_01.get())
+                                .templateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
+                                .instances(
+                                        LabelGroup.Instance.builder().instanceContent(DATA_01).count(1).build(),
+                                        LabelGroup.Instance.builder().instanceContent(DATA_02).count(1).build()
                                 )
                                 .build(),
                         LabelGroup.builder()
-                                .setTemplate(TEMPLATE_02.get())
-                                .setInstances(LabelGroup.Instance.builder().fillPage().build())
+                                .template(TEMPLATE_02.get())
+                                .instances(LabelGroup.Instance.builder().fillPage().build())
                                 .build()
 
                 ),
@@ -219,10 +219,10 @@ public class TileRendererImplTest {
         final int instanceHeight = 80;
 
         return TiledPaper.builder()
-                .setPaperSize(20 + instanceWidth * column, 20 + instanceHeight * rows)
-                .setLabelSize(instanceWidth, 80)
-                .setLabelOffset(10, 10)
-                .setLabelDelta(0, 0)
+                .paperSize(20 + instanceWidth * column, 20 + instanceHeight * rows)
+                .labelSize(instanceWidth, 80)
+                .labelOffset(10, 10)
+                .labelDelta(0, 0)
                 .build();
     }
 

@@ -55,7 +55,7 @@ public class TileCommand extends AbstractCommand {
             svg = processSVGTemplate(svg);
 
             TileRenderer renderer = new TileRendererImpl();
-            String result = renderer.render(paperOptions.buildPaper(), svg);
+            String result = renderer.renderSinglePageWithLabel(paperOptions.buildPaper(), svg);
             FileUtils.writeStringToFile(target, result);
         } catch (IOException | XPathExpressionException e) {
             throw new RuntimeException(e);

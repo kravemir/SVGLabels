@@ -21,7 +21,7 @@ public abstract class LabelTemplateDescriptor {
     @JsonAutoDetect
     @JsonDeserialize(builder = AutoValue_LabelTemplateDescriptor_Attribute.Builder.class)
     public abstract static class Attribute {
-        public abstract String getKey();
+        public abstract String key();
 
 
         @AutoValue.Builder
@@ -37,17 +37,21 @@ public abstract class LabelTemplateDescriptor {
     @JsonAutoDetect
     @JsonDeserialize(builder = AutoValue_LabelTemplateDescriptor_ContentReplaceRule.Builder.class)
     public abstract static class ContentReplaceRule {
-        public abstract String getValue();
-        public abstract String getElementXPath();
+        // TODO: add JSON-ignored xpath as javax.xml.xpath.XPath, tie together with string xpath property
+
+        public abstract String value();
+        public abstract String elementXPath();
 
         @Nullable
         @JsonProperty("if")
-        public abstract String getIfCondition();
+        public abstract String ifCondition();
 
 
         @AutoValue.Builder
         @JsonPOJOBuilder(withPrefix = "")
         public abstract static class Builder {
+            // TODO: add xpath validation
+
             public abstract Builder value(String value);
             public abstract Builder elementXPath(String elementXPath);
 
@@ -60,8 +64,8 @@ public abstract class LabelTemplateDescriptor {
     }
 
 
-    public abstract List<Attribute> getAttributes();
-    public abstract List<ContentReplaceRule> getContentReplaceRules();
+    public abstract List<Attribute> attributes();
+    public abstract List<ContentReplaceRule> contentReplaceRules();
 
 
     @AutoValue.Builder

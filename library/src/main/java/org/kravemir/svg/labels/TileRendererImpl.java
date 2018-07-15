@@ -38,11 +38,11 @@ public class TileRendererImpl implements TileRenderer {
         builder.startDocument();
 
         for(LabelGroup l : labels){
-            for(LabelGroup.Instance instance : l.getInstances()) {
-                String templateSVG = l.getTemplate();
-                if(l.getTemplateDescriptor() != null) {
+            for(LabelGroup.Instance instance : l.instances()) {
+                String templateSVG = l.template();
+                if(l.templateDescriptor() != null) {
                     try {
-                        templateSVG = instanceRenderer.render(templateSVG, l.getTemplateDescriptor(), instance.getInstanceContent());
+                        templateSVG = instanceRenderer.render(templateSVG, l.templateDescriptor(), instance.instanceContent());
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -50,7 +50,7 @@ public class TileRendererImpl implements TileRenderer {
 
                 LabelTemplate template = LabelTemplate.create(templateSVG, paper);
 
-                for (int n = 0; n < instance.getCount() || instance.shouldFillPage(); n++) {
+                for (int n = 0; n < instance.count() || instance.shouldFillPage(); n++) {
                     builder.placeLabel(template);
 
                     //create new page if current is full
@@ -69,10 +69,10 @@ public class TileRendererImpl implements TileRenderer {
     }
 
     @Override
-    public String render(TiledPaper paper, String SVG) {
+    public String renderSinglePageWithLabel(TiledPaper paper, String SVG) {
         LabelGroup l = LabelGroup.builder()
-                .setTemplate(SVG)
-                .setInstances(Collections.singletonList(LabelGroup.Instance.builder().fillPage().build()))
+                .template(SVG)
+                .instances(Collections.singletonList(LabelGroup.Instance.builder().fillPage().build()))
                 .build();
         return render(paper, Collections.singletonList(l), DocumentRenderOptions.builder().build()).get(0);
     }

@@ -29,14 +29,20 @@ public class InstanceRendererImpl implements InstanceRenderer {
     @Override
     public String render(String svgTemplate,
                          LabelTemplateDescriptor templateDescriptor,
-                         Map<String, String> instanceContent) throws XPathExpressionException {
+                         Map<String, String> instanceContent) {
 
         final SVGDocument document = RenderingUtils.parseSVG(svgTemplate);
 
-        for (LabelTemplateDescriptor.ContentReplaceRule rule : templateDescriptor.getContentReplaceRules()) {
-            XPathExpression elementXPath = xpath.compile(rule.getElementXPath());
+        for (LabelTemplateDescriptor.ContentReplaceRule rule : templateDescriptor.contentReplaceRules()) {
+            XPathExpression elementXPath;
+            try {
+                elementXPath = xpath.compile(rule.elementXPath());
+            } catch (XPathExpressionException e) {
+                // TODO: clean-up code
+                throw new RuntimeException("This should not happen!", e);
+            }
 
-            String value = expressionEvaluator.evaluateExpression(rule.getValue(), instanceContent);
+            String value = expressionEvaluator.evaluateExpression(rule.value(), instanceContent);
             String[] valueLines = value.split("\n");
 
             if (!shouldEvaluate(instanceContent, rule))
@@ -64,10 +70,10 @@ public class InstanceRendererImpl implements InstanceRenderer {
     }
 
     private boolean shouldEvaluate(Map<String, String> instanceContent, LabelTemplateDescriptor.ContentReplaceRule rule) {
-        if(rule.getIfCondition() == null)
+        if(rule.ifCondition() == null)
             return true;
 
-        return (boolean) expressionEvaluator.evaluateExpressionWithJEXL(rule.getIfCondition(), instanceContent);
+        return (boolean) expressionEvaluator.evaluateExpressionWithJEXL(rule.ifCondition(), instanceContent);
     }
 
     private Stream<Node> getNodeStream(Node root, XPathExpression expression){

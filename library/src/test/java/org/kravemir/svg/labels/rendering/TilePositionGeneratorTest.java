@@ -16,10 +16,10 @@ public class TilePositionGeneratorTest {
     @Test
     public void test1() {
         generator = new TilePositionGenerator(TiledPaper.builder()
-                .setPaperSize(14, 10)
-                .setLabelSize(10, 8)
-                .setLabelOffset(2, 1)
-                .setLabelDelta(0,0)
+                .paperSize(14, 10)
+                .labelSize(10, 8)
+                .labelOffset(2, 1)
+                .labelDelta(0,0)
                 .build()
         );
 
@@ -31,10 +31,10 @@ public class TilePositionGeneratorTest {
     @Test
     public void test2() {
         generator = new TilePositionGenerator(TiledPaper.builder()
-                .setPaperSize(26, 22)
-                .setLabelSize(10, 8)
-                .setLabelOffset(2, 2)
-                .setLabelDelta(2,2)
+                .paperSize(26, 22)
+                .labelSize(10, 8)
+                .labelOffset(2, 2)
+                .labelDelta(2,2)
                 .build()
         );
 

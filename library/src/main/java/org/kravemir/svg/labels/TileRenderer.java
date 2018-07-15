@@ -13,16 +13,14 @@ import java.util.List;
 @ToBePublicApi
 public interface TileRenderer {
 
-    // TODO: think about names of simplication methods
-
     /**
      * Renders one page filled by single label
      *
      * @param paper specification of a paper
-     * @param SVG label SVG image
+     * @param labelSVG {@link java.lang.String} containing <code>SVG</code> of label to be rendered
      * @return generate page
      */
-    String render(TiledPaper paper, String SVG);
+    String renderSinglePageWithLabel(TiledPaper paper, String labelSVG);
 
     /**
      * Renders labels

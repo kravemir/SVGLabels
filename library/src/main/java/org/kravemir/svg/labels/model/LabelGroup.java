@@ -25,14 +25,14 @@ public abstract class LabelGroup {
         private static final int FILL_PAGE = 0;
 
         @ToBePublicApi
-        public abstract int getCount();
+        public abstract int count();
 
         @ToBePublicApi
-        public abstract Map<String, String> getInstanceContent();
+        public abstract Map<String, String> instanceContent();
 
         @ToBePublicApi
         public boolean shouldFillPage() {
-            return getCount() == FILL_PAGE;
+            return count() == FILL_PAGE;
         }
 
         @AutoValue.Builder
@@ -40,16 +40,16 @@ public abstract class LabelGroup {
         public abstract static class Builder {
 
             @ToBePublicApi
-            public abstract Builder setCount(int count);
+            public abstract Builder count(int count);
 
             @ToBePublicApi
             public Builder fillPage() {
-                setCount(FILL_PAGE);
+                count(FILL_PAGE);
                 return this;
             }
 
             @ToBePublicApi
-            public abstract Builder setInstanceContent(Map<String, String> instanceContent);
+            public abstract Builder instanceContent(Map<String, String> instanceContent);
 
             @ToBePublicApi
             public abstract Instance build();
@@ -64,7 +64,7 @@ public abstract class LabelGroup {
         @ToBePublicApi
         public static Builder builder() {
             Builder builder = new AutoValue_LabelGroup_Instance.Builder();
-            builder.setInstanceContent(Collections.emptyMap());
+            builder.instanceContent(Collections.emptyMap());
             return builder;
         }
 
@@ -74,30 +74,30 @@ public abstract class LabelGroup {
     }
 
     @ToBePublicApi
-    public abstract String getTemplate();
+    public abstract String template();
 
     @ToBePublicApi
-    public abstract LabelTemplateDescriptor getTemplateDescriptor();
+    public abstract LabelTemplateDescriptor templateDescriptor();
 
     @ToBePublicApi
-    public abstract List<Instance> getInstances();
+    public abstract List<Instance> instances();
 
     @AutoValue.Builder
     @ToBePublicApi
     public abstract static class Builder {
 
         @ToBePublicApi
-        public abstract Builder setTemplate(String template);
+        public abstract Builder template(String template);
 
         @ToBePublicApi
-        public abstract Builder setTemplateDescriptor(LabelTemplateDescriptor descriptor);
+        public abstract Builder templateDescriptor(LabelTemplateDescriptor descriptor);
 
         @ToBePublicApi
-        public abstract Builder setInstances(List<Instance> instances);
+        public abstract Builder instances(List<Instance> instances);
 
         @ToBePublicApi
-        public final Builder setInstances(Instance ...instances) {
-            return setInstances(Arrays.asList(instances));
+        public final Builder instances(Instance ...instances) {
+            return instances(Arrays.asList(instances));
         }
 
         @ToBePublicApi
@@ -112,6 +112,6 @@ public abstract class LabelGroup {
      */
     @ToBePublicApi
     public static Builder builder() {
-        return new AutoValue_LabelGroup.Builder().setTemplateDescriptor(LabelTemplateDescriptor.EMPTY);
+        return new AutoValue_LabelGroup.Builder().templateDescriptor(LabelTemplateDescriptor.EMPTY);
     }
 }
