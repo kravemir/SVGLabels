@@ -1,5 +1,7 @@
 package org.kravemir.svg.labels.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
@@ -20,6 +22,7 @@ public abstract class LabelGroup {
 
     @AutoValue
     @ToBePublicApi
+    @JsonDeserialize(builder = AutoValue_LabelGroup_Instance.Builder.class)
     public static abstract class Instance {
 
         private static final int FILL_PAGE = 0;
@@ -37,6 +40,7 @@ public abstract class LabelGroup {
 
         @AutoValue.Builder
         @ToBePublicApi
+        @JsonPOJOBuilder(withPrefix = "")
         public abstract static class Builder {
 
             @ToBePublicApi

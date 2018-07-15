@@ -1,12 +1,13 @@
 package org.kravemir.svg.labels.tool;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
-import org.kravemir.svg.labels.InstanceRenderer;
-import org.kravemir.svg.labels.InstanceRendererImpl;
 import org.kravemir.svg.labels.TileRenderer;
 import org.kravemir.svg.labels.TileRendererImpl;
+import org.kravemir.svg.labels.model.DocumentRenderOptions;
+import org.kravemir.svg.labels.model.LabelGroup;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.tool.common.AbstractCommand;
 import org.kravemir.svg.labels.tool.common.PaperOptions;
@@ -15,11 +16,12 @@ import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 @Command(
         name = "tile", description = "Tile labels"
@@ -36,6 +38,11 @@ public class TileCommand extends AbstractCommand {
     )
     private File instanceJsonFile;
 
+    @Option(
+            names = "--instances-json"
+    )
+    private File instancesJsonFile;
+
     @Parameters(
             index = "0", paramLabel = "SOURCE",
             description = "Path of a SVG file containing a label"
@@ -49,27 +56,33 @@ public class TileCommand extends AbstractCommand {
     private File target;
 
 
+    private final TileRenderer renderer = new TileRendererImpl();
+
+
     public void run() {
         try {
             String svg = FileUtils.readFileToString(source);
-            svg = processSVGTemplate(svg);
+            String result;
 
-            TileRenderer renderer = new TileRendererImpl();
-            String result = renderer.renderSinglePageWithLabel(paperOptions.buildPaper(), svg);
+            if (instancesJsonFile != null) {
+                result = renderInstances(svg);
+            } else if (instanceJsonFile != null) {
+                result = renderInstance(svg);
+            } else {
+                result = renderer.renderSinglePageWithLabel(paperOptions.buildPaper(), svg);
+            }
+
             FileUtils.writeStringToFile(target, result);
-        } catch (IOException | XPathExpressionException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private String processSVGTemplate(String templateOrImage) throws IOException, XPathExpressionException {
-        if(instanceJsonFile == null) {
-            return templateOrImage;
-        }
-
+    private String renderInstance(String templateOrImage) throws IOException {
         Path sourcePath = source.toPath();
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         LabelTemplateDescriptor descriptor = mapper.readValue(
                 FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
@@ -81,7 +94,49 @@ public class TileCommand extends AbstractCommand {
                 HASH_MAP_TYPE_REFERENCE
         );
 
-        InstanceRenderer renderer = new InstanceRendererImpl();
-        return renderer.render(templateOrImage, descriptor, values);
+        List<String> result = renderer.render(
+                paperOptions.buildPaper(),
+                Collections.singletonList(
+                        LabelGroup.builder()
+                                .template(templateOrImage)
+                                .templateDescriptor(descriptor)
+                                .instances(LabelGroup.Instance.builder().fillPage().instanceContent(values).build())
+                                .build()
+                ),
+                DocumentRenderOptions.builder().build()
+        );
+
+        return result.get(0);
+    }
+
+    private String renderInstances(String templateOrImage) throws IOException {
+        Path sourcePath = source.toPath();
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+        LabelTemplateDescriptor descriptor = mapper.readValue(
+                FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
+                LabelTemplateDescriptor.class
+        );
+
+        LabelGroup.Instance[] instances = mapper.readValue(
+                FileUtils.readFileToString(instancesJsonFile),
+                LabelGroup.Instance[].class
+        );
+
+        List<String> result = renderer.render(
+                paperOptions.buildPaper(),
+                Collections.singletonList(
+                        LabelGroup.builder()
+                                .template(templateOrImage)
+                                .templateDescriptor(descriptor)
+                                .instances(instances)
+                                .build()
+                ),
+                DocumentRenderOptions.builder().build()
+        );
+
+        return result.get(0);
     }
 }

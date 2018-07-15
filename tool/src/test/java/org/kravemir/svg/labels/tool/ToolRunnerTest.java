@@ -52,4 +52,22 @@ public class ToolRunnerTest {
         System.out.println(FileUtils.readFileToString(outputFile));
     }
 
+    @Test
+    public void testRenderWithInstances() throws URISyntaxException, IOException {
+        /* TODO: there's an error, if page isn't fully filled, therefore count 200 last item was added,.. fix it!  */
+
+        ToolRunner.main( new String[]{
+                "tile",
+                "--paper-size", "210", "297",
+                "--label-offset", "0", "0",
+                "--label-size", "65", "26.5",
+                "--label-delta", "0", "0",
+                "--instances-json",
+                Paths.get(getClass().getResource("/test-instances.json").toURI()).toFile().getAbsolutePath(),
+                Paths.get(getClass().getResource("/template01.svg").toURI()).toFile().getAbsolutePath(),
+                outputFile.getAbsolutePath()
+        });
+        System.out.println(FileUtils.readFileToString(outputFile));
+    }
+
 }
