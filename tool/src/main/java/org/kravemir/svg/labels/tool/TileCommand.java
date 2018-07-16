@@ -34,24 +34,26 @@ public class TileCommand extends AbstractCommand {
     private PaperOptions paperOptions;
 
     @Option(
-            names = "--instance-json"
+            names = "--instance-json", paramLabel = "FILE",
+            description = "Path to JSON file containing values for single instance"
     )
     private File instanceJsonFile;
 
     @Option(
-            names = "--instances-json"
+            names = "--instances-json", paramLabel = "FILE",
+            description = "Path to JSON file containing array of instances"
     )
     private File instancesJsonFile;
 
     @Parameters(
             index = "0", paramLabel = "SOURCE",
-            description = "Path of a SVG file containing a label"
+            description = "Path to SVG file containing a label"
     )
     private File source;
 
     @Parameters(
             index = "1", paramLabel = "TARGET",
-            description = "Path of a SVG file which should be generated"
+            description = "Path to SVG file which should be generated"
     )
     private File target;
 
