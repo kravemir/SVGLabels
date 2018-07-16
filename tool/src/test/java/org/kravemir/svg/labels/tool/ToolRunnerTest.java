@@ -1,16 +1,22 @@
 package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.kravemir.svg.labels.utils.RenderingUtils;
+import org.w3c.dom.Document;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.kravemir.svg.labels.matcher.NodesMatchingXPath.nodesMatchingXPath;
 
 public class ToolRunnerTest {
 
@@ -68,6 +74,9 @@ public class ToolRunnerTest {
                 outputFile.getAbsolutePath()
         });
         System.out.println(FileUtils.readFileToString(outputFile));
+
+        Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
+        assertThat(instanceDocument, nodesMatchingXPath("//*", hasSize(greaterThan(1))));
     }
 
 }

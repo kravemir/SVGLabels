@@ -1,3 +1,22 @@
+configurations {
+    testlibCompile.extendsFrom compile
+    testCompile.extendsFrom testlibCompile
+}
+
+sourceSets {
+    testlib {
+        java {
+            compileClasspath += sourceSets.main.output + configurations.testlibCompile
+        }
+    }
+    test {
+        java {
+            compileClasspath += sourceSets.testlib.output
+            runtimeClasspath += sourceSets.testlib.output
+        }
+    }
+}
+
 dependencies {
     compile 'xml-apis:xml-apis-ext:1.3.04'
 
@@ -11,6 +30,10 @@ dependencies {
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+
+    testlibCompile sourceSets.main.output
+    testlibCompile group: 'junit', name: 'junit', version: '4.11'
+    testlibCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
 
     testCompile 'org.apache.xmlgraphics:batik-swing:1.10'
     testCompile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
@@ -33,4 +56,13 @@ task jarWithSources(type: Jar) {
     if (gradle.startParameter.taskNames.any{it == "publishToMavenLocal"}) {
         from sourceSets.main.allJava
     }
+}
+
+task testlibJar(type: Jar) {
+    from sourceSets.testlib.output
+    classifier 'testlib'
+}
+
+artifacts {
+    testlibCompile testlibJar
 }
