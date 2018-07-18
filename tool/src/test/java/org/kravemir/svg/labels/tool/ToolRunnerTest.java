@@ -2,6 +2,8 @@ package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,10 +15,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.kravemir.svg.labels.TemplateResoures.*;
 import static org.kravemir.svg.labels.matcher.NodesMatchingXPath.nodesMatchingXPath;
 
 public class ToolRunnerTest {
@@ -58,6 +65,7 @@ public class ToolRunnerTest {
     @Test
     public void testRenderWithoutInstance() throws IOException {
         ToolRunner.main( new String[]{
+                "tile",
                 "--paper-size", "210", "297",
                 "--label-offset", "0", "0",
                 "--label-size", "65", "26.5",
@@ -66,11 +74,20 @@ public class ToolRunnerTest {
                 outputFile.getAbsolutePath()
         });
         System.out.println(FileUtils.readFileToString(outputFile));
+
+        Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.allOf(
+                this.containsConcat(
+                        repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_01_DATA_01_MATCHER), not(TEMPLATE_02_MATCHER))),
+                        repeat(32, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_01_DATA_01_MATCHER), not(TEMPLATE_02_MATCHER)))
+                )
+        )));
     }
 
     @Test
     public void testRenderWithInstance() throws IOException {
         ToolRunner.main( new String[]{
+                "tile",
                 "--paper-size", "210", "297",
                 "--label-offset", "0", "0",
                 "--label-size", "65", "26.5",
@@ -81,6 +98,14 @@ public class ToolRunnerTest {
                 outputFile.getAbsolutePath()
         });
         System.out.println(FileUtils.readFileToString(outputFile));
+
+        Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.allOf(
+                this.containsConcat(
+                        repeat(1, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
+                        repeat(32, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER)))
+                )
+        )));
     }
 
     @Test
@@ -102,6 +127,21 @@ public class ToolRunnerTest {
 
         Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
         assertThat(instanceDocument, nodesMatchingXPath("//*", hasSize(greaterThan(1))));
+
+        // TODO: test content
     }
 
+    // TODO: duplicated code
+    private <T> Matcher<Iterable<? extends T>> containsConcat(Stream<Matcher<? super T>>... matchers) {
+        List<Matcher<? super T>> matcherList = Stream
+                .of(matchers)
+                .flatMap(Function.identity())
+                .collect(Collectors.toList());
+        return contains(matcherList);
+    }
+
+    // TODO: duplicated code
+    private <T> Stream<Matcher<? super T>> repeat(int times, Matcher<? super T> element) {
+        return IntStream.range(0, times).mapToObj(i -> element);
+    }
 }
