@@ -1,7 +1,6 @@
 package org.kravemir.svg.labels.tool;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -13,9 +12,7 @@ import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -37,30 +34,6 @@ public class ToolRunnerTest {
     @Before
     public void setUp() throws Exception {
         outputFile = folder.newFile("testOutput");
-    }
-
-    // TODO: refactor to proper place
-    // TODO: think about descritor path...
-    private File getTemplateFromResource(String name, boolean withDescriptorJSON) throws IOException {
-        File copyFile = folder.newFile();
-        OutputStream copyFileStream = new FileOutputStream(copyFile);
-        IOUtils.copy(
-                getClass().getResource(name).openStream(),
-                copyFileStream
-        );
-        copyFileStream.close();
-
-        if(withDescriptorJSON) {
-            File copyFileDescriptor = folder.newFile(copyFile.getName() + "-labels.json");
-            OutputStream copyFileDescriptorStream = new FileOutputStream(copyFileDescriptor);
-            IOUtils.copy(
-                    getClass().getResource(name + "-labels.json").openStream(),
-                    copyFileDescriptorStream
-            );
-            copyFileDescriptorStream.close();
-        }
-
-        return copyFile;
     }
 
     @Test
@@ -95,7 +68,9 @@ public class ToolRunnerTest {
                 "--label-delta", "0", "0",
                 "--instance-json",
                 TemplateResoures.DATA_01.getAsFile(folder::newFile).getAbsolutePath(),
-                getTemplateFromResource("/template01.svg", true).getAbsolutePath(),
+                "--template-descriptor",
+                TemplateResoures.TEMPLATE_01_DESCRIPTOR.getAsFile(folder::newFile).getAbsolutePath(),
+                TemplateResoures.TEMPLATE_01.getAsFile(folder::newFile).getAbsolutePath(),
                 outputFile.getAbsolutePath()
         });
         System.out.println(FileUtils.readFileToString(outputFile));
@@ -120,8 +95,10 @@ public class ToolRunnerTest {
                 "--label-size", "65", "26.5",
                 "--label-delta", "0", "0",
                 "--instances-json",
-                getTemplateFromResource("/test-instances.json", false).getAbsolutePath(),
-                getTemplateFromResource("/template01.svg", true).getAbsolutePath(),
+                TemplateResoures.INSTANCES_01.getAsFile(folder::newFile).getAbsolutePath(),
+                "--template-descriptor",
+                TemplateResoures.TEMPLATE_01_DESCRIPTOR.getAsFile(folder::newFile).getAbsolutePath(),
+                TemplateResoures.TEMPLATE_01.getAsFile(folder::newFile).getAbsolutePath(),
                 outputFile.getAbsolutePath()
         });
         System.out.println(FileUtils.readFileToString(outputFile));

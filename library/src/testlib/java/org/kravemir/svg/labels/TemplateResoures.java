@@ -26,6 +26,8 @@ public final class TemplateResoures {
             {"date", "13. 05. 2017"}
     });
 
+    public static final StringTestResource INSTANCES_01 = getTemplateFromResource("/test-instances.json");
+
     public static final StringTestResource TEMPLATE_01 = getTemplateFromResource("/template01.svg");
     public static final StringTestResource TEMPLATE_02 = getTemplateFromResource("/template02.svg");
 
