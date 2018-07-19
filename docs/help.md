@@ -12,9 +12,9 @@ Commands:
 Command `tile`:
 ```
 Usage: <main class> tile [-h] [--instance-json=FILE] [--instances-json=FILE]
-                         [--label-delta=mm mm]... [--label-offset=mm mm]...
-                         [--label-size=mm mm]... [--paper-size=mm mm]... SOURCE
-                         TARGET
+                         [--template-descriptor=FILE] [--label-delta=mm mm]...
+                         [--label-offset=mm mm]... [--label-size=mm mm]...
+                         [--paper-size=mm mm]... SOURCE TARGET
 Tile labels
       SOURCE                 Path to SVG file containing a label
       TARGET                 Path to SVG file which should be generated
@@ -25,6 +25,8 @@ Tile labels
       --label-size=mm mm     Width and height of label in mm, ie.
       --paper-size=mm mm     Width and height of the paper in mm, ie. 210 297 for A4
                                paper portrait
+      --template-descriptor=FILE
+                             Path to JSON file containing descriptor of template
   -h, --help                 display a help message
 ```
 
