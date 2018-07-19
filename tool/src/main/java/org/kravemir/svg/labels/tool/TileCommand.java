@@ -45,6 +45,12 @@ public class TileCommand extends AbstractCommand {
     )
     private File instancesJsonFile;
 
+    @Option(
+            names = "--template-descriptor", paramLabel = "FILE",
+            description = "Path to JSON file containing descriptor of template"
+    )
+    private File templateDescriptorFile;
+
     @Parameters(
             index = "0", paramLabel = "SOURCE",
             description = "Path to SVG file containing a label"
@@ -81,13 +87,11 @@ public class TileCommand extends AbstractCommand {
     }
 
     private String renderInstance(String templateOrImage) throws IOException {
-        Path sourcePath = source.toPath();
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         LabelTemplateDescriptor descriptor = mapper.readValue(
-                FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
+                FileUtils.readFileToString(getDescriptorFile()),
                 LabelTemplateDescriptor.class
         );
 
@@ -111,6 +115,15 @@ public class TileCommand extends AbstractCommand {
         return result.get(0);
     }
 
+    private File getDescriptorFile() {
+        if(templateDescriptorFile != null) {
+            return templateDescriptorFile;
+        } else {
+            Path sourcePath = source.toPath();
+            return sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile();
+        }
+    }
+
     private String renderInstances(String templateOrImage) throws IOException {
         Path sourcePath = source.toPath();
 
@@ -118,7 +131,7 @@ public class TileCommand extends AbstractCommand {
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         LabelTemplateDescriptor descriptor = mapper.readValue(
-                FileUtils.readFileToString(sourcePath.resolveSibling(sourcePath.getFileName() + "-labels.json").toFile()),
+                FileUtils.readFileToString(getDescriptorFile()),
                 LabelTemplateDescriptor.class
         );
 
