@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.kravemir.svg.labels.TemplateResoures;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
 
@@ -70,7 +71,7 @@ public class ToolRunnerTest {
                 "--label-offset", "0", "0",
                 "--label-size", "65", "26.5",
                 "--label-delta", "0", "0",
-                getTemplateFromResource("/template01.svg", true).getAbsolutePath(),
+                TemplateResoures.TEMPLATE_01.getAsFile(folder::newFile).getAbsolutePath(),
                 outputFile.getAbsolutePath()
         });
         System.out.println(FileUtils.readFileToString(outputFile));
@@ -93,7 +94,7 @@ public class ToolRunnerTest {
                 "--label-size", "65", "26.5",
                 "--label-delta", "0", "0",
                 "--instance-json",
-                getTemplateFromResource("/test-instance.json", false).getAbsolutePath(),
+                TemplateResoures.DATA_01.getAsFile(folder::newFile).getAbsolutePath(),
                 getTemplateFromResource("/template01.svg", true).getAbsolutePath(),
                 outputFile.getAbsolutePath()
         });

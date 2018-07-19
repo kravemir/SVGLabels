@@ -1,16 +1,16 @@
 package org.kravemir.svg.labels;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matcher;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.w3c.dom.Node;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasSize;
@@ -18,11 +18,7 @@ import static org.kravemir.svg.labels.matcher.NodesMatchingXPath.nodesMatchingXP
 
 public final class TemplateResoures {
 
-    public static final Map<String,String> DATA_01 = MapUtils.putAll(new HashMap<>(), new String[][] {
-            {"name", "JUnit test"},
-            {"description", "Test replacement of texts"},
-            {"date", "13. 05. 2017"}
-    });
+    public static final TestResource<Map<String, String>> DATA_01 = getInstanceResource("/test-instance.json");
 
     public static final Map<String,String> DATA_02 = MapUtils.putAll(new HashMap<>(), new String[][]{
             {"name", "Line no. 01\n.. line no 02 .."},
@@ -30,11 +26,11 @@ public final class TemplateResoures {
             {"date", "13. 05. 2017"}
     });
 
-    public static final Supplier<String> TEMPLATE_01 = getTemplateFromResource("/template01.svg");
-    public static final Supplier<String> TEMPLATE_02 = getTemplateFromResource("/template02.svg");
+    public static final StringTestResource TEMPLATE_01 = getTemplateFromResource("/template01.svg");
+    public static final StringTestResource TEMPLATE_02 = getTemplateFromResource("/template02.svg");
 
-    public static final Supplier<LabelTemplateDescriptor> TEMPLATE_01_DESCRIPTOR = getDescriptorFromResource("/template01.svg-labels.json");
-    public static final Supplier<LabelTemplateDescriptor> TEMPLATE_02_DESCRIPTOR = getDescriptorFromResource("/template02.svg-labels.json");
+    public static final TestResource<LabelTemplateDescriptor> TEMPLATE_01_DESCRIPTOR = getDescriptorFromResource("/template01.svg-labels.json");
+    public static final TestResource<LabelTemplateDescriptor> TEMPLATE_02_DESCRIPTOR = getDescriptorFromResource("/template02.svg-labels.json");
 
     public static final Matcher<Node> TEMPLATE_01_MATCHER = allOf(
             nodesMatchingXPath( ".//*[@id='nameText']/*[1][text()='Multiline']", hasSize(1)),
@@ -61,26 +57,35 @@ public final class TemplateResoures {
             nodesMatchingXPath( ".//*[@id='text-large']/*", hasSize(2))
     );
 
-    private static Supplier<String> getTemplateFromResource(String resource) {
-        return () -> {
-            try {
-                return  IOUtils.toString(TemplateResoures.class.getResource(resource));
-            } catch (IOException e) {
-                throw new RuntimeException("This should not happen!!!", e);
+    private static StringTestResource getTemplateFromResource(String resource) {
+        return new StringTestResource(TemplateResoures.class, resource);
+    }
+
+    private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final TypeReference<HashMap<String,Object>> HASH_MAP_TYPE_REFERENCE = new TypeReference<HashMap<String,Object>>() {};
+
+    private static TestResource<LabelTemplateDescriptor> getDescriptorFromResource(String resource) {
+        return new TestResource<LabelTemplateDescriptor>(TemplateResoures.class, resource) {
+            @Override
+            protected LabelTemplateDescriptor convert(URL resource) {
+                try {
+                    return OBJECT_MAPPER.readValue(resource, LabelTemplateDescriptor.class);
+                } catch (IOException e) {
+                    throw new RuntimeException("This should not happen!!!", e);
+                }
             }
         };
     }
 
-    private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static Supplier<LabelTemplateDescriptor> getDescriptorFromResource(String resource) {
-        return () -> {
-            try {
-                return OBJECT_MAPPER.readValue(
-                        IOUtils.toString(TemplateResoures.class.getResource(resource)),
-                        LabelTemplateDescriptor.class
-                );
-            } catch (IOException e) {
-                throw new RuntimeException("This should not happen!!!", e);
+    private static TestResource<Map<String,String>> getInstanceResource(String resource) {
+        return new TestResource<Map<String,String>>(TemplateResoures.class, resource) {
+            @Override
+            protected Map<String,String> convert(URL resource) {
+                try {
+                    return OBJECT_MAPPER.readValue(resource, HASH_MAP_TYPE_REFERENCE);
+                } catch (IOException e) {
+                    throw new RuntimeException("This should not happen!!!", e);
+                }
             }
         };
     }

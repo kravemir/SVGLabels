@@ -38,7 +38,7 @@ public class InstanceRendererImplTest {
         String renderedInstance = renderer.render(
                 TEMPLATE_01.get(),
                 TEMPLATE_01_DESCRIPTOR.get(),
-                DATA_01
+                DATA_01.get()
         );
 
         Document instanceDocument = RenderingUtils.parseSVG(renderedInstance);

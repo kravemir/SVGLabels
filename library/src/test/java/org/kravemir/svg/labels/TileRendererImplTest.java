@@ -125,7 +125,7 @@ public class TileRendererImplTest {
                         LabelGroup.builder()
                                 .template(TEMPLATE_01.get())
                                 .templateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
-                                .instances(LabelGroup.Instance.builder().instanceContent(DATA_01).count(1).build())
+                                .instances(LabelGroup.Instance.builder().instanceContent(DATA_01.get()).count(1).build())
                                 .build(),
                         LabelGroup.builder()
                                 .template(TEMPLATE_01.get())
@@ -174,7 +174,7 @@ public class TileRendererImplTest {
                                 .template(TEMPLATE_01.get())
                                 .templateDescriptor(TEMPLATE_01_DESCRIPTOR.get())
                                 .instances(
-                                        LabelGroup.Instance.builder().instanceContent(DATA_01).count(1).build(),
+                                        LabelGroup.Instance.builder().instanceContent(DATA_01.get()).count(1).build(),
                                         LabelGroup.Instance.builder().instanceContent(DATA_02).count(1).build()
                                 )
                                 .build(),
