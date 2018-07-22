@@ -102,8 +102,12 @@ public class ToolRunnerTest {
         System.out.println(FileUtils.readFileToString(outputFile));
 
         Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
-        assertThat(instanceDocument, nodesMatchingXPath("//*", hasSize(greaterThan(1))));
-
-        // TODO: test content
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<Collection<Node>>allOf(
+                hasSize(33),
+                hasSize(33),
+                Matchers.contains(
+                        TEMPLATE_01_INSTANCES_01_MATCHER_LIST.subList(0, 33)
+                )
+        )));
     }
 }
