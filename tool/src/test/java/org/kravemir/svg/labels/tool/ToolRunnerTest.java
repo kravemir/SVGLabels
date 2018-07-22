@@ -10,9 +10,11 @@ import org.junit.rules.TemporaryFolder;
 import org.kravemir.svg.labels.TemplateResoures;
 import org.kravemir.svg.labels.utils.RenderingUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,11 +52,9 @@ public class ToolRunnerTest {
         System.out.println(FileUtils.readFileToString(outputFile));
 
         Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
-        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.allOf(
-                this.containsConcat(
-                        repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_01_DATA_01_MATCHER), not(TEMPLATE_02_MATCHER))),
-                        repeat(32, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_01_DATA_01_MATCHER), not(TEMPLATE_02_MATCHER)))
-                )
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<Collection<Node>>allOf(
+                hasSize(33),
+                everyItem(allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_01_DATA_01_MATCHER), not(TEMPLATE_02_MATCHER)))
         )));
     }
 
@@ -76,11 +76,9 @@ public class ToolRunnerTest {
         System.out.println(FileUtils.readFileToString(outputFile));
 
         Document instanceDocument = RenderingUtils.parseSVG(FileUtils.readFileToString(outputFile));
-        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.allOf(
-                this.containsConcat(
-                        repeat(1, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER))),
-                        repeat(32, allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER)))
-                )
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<Collection<Node>>allOf(
+                hasSize(33),
+                everyItem(allOf(TEMPLATE_01_DATA_01_MATCHER, not(TEMPLATE_01_MATCHER), not(TEMPLATE_02_MATCHER)))
         )));
     }
 
@@ -107,19 +105,5 @@ public class ToolRunnerTest {
         assertThat(instanceDocument, nodesMatchingXPath("//*", hasSize(greaterThan(1))));
 
         // TODO: test content
-    }
-
-    // TODO: duplicated code
-    private <T> Matcher<Iterable<? extends T>> containsConcat(Stream<Matcher<? super T>>... matchers) {
-        List<Matcher<? super T>> matcherList = Stream
-                .of(matchers)
-                .flatMap(Function.identity())
-                .collect(Collectors.toList());
-        return contains(matcherList);
-    }
-
-    // TODO: duplicated code
-    private <T> Stream<Matcher<? super T>> repeat(int times, Matcher<? super T> element) {
-        return IntStream.range(0, times).mapToObj(i -> element);
     }
 }
