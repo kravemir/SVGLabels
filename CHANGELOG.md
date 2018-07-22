@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - library: support of template instancing in tiling rendering
+- tool: support of template instancing with option `--instances-json` for `tile` command
+- tests: separated sourceset to share test classes and resources between modules 
 
 ### Changed
 - library: extended tiling model to support definition of instances
