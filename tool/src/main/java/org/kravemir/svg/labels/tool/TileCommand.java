@@ -11,6 +11,7 @@ import org.kravemir.svg.labels.model.LabelGroup;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.tool.common.AbstractCommand;
 import org.kravemir.svg.labels.tool.common.PaperOptions;
+import org.kravemir.svg.labels.tool.model.ReferringLabelGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -19,9 +20,8 @@ import picocli.CommandLine.Parameters;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Command(
         name = "tile", description = "Tile labels"
@@ -32,6 +32,12 @@ public class TileCommand extends AbstractCommand {
 
     @Mixin
     private PaperOptions paperOptions;
+
+    @Option(
+            names = "--instance-definitions-location", paramLabel = "FOLDER",
+            description = "Path to folder containing JSON files for instances"
+    )
+    private Path instanceDefinitionsLocation;
 
     @Option(
             names = "--instance-json", paramLabel = "FILE",
@@ -64,7 +70,15 @@ public class TileCommand extends AbstractCommand {
     private File target;
 
 
-    private final TileRenderer renderer = new TileRendererImpl();
+    private final TileRenderer renderer;
+    private final ObjectMapper mapper;
+
+    public TileCommand() {
+        renderer = new TileRendererImpl();
+
+        mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+    }
 
 
     public void run() {
@@ -87,9 +101,6 @@ public class TileCommand extends AbstractCommand {
     }
 
     private String renderInstance(String templateOrImage) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-
         LabelTemplateDescriptor descriptor = mapper.readValue(
                 FileUtils.readFileToString(getDescriptorFile()),
                 LabelTemplateDescriptor.class
@@ -125,19 +136,14 @@ public class TileCommand extends AbstractCommand {
     }
 
     private String renderInstances(String templateOrImage) throws IOException {
-        Path sourcePath = source.toPath();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-
         LabelTemplateDescriptor descriptor = mapper.readValue(
                 FileUtils.readFileToString(getDescriptorFile()),
                 LabelTemplateDescriptor.class
         );
 
-        LabelGroup.Instance[] instances = mapper.readValue(
+        ReferringLabelGroup.Instance[] instances = mapper.readValue(
                 FileUtils.readFileToString(instancesJsonFile),
-                LabelGroup.Instance[].class
+                ReferringLabelGroup.Instance[].class
         );
 
         List<String> result = renderer.render(
@@ -146,12 +152,57 @@ public class TileCommand extends AbstractCommand {
                         LabelGroup.builder()
                                 .template(templateOrImage)
                                 .templateDescriptor(descriptor)
-                                .instances(instances)
+                                .instances(
+                                        Arrays.stream(instances)
+                                                .map(this::mapInstance)
+                                                .collect(Collectors.toList())
+                                )
                                 .build()
                 ),
                 DocumentRenderOptions.builder().build()
         );
 
         return result.get(0);
+    }
+
+    private LabelGroup.Instance mapInstance(ReferringLabelGroup.Instance instance) {
+        LabelGroup.Instance.Builder builder = LabelGroup.Instance.builder();
+
+        if(instance.instanceContent().isPresent() && instance.instanceContentRef().isPresent()) {
+            // TODO: cleanup / think about this, override?
+            throw new RuntimeException("Both ref and content are present");
+        } else if (instance.instanceContent().isPresent()) {
+            builder.instanceContent(instance.instanceContent().get());
+        } else if (instance.instanceContentRef().isPresent()) {
+            builder.instanceContent(loadInstanceContent(instance.instanceContentRef().get()));
+        } else {
+            // TODO: cleanup / think about this, not content
+            throw new RuntimeException("None of ref and content are present");
+        }
+
+        if (instance.shouldFillPage()) {
+            builder.fillPage();
+        } else {
+            builder.count(instance.count());
+        }
+
+        return builder.build();
+    }
+
+    private Map<String, String> loadInstanceContent(String name) {
+
+        try {
+            Map<String, String> values = mapper.readValue(
+                    FileUtils.readFileToString(
+                            instanceDefinitionsLocation.resolve(name + ".json").toFile()
+                    ),
+                    HASH_MAP_TYPE_REFERENCE
+            );
+
+            return values;
+        } catch (IOException e) {
+            // TODO: error handling
+            throw new RuntimeException(e);
+        }
     }
 }
