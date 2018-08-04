@@ -11,6 +11,7 @@ import org.kravemir.svg.labels.model.LabelGroup;
 import org.kravemir.svg.labels.model.LabelTemplateDescriptor;
 import org.kravemir.svg.labels.tool.common.AbstractCommand;
 import org.kravemir.svg.labels.tool.common.PaperOptions;
+import org.kravemir.svg.labels.tool.model.ReferringLabelGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Option;
@@ -19,9 +20,8 @@ import picocli.CommandLine.Parameters;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Command(
         name = "tile", description = "Tile labels"
@@ -135,9 +135,9 @@ public class TileCommand extends AbstractCommand {
                 LabelTemplateDescriptor.class
         );
 
-        LabelGroup.Instance[] instances = mapper.readValue(
+        ReferringLabelGroup.Instance[] instances = mapper.readValue(
                 FileUtils.readFileToString(instancesJsonFile),
-                LabelGroup.Instance[].class
+                ReferringLabelGroup.Instance[].class
         );
 
         List<String> result = renderer.render(
@@ -146,12 +146,57 @@ public class TileCommand extends AbstractCommand {
                         LabelGroup.builder()
                                 .template(templateOrImage)
                                 .templateDescriptor(descriptor)
-                                .instances(instances)
+                                .instances(
+                                        Arrays.stream(instances)
+                                                .map(TileCommand::mapInstance)
+                                                .collect(Collectors.toList())
+                                )
                                 .build()
                 ),
                 DocumentRenderOptions.builder().build()
         );
 
         return result.get(0);
+    }
+
+    private static LabelGroup.Instance mapInstance(ReferringLabelGroup.Instance instance) {
+        LabelGroup.Instance.Builder builder = LabelGroup.Instance.builder();
+
+        if(instance.instanceContent().isPresent() && instance.instanceContentRef().isPresent()) {
+            // TODO: cleanup / think about this, override?
+            throw new RuntimeException("Both ref and content are present");
+        } else if (instance.instanceContent().isPresent()) {
+            builder.instanceContent(instance.instanceContent().get());
+        } else if (instance.instanceContentRef().isPresent()) {
+            builder.instanceContent(loadInstanceContent(instance.instanceContentRef().get()));
+        } else {
+            // TODO: cleanup / think about this, not content
+            throw new RuntimeException("None of ref and content are present");
+        }
+
+        if (instance.shouldFillPage()) {
+            builder.fillPage();
+        } else {
+            builder.count(instance.count());
+        }
+
+        return builder.build();
+    }
+
+    private static Map<String, String> loadInstanceContent(String s) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+        try {
+            Map<String, String> values = mapper.readValue(
+                    FileUtils.readFileToString(null /* TODO */),
+                    HASH_MAP_TYPE_REFERENCE
+            );
+
+            return values;
+        } catch (IOException e) {
+            // TODO: error handling
+            throw new RuntimeException(e);
+        }
     }
 }
