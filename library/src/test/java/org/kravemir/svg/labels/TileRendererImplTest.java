@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -69,6 +70,52 @@ public class TileRendererImplTest {
                 {9, 9}
         };
     }
+
+    @Test
+    @Parameters
+    public void testVariousPageFill(int rows, int columns, int count) {
+        TiledPaper paper = createPaper(rows, columns);
+
+        List<String> renderResult = renderer.render(
+                paper,
+                Collections.singletonList(
+                        LabelGroup.builder()
+                                .template(TEMPLATE_01.get())
+                                .instances(LabelGroup.Instance.builder().count(count).build())
+                                .build()
+                ),
+                DocumentRenderOptions.builder().build()
+        );
+
+        Document instanceDocument = RenderingUtils.parseSVG(renderResult.get(0));
+
+        System.out.println(renderResult);
+
+        assertThat(renderResult, hasSize(1));
+        assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<List<Node>>allOf(
+                hasSize(count),
+                everyItem( TEMPLATE_01_MATCHER )
+        )));
+    }
+
+    private Object[] parametersForTestVariousPageFill() {
+        return new Object[][] {
+                {1, 1, 1},
+                {2, 1, 1},
+                {2, 1, 2},
+                {1, 2, 1},
+                {1, 2, 2},
+                {9, 9, 1},
+                {9, 9, 2},
+                {9, 9, 3},
+                {9, 9, 9},
+                {9, 9, 79},
+                {9, 9, 80},
+                {9, 9, 81}
+        };
+    }
+
+    // TODO: add test for rendering of multiple pages
 
     @Test
     public void testMultipleLabels() {

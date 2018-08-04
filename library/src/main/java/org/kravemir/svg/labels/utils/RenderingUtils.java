@@ -33,8 +33,7 @@ public class RenderingUtils {
         try {
             return factory.createSVGDocument("", new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
         } catch (IOException e) {
-            // TODO: do something nicer
-            throw new RuntimeException(s);
+            throw new RuntimeException("This should have never had happened!", e);
         }
     }
 
