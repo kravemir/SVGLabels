@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.3.0] - 2018-08-04
 ### Added
 - library: support of template instancing in tiling rendering
 - tool: support of template instancing with option `--instances-json` for `tile` command
@@ -35,5 +37,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - library implementing tiled SVG rendering
 - CLI tool
 
-[Unreleased]: https://github.com/kravemir/svg-labels/compare/0.2.0...master
+[Unreleased]: https://github.com/kravemir/svg-labels/compare/0.3.0...master
+[0.3.0]: https://github.com/kravemir/svg-labels/compare/0.2.0...0.3.0
 [0.2.0]: https://github.com/kravemir/svg-labels/compare/0.1.0...0.2.0
