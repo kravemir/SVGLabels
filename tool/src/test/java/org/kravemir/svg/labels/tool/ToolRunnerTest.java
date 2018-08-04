@@ -84,8 +84,6 @@ public class ToolRunnerTest {
 
     @Test
     public void testRenderWithInstances() throws IOException {
-        /* TODO: there's an error, if page isn't fully filled, therefore count 200 last item was added,.. fix it!  */
-
         ToolRunner.main( new String[]{
                 "tile",
                 "--paper-size", "210", "297",

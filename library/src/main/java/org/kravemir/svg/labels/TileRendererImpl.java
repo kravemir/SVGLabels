@@ -51,18 +51,23 @@ public class TileRendererImpl implements TileRenderer {
                 LabelTemplate template = LabelTemplate.create(templateSVG, paper);
 
                 for (int n = 0; n < instance.count() || instance.shouldFillPage(); n++) {
-                    builder.placeLabel(template);
-
-                    //create new page if current is full
-                    if (builder.isFull()) {
+                    if(builder.isFull()) {
                         documents.add(builder.getDocument());
+
+                        builder = new LabelDocumentBuilder(paper, options);
                         builder.startDocument();
 
                         //move to next template if page is full
                         if (instance.shouldFillPage()) break;
                     }
+
+                    builder.placeLabel(template);
                 }
             }
+        }
+
+        if(builder != null) {
+            documents.add(builder.getDocument());
         }
 
         return documents;
