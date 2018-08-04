@@ -34,6 +34,12 @@ public class TileCommand extends AbstractCommand {
     private PaperOptions paperOptions;
 
     @Option(
+            names = "--instance-definitions-location", paramLabel = "FOLDER",
+            description = "Path to folder containing JSON files for instances"
+    )
+    private Path instanceDefinitionsLocation;
+
+    @Option(
             names = "--instance-json", paramLabel = "FILE",
             description = "Path to JSON file containing values for single instance"
     )
@@ -148,7 +154,7 @@ public class TileCommand extends AbstractCommand {
                                 .templateDescriptor(descriptor)
                                 .instances(
                                         Arrays.stream(instances)
-                                                .map(TileCommand::mapInstance)
+                                                .map(this::mapInstance)
                                                 .collect(Collectors.toList())
                                 )
                                 .build()
@@ -159,7 +165,7 @@ public class TileCommand extends AbstractCommand {
         return result.get(0);
     }
 
-    private static LabelGroup.Instance mapInstance(ReferringLabelGroup.Instance instance) {
+    private LabelGroup.Instance mapInstance(ReferringLabelGroup.Instance instance) {
         LabelGroup.Instance.Builder builder = LabelGroup.Instance.builder();
 
         if(instance.instanceContent().isPresent() && instance.instanceContentRef().isPresent()) {
@@ -183,13 +189,15 @@ public class TileCommand extends AbstractCommand {
         return builder.build();
     }
 
-    private static Map<String, String> loadInstanceContent(String s) {
+    private Map<String, String> loadInstanceContent(String name) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         try {
             Map<String, String> values = mapper.readValue(
-                    FileUtils.readFileToString(null /* TODO */),
+                    FileUtils.readFileToString(
+                            instanceDefinitionsLocation.resolve(name + ".json").toFile()
+                    ),
                     HASH_MAP_TYPE_REFERENCE
             );
 
