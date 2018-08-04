@@ -70,7 +70,15 @@ public class TileCommand extends AbstractCommand {
     private File target;
 
 
-    private final TileRenderer renderer = new TileRendererImpl();
+    private final TileRenderer renderer;
+    private final ObjectMapper mapper;
+
+    public TileCommand() {
+        renderer = new TileRendererImpl();
+
+        mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+    }
 
 
     public void run() {
@@ -93,9 +101,6 @@ public class TileCommand extends AbstractCommand {
     }
 
     private String renderInstance(String templateOrImage) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-
         LabelTemplateDescriptor descriptor = mapper.readValue(
                 FileUtils.readFileToString(getDescriptorFile()),
                 LabelTemplateDescriptor.class
@@ -131,11 +136,6 @@ public class TileCommand extends AbstractCommand {
     }
 
     private String renderInstances(String templateOrImage) throws IOException {
-        Path sourcePath = source.toPath();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-
         LabelTemplateDescriptor descriptor = mapper.readValue(
                 FileUtils.readFileToString(getDescriptorFile()),
                 LabelTemplateDescriptor.class
@@ -190,8 +190,6 @@ public class TileCommand extends AbstractCommand {
     }
 
     private Map<String, String> loadInstanceContent(String name) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         try {
             Map<String, String> values = mapper.readValue(
