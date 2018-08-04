@@ -11,13 +11,16 @@ Commands:
 
 Command `tile`:
 ```
-Usage: <main class> tile [-h] [--instance-json=FILE] [--instances-json=FILE]
+Usage: <main class> tile [-h] [--instance-definitions-location=FOLDER]
+                         [--instance-json=FILE] [--instances-json=FILE]
                          [--template-descriptor=FILE] [--label-delta=mm mm]...
                          [--label-offset=mm mm]... [--label-size=mm mm]...
                          [--paper-size=mm mm]... SOURCE TARGET
 Tile labels
       SOURCE                 Path to SVG file containing a label
       TARGET                 Path to SVG file which should be generated
+      --instance-definitions-location=FOLDER
+                             Path to folder containing JSON files for instances
       --instance-json=FILE   Path to JSON file containing values for single instance
       --instances-json=FILE  Path to JSON file containing array of instances
       --label-delta=mm mm    X and Y delta between labels in mm, ie. 5 5
