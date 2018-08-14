@@ -1,0 +1,29 @@
+name: svg-labels
+version: '0.3.0'
+summary: SVG print labels generator
+description: |
+  Designed to be simply usable java tool for generation of documents with
+  labels for printing. Supports combining of multiple labels and instancing
+  within single document.
+
+confinement: devmode
+
+apps:
+  tool:
+    command: svg-labels/svg-labels-tool.sh
+
+parts:
+  svg-labels:
+    plugin: gradle
+    source: .
+    build: |
+      export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+      ./gradlew :tool:executableJar
+    install: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/svg-labels
+      cp tool/build/libs/tool-*-executable.jar -d $SNAPCRAFT_PART_INSTALL/svg-labels/svg-labels-tool.jar
+      echo java -jar "\$SNAP/svg-labels/svg-labels-tool.jar" '"$@"' > $SNAPCRAFT_PART_INSTALL/svg-labels/svg-labels-tool.sh
+      chmod 755 $SNAPCRAFT_PART_INSTALL/svg-labels/svg-labels-tool.sh
+    build-packages:
+      - unzip
+      - openjdk-8-jdk
