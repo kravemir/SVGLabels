@@ -12,7 +12,13 @@ The tool offers commandline a simple way to invoke these manipulations without n
 
 ## Usage as a tool
 
-TODO: some intro to usage
+The tool can be installed as [snap package from snapcraft.io](https://snapcraft.io/svg-labels):
+
+```
+sudo snap install svg-labels
+```
+
+TODO: add some usage example
 
 Check [complete help](docs/help.md) to see all available options.
 
