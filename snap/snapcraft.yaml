@@ -9,7 +9,7 @@ description: |
 confinement: strict
 
 apps:
-  tool:
+  svg-labels:
     command: svg-labels/svg-labels-tool.sh
     plugs: [home]
 
