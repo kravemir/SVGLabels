@@ -1,5 +1,5 @@
 name: svg-labels
-version: '0.3.0'
+version: '0.4.0-SNAPSHOT'
 summary: SVG print labels generator
 description: |
   Designed to be simply usable java tool for generation of documents with
