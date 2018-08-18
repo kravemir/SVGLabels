@@ -6,11 +6,12 @@ description: |
   labels for printing. Supports combining of multiple labels and instancing
   within single document.
 
-confinement: devmode
+confinement: strict
 
 apps:
   tool:
     command: svg-labels/svg-labels-tool.sh
+    plugs: [home]
 
 parts:
   svg-labels:
