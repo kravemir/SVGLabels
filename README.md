@@ -12,7 +12,7 @@ The tool offers commandline a simple way to invoke these manipulations without n
 
 ## Usage as a tool
 
-The tool can be installed as [snap package from snapcraft.io](https://snapcraft.io/svg-labels):
+The tool can be installed as [snap package from snapcraft.io][snapcraft-io-package]:
 
 ```
 sudo snap install svg-labels
@@ -34,5 +34,6 @@ TODO: javadocs
 
 The project is licensed under Apache License, Version 2.0, January 2004. See [LICENSE](LICENSE).
 
-[search-maven-org-by-group]: https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.kravemir.svg.labels%22
+[snapcraft-io-package]: https://snapcraft.io/svg-labels
+[search-maven-org-by-group]: https://search.maven.org/search?q=kravemir
 [mvnrepository-com-group]: https://mvnrepository.com/artifact/org.kravemir.svg.labels
