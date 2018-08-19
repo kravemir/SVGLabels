@@ -12,6 +12,8 @@ public class ToolRunner {
 
         commandLine.addMixin("helperOptions", new CommandHelpOption());
 
+        commandLine.setSeparator(" ");
+
         commandLine.parseWithHandler(
                 new CommandLine.RunLast().useOut(System.out).useAnsi(CommandLine.Help.Ansi.AUTO),
                 args
