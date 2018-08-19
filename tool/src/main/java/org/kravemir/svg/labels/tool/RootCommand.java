@@ -17,6 +17,7 @@ public class RootCommand implements Runnable {
 
     @Override
     public void run() {
-        throw new RuntimeException("sub-command needed");
+        System.err.println("Sub-command is required, see: svg-labels -h");
+        System.exit(1);
     }
 }
