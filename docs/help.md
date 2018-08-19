@@ -1,7 +1,7 @@
 # `svg-labels` help
 
 ```
-Usage: <main class> [-hv] [COMMAND]
+Usage: svg-labels [-hv] [COMMAND]
   -h, --help      display a help message
   -v, --version   display version info
 Commands:
@@ -11,11 +11,11 @@ Commands:
 
 Command `tile`:
 ```
-Usage: <main class> tile [-h] [--instance-definitions-location=FOLDER]
-                         [--instance-json=FILE] [--instances-json=FILE]
-                         [--template-descriptor=FILE] [--label-delta=mm mm]...
-                         [--label-offset=mm mm]... [--label-size=mm mm]...
-                         [--paper-size=mm mm]... SOURCE TARGET
+Usage: svg-labels tile [-h] [--instance-definitions-location=FOLDER]
+                       [--instance-json=FILE] [--instances-json=FILE]
+                       [--template-descriptor=FILE] [--label-delta=mm mm]...
+                       [--label-offset=mm mm]... [--label-size=mm mm]...
+                       [--paper-size=mm mm]... SOURCE TARGET
 Tile labels
       SOURCE                 Path to SVG file containing a label
       TARGET                 Path to SVG file which should be generated
@@ -35,8 +35,8 @@ Tile labels
 
 Command `instance`:
 ```
-Usage: <main class> instance [-h] [--instance-json=<instanceJsonFile>] SOURCE
-                             TARGET
+Usage: svg-labels instance [-h] [--instance-json=<instanceJsonFile>] SOURCE
+                           TARGET
 Fill label template with instance data
       SOURCE   Path of a SVG file containing a label
       TARGET   Path of a SVG file which should be generated

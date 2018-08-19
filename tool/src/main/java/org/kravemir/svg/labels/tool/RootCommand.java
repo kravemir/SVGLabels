@@ -4,6 +4,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command(
+        name = "svg-labels",
         versionProvider = VersionProvider.class
 )
 public class RootCommand implements Runnable {
