@@ -18,7 +18,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 
 @Command(
-        name = "instance", description = "Fill label template with instance data"
+        name = "instance", description = "Fill label template with instance data",
+        abbreviateSynopsis = true
 )
 public class InstanceCommand extends AbstractCommand {
 
