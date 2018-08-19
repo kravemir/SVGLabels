@@ -24,7 +24,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Command(
-        name = "tile", description = "Tile labels"
+        name = "tile", description = "Tile labels",
+        abbreviateSynopsis = true
 )
 public class TileCommand extends AbstractCommand {
 
