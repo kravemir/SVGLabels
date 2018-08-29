@@ -3,6 +3,7 @@
 Assumptions:
 
 * `svg-labels` is installed (if not, see README),
+* `inkscape` is installed,
 * `label.svg` is present in current working directory (download [label.svg](label.svg)).
 
 Then, by invoking following commands:
@@ -13,7 +14,7 @@ inkscape --file=label-tiled.svg --without-gui --export-png=label-tiled.png
 inkscape --file=label-tiled.svg --without-gui --export-pdf=label-tiled.pdf
 ```
 
-We should have created following files, results:
+Following result files should have been created:
 
 * `label-tiled.svg` containing tiled label on specified paper,
 * `label-tiled.png` containing `label-tiled.svg` converted to PNG,
