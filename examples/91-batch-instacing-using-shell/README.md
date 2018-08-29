@@ -1,4 +1,4 @@
-# Example 91: tile label with instancing
+# Example 91: batch instancing using shell script
 
 * `svg-labels` is installed (if not, see README),
 * `inkscape` is installed,
