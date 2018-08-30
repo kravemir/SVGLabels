@@ -8,9 +8,11 @@ Designed to be simply usable java library and java tool for generation of docume
 
 The library consist of renderers performing SVG manipulations for creation of label materials.
 
+## CLI tool
+
 The tool offers commandline a simple way to invoke these manipulations without need to write any java code.
 
-## Usage as a tool
+###  Tool installation
 
 The tool can be installed as [snap package from snapcraft.io][snapcraft-io-package]:
 
@@ -18,7 +20,18 @@ The tool can be installed as [snap package from snapcraft.io][snapcraft-io-packa
 sudo snap install svg-labels
 ```
 
-TODO: add some usage example
+### Usage examples
+
+Examples are available inside [examples](examples) subdirectory, which contains:
+
+| Example                                                      | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [01-tile-label](examples/01-tile-label/)                     | Create SVG and PDF for print containing tiled label          |
+| [02-tile-label-with-instancing](examples/02-tile-label-with-instancing/) | Create SVG(s) and PDF(s) for print containing tiled label filled with data of corresponding instances (products) |
+| [91-batch-instacing-using-shell](examples/91-batch-instacing-using-shell/) | Create instanced SVG(s) and PDF(s) for print, in batch, using `bash` script. |
+| [92-batch-instacing-using-makefile](examples/92-batch-instacing-using-makefile/) | Create instanced PDF(s) for print, in batch, using `Makefile`. Supports incremental builds, thanks to `make` functionality. |
+
+### CLI options
 
 Check [complete help](docs/help.md) to see all available options.
 
