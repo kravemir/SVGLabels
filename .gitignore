@@ -2,6 +2,10 @@
 .idea
 *.iml
 
+# gradle wrapper
+gradlew*
+gradle/wrapper
+
 # Other
 .gradle
 */out

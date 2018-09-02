@@ -7,6 +7,11 @@ dist: trusty
 
 language: java
 
+addons:
+  apt:
+    packages:
+     - gradle
+
 env:
   - GRADLE_VERSION=3.4.1
   - GRADLE_VERSION=4.6
@@ -16,7 +21,7 @@ jdk:
   - openjdk8
 
 install:
- - ./gradlew wrapper --gradle-version ${GRADLE_VERSION}
+ - gradle wrapper --gradle-version ${GRADLE_VERSION}
  - ./gradlew assemble
 
 script:
