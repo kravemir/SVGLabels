@@ -1,0 +1,25 @@
+syntax = "proto2";
+
+option java_package = "org.kravemir.svg.labels.model";
+option java_multiple_files = true;
+
+
+enum UnitType {
+    MM = 0;
+    CM = 1;
+    PT = 2;
+}
+
+message TiledPaper {
+    optional UnitType units = 1;
+
+    optional double with = 2;
+    optional double height = 3;
+
+    optional double tile_offset_x = 4;
+    optional double tile_offset_y = 5;
+    optional double tile_width = 6;
+    optional double tile_height = 7;
+    optional double tile_delta_x = 8;
+    optional double tile_delta_y = 9;
+}

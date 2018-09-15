@@ -265,11 +265,15 @@ public class TileRendererImplTest {
         final int instanceWidth = 80;
         final int instanceHeight = 80;
 
-        return TiledPaper.builder()
-                .paperSize(20 + instanceWidth * column, 20 + instanceHeight * rows)
-                .labelSize(instanceWidth, 80)
-                .labelOffset(10, 10)
-                .labelDelta(0, 0)
+        return TiledPaper.newBuilder()
+                .setWith(20 + instanceWidth * column)
+                .setHeight(20 + instanceHeight * rows)
+                .setTileWidth(instanceWidth)
+                .setTileHeight(80)
+                .setTileOffsetX(10)
+                .setTileOffsetY(10)
+                .setTileDeltaX(0)
+                .setTileDeltaY(0)
                 .build();
     }
 

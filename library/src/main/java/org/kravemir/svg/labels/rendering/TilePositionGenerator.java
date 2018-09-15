@@ -15,19 +15,19 @@ public class TilePositionGenerator {
 
     public void start(){
         full = false;
-        x = paper.tileOffsetX();
-        y = paper.tileOffsetY();
+        x = paper.getTileOffsetX();
+        y = paper.getTileOffsetY();
     }
 
     public void nextPosition(){
         if(isFull()) return;
 
-        x += paper.tileWidth() + paper.tileDeltaX();
-        if (x > paper.width() - paper.tileWidth()) {
-            x = paper.tileOffsetX();
-            y += paper.tileHeight() + paper.tileDeltaY();
+        x += paper.getTileWidth() + paper.getTileDeltaX();
+        if (x > paper.getWith() - paper.getTileWidth()) {
+            x = paper.getTileOffsetX();
+            y += paper.getTileHeight() + paper.getTileDeltaY();
 
-            if (y > paper.height() - paper.tileHeight()) {
+            if (y > paper.getHeight() - paper.getTileHeight()) {
                 full = true;
             }
         }
@@ -46,20 +46,20 @@ public class TilePositionGenerator {
     }
 
     public double getPaperWidth() {
-        return paper.width();
+        return paper.getWith();
     }
 
     public double getPaperHeight() {
-        return paper.height();
+        return paper.getHeight();
     }
 
     @ToBePublicApi
     public double getTileWidth() {
-        return paper.tileWidth();
+        return paper.getTileWidth();
     }
 
     @ToBePublicApi
     public double getTileHeight() {
-        return paper.tileHeight();
+        return paper.getTileHeight();
     }
 }

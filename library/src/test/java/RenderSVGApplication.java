@@ -1,16 +1,11 @@
 import org.apache.batik.swing.JSVGCanvas;
 import org.apache.commons.io.IOUtils;
-import org.kravemir.svg.labels.*;
-import org.kravemir.svg.labels.model.DocumentRenderOptions;
-import org.kravemir.svg.labels.model.LabelGroup;
-import org.kravemir.svg.labels.model.TiledPaper;
 import org.w3c.dom.svg.SVGDocument;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RenderSVGApplication {

@@ -56,11 +56,15 @@ public class PaperOptions {
         double labelWidth = getLabelSize()[0];
         double labelHeight = getLabelSize()[1];
 
-        return TiledPaper.builder()
-                .paperSize(paperWidth, paperHeight)
-                .labelOffset(labelOffsetX, labelOffsetY)
-                .labelSize(labelWidth, labelHeight)
-                .labelDelta(labelDeltaX, labelDeltaY)
+        return TiledPaper.newBuilder()
+                .setWith(paperWidth)
+                .setHeight(paperHeight)
+                .setTileOffsetX(labelOffsetX)
+                .setTileOffsetY(labelOffsetY)
+                .setTileWidth(labelWidth)
+                .setTileHeight(labelHeight)
+                .setTileDeltaX(labelDeltaX)
+                .setTileDeltaY(labelDeltaY)
                 .build();
     }
 }

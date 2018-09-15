@@ -24,8 +24,8 @@ public class LabelTemplate {
             templateRoot = templateDoc.getDocumentElement();
             labelW = RenderingUtils.length(templateRoot.getAttributeNS(null, "width"));
             labelH = RenderingUtils.length(templateRoot.getAttributeNS(null, "height"));
-            labelOffsetX = (paper.tileWidth() - labelW) / 2;
-            labelOffsetY = (paper.tileHeight() - labelH) / 2;
+            labelOffsetX = (paper.getTileWidth() - labelW) / 2;
+            labelOffsetY = (paper.getTileHeight() - labelH) / 2;
         }
     }
 }
