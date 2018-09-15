@@ -11,6 +11,7 @@ addons:
   apt:
     packages:
      - gradle
+     - protobuf-compiler
 
 env:
   - GRADLE_VERSION=3.4.1
