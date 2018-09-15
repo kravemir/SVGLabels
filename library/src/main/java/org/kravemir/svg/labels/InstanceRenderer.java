@@ -13,7 +13,7 @@ public interface InstanceRenderer {
      *
      * @param svgTemplate template to use for rendering
      * @param templateDescriptor descriptor for {@code svgTemplate} input argument
-     * @param instanceContent map containing instance values for attributes in template
+     * @param instanceContent map containing instance values for setAttributes in template
      * @return rendered SVG
      */
     @ToBePublicApi

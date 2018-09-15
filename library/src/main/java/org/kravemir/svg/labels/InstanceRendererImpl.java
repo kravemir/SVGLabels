@@ -33,16 +33,16 @@ public class InstanceRendererImpl implements InstanceRenderer {
 
         final SVGDocument document = RenderingUtils.parseSVG(svgTemplate);
 
-        for (LabelTemplateDescriptor.ContentReplaceRule rule : templateDescriptor.contentReplaceRules()) {
+        for (LabelTemplateDescriptor.ContentReplaceRule rule : templateDescriptor.getContentReplaceRulesList()) {
             XPathExpression elementXPath;
             try {
-                elementXPath = xpath.compile(rule.elementXPath());
+                elementXPath = xpath.compile(rule.getElementXPath());
             } catch (XPathExpressionException e) {
                 // TODO: clean-up code
                 throw new RuntimeException("This should not happen!", e);
             }
 
-            String value = expressionEvaluator.evaluateExpression(rule.value(), instanceContent);
+            String value = expressionEvaluator.evaluateExpression(rule.getValue(), instanceContent);
             String[] valueLines = value.split("\n");
 
             if (!shouldEvaluate(instanceContent, rule))
@@ -70,10 +70,10 @@ public class InstanceRendererImpl implements InstanceRenderer {
     }
 
     private boolean shouldEvaluate(Map<String, String> instanceContent, LabelTemplateDescriptor.ContentReplaceRule rule) {
-        if(rule.ifCondition() == null)
+        if(rule.getIf() == null)
             return true;
 
-        return (boolean) expressionEvaluator.evaluateExpressionWithJEXL(rule.ifCondition(), instanceContent);
+        return (boolean) expressionEvaluator.evaluateExpressionWithJEXL(rule.getIf(), instanceContent);
     }
 
     private Stream<Node> getNodeStream(Node root, XPathExpression expression){

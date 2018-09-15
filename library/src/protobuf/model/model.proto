@@ -23,3 +23,20 @@ message TiledPaper {
     optional double tile_delta_x = 8;
     optional double tile_delta_y = 9;
 }
+
+
+message LabelTemplateDescriptor {
+
+    message Attribute {
+        optional string key = 1;
+    }
+
+    message ContentReplaceRule {
+        optional string value = 1;
+        optional string elementXPath = 2;
+        optional string if = 3;
+    }
+
+    repeated Attribute attributes = 1;
+    repeated ContentReplaceRule contentReplaceRules = 2;
+}

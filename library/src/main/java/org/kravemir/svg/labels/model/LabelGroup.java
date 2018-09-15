@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The <code>LabelGroup</code> is a value class, and a group of labels.
+ * The <code>LabelGroup</code> is a setValue class, and a group of labels.
  *
  * Use a {@link Builder} to construct instance.
  */
@@ -116,6 +116,6 @@ public abstract class LabelGroup {
      */
     @ToBePublicApi
     public static Builder builder() {
-        return new AutoValue_LabelGroup.Builder().templateDescriptor(LabelTemplateDescriptor.EMPTY);
+        return new AutoValue_LabelGroup.Builder().templateDescriptor(LabelTemplateDescriptor.getDefaultInstance());
     }
 }

@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 import org.kravemir.svg.labels.annotations.ToBePublicApi;
 
 /**
- * The <code>DocumentRenderOptions</code> is a value class, and contains rendering options.
+ * The <code>DocumentRenderOptions</code> is a setValue class, and contains rendering options.
  *
  * Use a {@link Builder} to construct instance.
  */
