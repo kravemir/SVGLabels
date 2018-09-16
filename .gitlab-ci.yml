@@ -29,7 +29,7 @@ build-ubuntu-bionic-openjdk-11:
   image: ubuntu:bionic
   before_script:
     - apt-get update -qq && apt-get install -y -qq openjdk-11-jdk gradle protobuf-compiler
-    - gradle wrapper
+    - gradle wrapper --gradle-version 4.6
   script:
     - ./gradlew assemble
     - ./gradlew check
