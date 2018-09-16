@@ -24,3 +24,16 @@ build-ubuntu-bionic-openjdk-11:
     - ./gradlew executableJar
     - ./bin/generateHelpDocs.sh
     - ./bin/travis_ci_after_build_checks.sh
+
+build-fedora-28-openjdk-11:
+  image: fedora:28
+  before_script:
+    - dnf install -y -q java-11-openjdk gradle protobuf-compiler
+    - gradle wrapper --gradle-version 4.6
+  script:
+    - ./gradlew assemble
+    - ./gradlew check
+    - ./gradlew build
+    - ./gradlew executableJar
+    - ./bin/generateHelpDocs.sh
+    - ./bin/travis_ci_after_build_checks.sh
