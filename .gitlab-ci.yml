@@ -1,8 +1,34 @@
-image: debian:stretch
 
-build:
+build-debian-stretch-openjdk-8:
+  image: debian:stretch
   before_script:
     - apt-get update -qq && apt-get install -y -qq openjdk-8-jdk gradle protobuf-compiler
+    - gradle wrapper
+  script:
+    - ./gradlew assemble
+    - ./gradlew check
+    - ./gradlew build
+    - ./gradlew executableJar
+    - ./bin/generateHelpDocs.sh
+    - ./bin/travis_ci_after_build_checks.sh
+
+build-ubuntu-bionic-openjdk-8:
+  image: ubuntu:bionic
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq openjdk-8-jdk gradle protobuf-compiler
+    - gradle wrapper
+  script:
+    - ./gradlew assemble
+    - ./gradlew check
+    - ./gradlew build
+    - ./gradlew executableJar
+    - ./bin/generateHelpDocs.sh
+    - ./bin/travis_ci_after_build_checks.sh
+
+build-ubuntu-bionic-openjdk-11:
+  image: ubuntu:bionic
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq openjdk-11-jdk gradle protobuf-compiler
     - gradle wrapper
   script:
     - ./gradlew assemble
