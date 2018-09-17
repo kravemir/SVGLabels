@@ -146,11 +146,9 @@ public class TileRendererImplTest {
 
         assertThat(instanceDocument, nodesMatchingXPath("/*/*", Matchers.<List<Node>>allOf(
                 hasSize(expectedCount),
-                contains(
-                        Stream.concat(
-                                repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_02_MATCHER))),
-                                repeat(expectedCount - 1, allOf(TEMPLATE_02_MATCHER, not(TEMPLATE_01_MATCHER)))
-                        ).collect(Collectors.toList())
+                containsConcat(
+                        repeat(1, allOf(TEMPLATE_01_MATCHER, not(TEMPLATE_02_MATCHER))),
+                        repeat(expectedCount - 1, allOf(TEMPLATE_02_MATCHER, not(TEMPLATE_01_MATCHER)))
                 )
         )));
     }
